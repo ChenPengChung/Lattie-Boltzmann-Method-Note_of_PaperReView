@@ -1,0 +1,310 @@
+﻿\documentclass[12pt]{article}
+\usepackage[a4paper,margin=2cm]{geometry} % 明確設定四邊
+\usepackage{fontspec} % 字體設定
+\usepackage{xeCJK}
+\usepackage{setspace} % 設定行距
+\linespread{1.2}
+\usepackage{titling} % 預設標題下移0.6in
+\usepackage{enumitem}
+\usepackage{amsmath} % 數學方程式
+\usepackage{graphicx} %圖片
+\usepackage{float} % 在導言區，讓圖片強制插在原地
+\usepackage{xcolor} %字體加入顏色
+\usepackage{listings}
+\usepackage{physics} % 物理符號
+\usepackage{wrapfig} % 文字環繞圖
+\usepackage{array} % 表格對齊控制
+\usepackage{caption}
+\usepackage{amsthm}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{etoolbox}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{hyperref}
+\usepackage{makecell}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  citecolor=blue,
+  linktoc=all
+}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+\tcbset{
+  highlightblock/.style={
+    enhanced,
+    breakable,
+    colback=gray!8,
+    colframe=gray!60,
+    boxrule=0.4pt,
+    arc=0pt,
+    boxsep=0pt,
+    left=4pt,
+    right=4pt,
+    top=4pt,
+    bottom=4pt,
+    before skip=0pt,
+    after skip=0pt
+  }
+}
+\usepackage{longtable}
+
+%1 註記行距設定
+\setlist[itemize]{itemsep=1.2pt, parsep=0pt, topsep=1pt}
+\setlist[enumerate]{itemsep=1.2pt, parsep=0pt, topsep=1pt}
+%2 圖表標題設定
+\captionsetup{
+    labelfont={footnotesize,bf},    % 標籤：小字體+粗體
+    skip=10pt                        % 標題與圖表的間距
+}
+%3 表格間距設定
+\setlength{\tabcolsep}{8pt} % 列間距（增加）
+\renewcommand{\arraystretch}{1.4} % 行間距（增加）
+%4 腳註設定
+\usepackage[bottom,hang]{footmisc} % 腳註置於頁面底部，懸掛縮排
+\setlength{\footnotesep}{10pt} % 腳註之間的間距（增加）
+\setlength{\skip\footins}{12pt plus 5pt minus 2pt} % 正文與腳註之間的間距（增加）
+\setlength{\footnotemargin}{1.5em} % 腳註標號與文字的間距（增加）
+\renewcommand{\footnoterule}{\vspace*{-3pt}\hrule width 0.4\columnwidth height 0.4pt\vspace*{3pt}} % 腳註分隔線
+%5 使用直立字體的定理樣式
+\newtheoremstyle{upright}
+  {6pt}{6pt}  % 定理環境前後間距（增加）
+  {\normalfont}% 使用正常字體，不使用斜體
+  {0pt}{\bfseries}{：}{0.5em}{}
+%6 定理環境定義
+\theoremstyle{upright}
+\newtheorem{definition}{定義}[section]
+\newtheorem{theorem}{定理}[section]
+\newtheorem{lemma}{引理}[section]
+\newtheorem{corollary}{推論}[section]
+\newtheorem{example}{例子}[section]
+% 重新正確定義 remark 環境 - 確保完全靠左對齊
+\makeatletter
+\@ifundefined{c@remark}{}{\renewcommand{\theremark}{}}
+\newenvironment{remark}{%
+  \par\vspace{0.0\baselineskip}%
+  \begingroup% 開始一個組以限制設置的範圍
+  \setlength{\parindent}{0pt}% 設置段落縮進為零
+  \setlength{\leftskip}{0pt}% 設置左邊距為零
+  \noindent\textbf{註記：}\\% 添加標題並強制換行
+  \ignorespaces% 忽略可能的空格
+  \setlist[enumerate]{itemsep=0pt, parsep=0pt, topsep=0.0pt, leftmargin=1.5em}%
+  \setlist[itemize]{itemsep=0pt, parsep=0pt, topsep=0.0pt, leftmargin=1.5em}%
+}{%
+  \endgroup% 結束組
+  \par\vspace{0.5\baselineskip}
+}
+\makeatother
+%7 手動定義中文數字（不含標點符號）
+\newcommand{\chinese}[1]{%
+  \ifcase#1 零\or 一\or 二\or 三\or 四\or 五\or 六\or 七\or 八\or 九\or 十\or
+  十一\or 十二\or 十三\or 十四\or 十五\or 十六\or 十七\or 十八\or 十九\or 二十\fi
+}
+
+%8 重新定義章節編號格式
+\renewcommand{\thesection}{\chinese{\value{section}}}
+\renewcommand{\thesubsection}{\chinese{\value{section}}、\arabic{subsection}}
+\renewcommand{\theequation}{\chinese{\value{section}}.\arabic{equation}}
+\renewcommand{\thesubsubsection}{\chinese{\value{section}}、\arabic{subsection}.\arabic{subsubsection}}
+\renewcommand{\thefigure}{\chinese{\value{section}}.\arabic{figure}}
+\renewcommand{\thedefinition}{\thesection、\arabic{definition}}
+\renewcommand{\thetheorem}{\thesection、\arabic{theorem}}
+\renewcommand{\theexample}{\thesection、\arabic{example}}
+
+% 为不同级别的标题增加编号后的空格
+\setlength{\cftsecnumwidth}{2.5em}  % section 编号宽度
+\setlength{\cftsubsecnumwidth}{3.5em}  % subsection 编号宽度
+\setlength{\cftsubsubsecnumwidth}{4.5em}  % subsubsection 编号宽度
+
+% 添加点线（可选）
+\renewcommand{\cftsubsubsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsubsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+%9 讓方程式計數器在每個section重置
+\counterwithin{equation}{section}
+%10 字體設定 - 優化以減少警告
+\IfFontExistsTF{Times New Roman}{%
+  \setmainfont{Times New Roman}%
+}{%
+  \setmainfont{TeX Gyre Termes}%
+}
+
+%\setCJKmainfont[
+%    BoldFont={Kaiti TC Bold},
+%    ItalicFont={Kaiti TC},
+%    BoldItalicFont={Kaiti TC Bold}
+%]{Kaiti TC}
+%\setCJKmonofont{Kaiti TC}
+\IfFontExistsTF{DFKai-SB}{%
+  \setCJKmainfont[
+    BoldFont={DFKai-SB},
+    ItalicFont={DFKai-SB},
+    BoldItalicFont={DFKai-SB}
+  ]{DFKai-SB}%
+  % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+  \setCJKmonofont{DFKai-SB}%
+}{%
+  \IfFontExistsTF{Kaiti TC}{%
+    \setCJKmainfont[
+      BoldFont={Kaiti TC Bold},
+      ItalicFont={Kaiti TC},
+      BoldItalicFont={Kaiti TC Bold}
+    ]{Kaiti TC}%
+    % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+    \setCJKmonofont{Kaiti TC}%
+  }{%
+    \IfFontExistsTF{Songti TC}{%
+      \setCJKmainfont{Songti TC}%
+      % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+      \setCJKmonofont{Songti TC}%
+    }{%
+      \setCJKmainfont{Heiti TC}%
+      % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+      \setCJKmonofont{Heiti TC}%
+    }%
+  }%
+}
+%11 標題設定
+\setlength{\droptitle}{-1in} % 上移標題1in
+\title{24.evolution零碎筆記}
+\author{Chen Peng Chung}
+\setcounter{section}{0}
+% 12调整 subsection 的间距
+\titlespacing*{\section}
+{0pt}                    % 左边距
+{0.0in}                 % 标题前间距
+{0.0em}                  % 标题后间距
+\titlespacing*{\subsection}
+{0pt}                    % 左边距
+{-0.05in}                % 标题前间距
+{0.0em}                  % 标题后间距
+% 调整 subsubsection 的间距  
+\titlespacing*{\subsubsection}
+{0pt}                    % 左边距
+{0.0in}                 % 标题前间距
+{0.0em}                  % 标题后间距
+%13.
+
+% ========== Monokai Light 配色方案（淺灰背景）==========
+\definecolor{monokailight-bg}{RGB}{240,240,240}      % 淺灰背景 #F0F0F0
+\definecolor{monokailight-fg}{RGB}{39,40,34}         % 深色文字 #272822
+\definecolor{monokailight-comment}{RGB}{117,113,94}  % 註解 #75715E
+\definecolor{monokailight-string}{RGB}{152,118,24}   % 字串 #987618
+\definecolor{monokailight-keyword}{RGB}{244,0,95}    % 關鍵字 #F4005F
+\definecolor{monokailight-function}{RGB}{121,162,0}  % 函數 #79A200
+\definecolor{monokailight-number}{RGB}{137,89,168}   % 數字 #8959A8
+\definecolor{monokailight-type}{RGB}{0,129,152}      % 型別 #008198
+\definecolor{monokailight-operator}{RGB}{244,0,95}   % 運算符 #F4005F
+\definecolor{monokailight-border}{RGB}{210,210,210}  % 邊框 #D2D2D2
+
+% ========== CUDA 語言定義 ==========
+\lstdefinelanguage{CUDA}{
+    language=C++,
+    morekeywords={__global__, __device__, __host__, __shared__, 
+                  __constant__, __syncthreads, dim3, cudaMalloc,
+                  cudaMemcpy, cudaFree, cudaMemcpyHostToDevice,
+                  cudaMemcpyDeviceToHost, cudaDeviceSynchronize},
+    % 型別關鍵字
+    morekeywords=[2]{double, float, int, char, void, size_t,
+                     uint, uint2, uint3, uint4,
+                     int2, int3, int4,
+                     float2, float3, float4,
+                     double2, double3, double4},
+    % CUDA 內建變數
+    morekeywords=[3]{blockIdx, threadIdx, blockDim, gridDim,
+                     warpSize},
+    sensitive=true
+}
+
+% ========== Monokai Light 樣式 ==========
+\lstdefinestyle{monokailight}{
+    language=CUDA,
+    backgroundcolor=\color{monokailight-bg},
+    basicstyle=\color{monokailight-fg}\ttfamily\footnotesize,
+    commentstyle=\color{monokailight-comment}\itshape,
+    keywordstyle=\color{monokailight-keyword}\bfseries,
+    keywordstyle=[2]\color{monokailight-type}\bfseries,      % 型別
+    keywordstyle=[3]\color{monokailight-function}\bfseries,  % CUDA 變數
+    stringstyle=\color{monokailight-string},
+    numberstyle=\tiny\color{monokailight-comment},
+    % 數字顏色
+    literate=
+        {0}{{{\color{monokailight-number}0}}}1
+        {1}{{{\color{monokailight-number}1}}}1
+        {2}{{{\color{monokailight-number}2}}}1
+        {3}{{{\color{monokailight-number}3}}}1
+        {4}{{{\color{monokailight-number}4}}}1
+        {5}{{{\color{monokailight-number}5}}}1
+        {6}{{{\color{monokailight-number}6}}}1
+        {7}{{{\color{monokailight-number}7}}}1
+        {8}{{{\color{monokailight-number}8}}}1
+        {9}{{{\color{monokailight-number}9}}}1,
+    % 版面設定
+    breaklines=true,
+    breakatwhitespace=false,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    % 框線設定
+    frame=single,
+    rulecolor=\color{monokailight-border},
+    framerule=0.8pt,
+    % 其他設定
+    columns=flexible,
+    escapeinside={(*@}{@*)},
+    xleftmargin=2em,
+    xrightmargin=0.5em,
+    framexleftmargin=1.5em
+}
+
+% ========== 設為預設樣式 ==========
+\lstset{style=monokailight}
+%14.
+% ========== 表格樣式設定 ==========
+\setlength{\arrayrulewidth}{0.5pt}  % 表格線條粗細
+\renewcommand{\arraystretch}{1.3}   % 行高
+%15listing 設定:
+\lstset{
+  language=C++,
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny,
+  stepnumber=1,
+  numbersep=8pt,
+%
+  keepspaces=true,      % ★保留空白
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+%
+  tabsize=2,            % ★tab 視為 2 個空白（可改 4）
+  breaklines=true,
+  breakatwhitespace=false,
+%
+  frame=single,
+  captionpos=b
+}
+
+
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\end{document}
+
+
+
