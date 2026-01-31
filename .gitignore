@@ -1,0 +1,56 @@
+# macOS 系統檔案
+.DS_Store
+._*
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+
+# LaTeX 暫存檔案（只保留 .tex 和 .pdf）
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.nav
+*.snm
+*.vrb
+*.xdv
+*.idx
+*.ilg
+*.ind
+*.glo
+*.gls
+*.glg
+*.acn
+*.acr
+*.alg
+*.nlo
+*.nls
+*.maf
+*.mtc*
+*.ptc*
+*.thm
+*.tdo
+*.dvi
+*.ps
+
+# 編輯器暫存檔
+*~
+*.swp
+*.swo
+*.bak
+\#*\#
+
+# Thumbs.db (Windows)
+Thumbs.db
+ehthumbs.db
