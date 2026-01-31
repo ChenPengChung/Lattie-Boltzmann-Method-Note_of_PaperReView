@@ -1,0 +1,697 @@
+﻿\documentclass[12pt]{article}
+\usepackage[a4paper,margin=2cm]{geometry} % 明確設定四邊
+\usepackage{fontspec} % 字體設定
+\usepackage{xeCJK}
+\usepackage{setspace} % 設定行距
+\linespread{1.2}
+\usepackage{titling} % 預設標題下移0.6in
+\usepackage{enumitem}
+\usepackage{amsmath} % 數學方程式
+\usepackage{graphicx} %圖片
+\usepackage{float} % 在導言區，讓圖片強制插在原地
+\usepackage{xcolor} %字體加入顏色
+\usepackage{listings}
+\usepackage{physics} % 物理符號
+\usepackage{wrapfig} % 文字環繞圖
+\usepackage{array} % 表格對齊控制
+\usepackage{caption}
+\usepackage{amsthm}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{etoolbox}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{hyperref}
+\usepackage{makecell}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  citecolor=blue,
+  linktoc=all
+}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+\tcbset{
+  highlightblock/.style={
+    enhanced,
+    breakable,
+    colback=gray!8,
+    colframe=gray!60,
+    boxrule=0.4pt,
+    arc=0pt,
+    boxsep=0pt,
+    left=4pt,
+    right=4pt,
+    top=4pt,
+    bottom=4pt,
+    before skip=0pt,
+    after skip=0pt
+  }
+}
+\usepackage{longtable}
+
+%1 註記行距設定
+\setlist[itemize]{itemsep=1.2pt, parsep=0pt, topsep=1pt}
+\setlist[enumerate]{itemsep=1.2pt, parsep=0pt, topsep=1pt}
+%2 圖表標題設定
+\captionsetup{
+    labelfont={footnotesize,bf},    % 標籤：小字體+粗體
+    skip=10pt                        % 標題與圖表的間距
+}
+%3 表格間距設定
+\setlength{\tabcolsep}{8pt} % 列間距（增加）
+\renewcommand{\arraystretch}{1.4} % 行間距（增加）
+%4 腳註設定
+\usepackage[bottom,hang]{footmisc} % 腳註置於頁面底部，懸掛縮排
+\setlength{\footnotesep}{10pt} % 腳註之間的間距（增加）
+\setlength{\skip\footins}{12pt plus 5pt minus 2pt} % 正文與腳註之間的間距（增加）
+\setlength{\footnotemargin}{1.5em} % 腳註標號與文字的間距（增加）
+\renewcommand{\footnoterule}{\vspace*{-3pt}\hrule width 0.4\columnwidth height 0.4pt\vspace*{3pt}} % 腳註分隔線
+%5 使用直立字體的定理樣式
+\newtheoremstyle{upright}
+  {6pt}{6pt}  % 定理環境前後間距（增加）
+  {\normalfont}% 使用正常字體，不使用斜體
+  {0pt}{\bfseries}{：}{0.5em}{}
+%6 定理環境定義
+\theoremstyle{upright}
+\newtheorem{definition}{定義}[section]
+\newtheorem{theorem}{定理}[section]
+\newtheorem{lemma}{引理}[section]
+\newtheorem{corollary}{推論}[section]
+\newtheorem{example}{例子}[section]
+% 重新正確定義 remark 環境 - 確保完全靠左對齊
+\makeatletter
+\@ifundefined{c@remark}{}{\renewcommand{\theremark}{}}
+\newenvironment{remark}{%
+  \par\vspace{0.0\baselineskip}%
+  \begingroup% 開始一個組以限制設置的範圍
+  \setlength{\parindent}{0pt}% 設置段落縮進為零
+  \setlength{\leftskip}{0pt}% 設置左邊距為零
+  \noindent\textbf{註記：}\\% 添加標題並強制換行
+  \ignorespaces% 忽略可能的空格
+  \setlist[enumerate]{itemsep=0pt, parsep=0pt, topsep=0.0pt, leftmargin=1.5em}%
+  \setlist[itemize]{itemsep=0pt, parsep=0pt, topsep=0.0pt, leftmargin=1.5em}%
+}{%
+  \endgroup% 結束組
+  \par\vspace{0.5\baselineskip}
+}
+\makeatother
+%7 手動定義中文數字（不含標點符號）
+\newcommand{\chinese}[1]{%
+  \ifcase#1 零\or 一\or 二\or 三\or 四\or 五\or 六\or 七\or 八\or 九\or 十\or
+  十一\or 十二\or 十三\or 十四\or 十五\or 十六\or 十七\or 十八\or 十九\or 二十\fi
+}
+
+%8 重新定義章節編號格式
+\renewcommand{\thesection}{\chinese{\value{section}}}
+\renewcommand{\thesubsection}{\chinese{\value{section}}、\arabic{subsection}}
+\renewcommand{\theequation}{\chinese{\value{section}}.\arabic{equation}}
+\renewcommand{\thesubsubsection}{\chinese{\value{section}}、\arabic{subsection}.\arabic{subsubsection}}
+\renewcommand{\thefigure}{\chinese{\value{section}}.\arabic{figure}}
+\renewcommand{\thedefinition}{\thesection、\arabic{definition}}
+\renewcommand{\thetheorem}{\thesection、\arabic{theorem}}
+\renewcommand{\theexample}{\thesection、\arabic{example}}
+
+% 为不同级别的标题增加编号后的空格
+\setlength{\cftsecnumwidth}{2.5em}  % section 编号宽度
+\setlength{\cftsubsecnumwidth}{3.5em}  % subsection 编号宽度
+\setlength{\cftsubsubsecnumwidth}{4.5em}  % subsubsection 编号宽度
+
+% 添加点线（可选）
+\renewcommand{\cftsubsubsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsubsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+%9 讓方程式計數器在每個section重置
+\counterwithin{equation}{section}
+%10 字體設定 - 優化以減少警告
+\IfFontExistsTF{Times New Roman}{%
+  \setmainfont{Times New Roman}%
+}{%
+  \setmainfont{TeX Gyre Termes}%
+}
+
+%\setCJKmainfont[
+%    BoldFont={Kaiti TC Bold},
+%    ItalicFont={Kaiti TC},
+%    BoldItalicFont={Kaiti TC Bold}
+%]{Kaiti TC}
+%\setCJKmonofont{Kaiti TC}
+\IfFontExistsTF{DFKai-SB}{%
+  \setCJKmainfont[
+    BoldFont={DFKai-SB},
+    ItalicFont={DFKai-SB},
+    BoldItalicFont={DFKai-SB}
+  ]{DFKai-SB}%
+  % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+  \setCJKmonofont{DFKai-SB}%
+}{%
+  \IfFontExistsTF{Kaiti TC}{%
+    \setCJKmainfont[
+      BoldFont={Kaiti TC Bold},
+      ItalicFont={Kaiti TC},
+      BoldItalicFont={Kaiti TC Bold}
+    ]{Kaiti TC}%
+    % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+    \setCJKmonofont{Kaiti TC}%
+  }{%
+    \IfFontExistsTF{Songti TC}{%
+      \setCJKmainfont{Songti TC}%
+      % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+      \setCJKmonofont{Songti TC}%
+    }{%
+      \setCJKmainfont{Heiti TC}%
+      % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+      \setCJKmonofont{Heiti TC}%
+    }%
+  }%
+}
+%11 標題設定
+\setlength{\droptitle}{-1in} % 上移標題1in
+\title{25.分佈函數的宣告與統整.tex}
+\author{Chen Peng Chung}
+\setcounter{section}{0}
+% 12调整 subsection 的间距
+\titlespacing*{\section}
+{0pt}                    % 左边距
+{0.0in}                 % 标题前间距
+{0.0em}                  % 标题后间距
+\titlespacing*{\subsection}
+{0pt}                    % 左边距
+{-0.05in}                % 标题前间距
+{0.0em}                  % 标题后间距
+% 调整 subsubsection 的间距  
+\titlespacing*{\subsubsection}
+{0pt}                    % 左边距
+{0.0in}                 % 标题前间距
+{0.0em}                  % 标题后间距
+%13.
+
+% ========== Monokai Light 配色方案（淺灰背景）==========
+\definecolor{monokailight-bg}{RGB}{240,240,240}      % 淺灰背景 #F0F0F0
+\definecolor{monokailight-fg}{RGB}{39,40,34}         % 深色文字 #272822
+\definecolor{monokailight-comment}{RGB}{117,113,94}  % 註解 #75715E
+\definecolor{monokailight-string}{RGB}{152,118,24}   % 字串 #987618
+\definecolor{monokailight-keyword}{RGB}{244,0,95}    % 關鍵字 #F4005F
+\definecolor{monokailight-function}{RGB}{121,162,0}  % 函數 #79A200
+\definecolor{monokailight-number}{RGB}{137,89,168}   % 數字 #8959A8
+\definecolor{monokailight-type}{RGB}{0,129,152}      % 型別 #008198
+\definecolor{monokailight-operator}{RGB}{244,0,95}   % 運算符 #F4005F
+\definecolor{monokailight-border}{RGB}{210,210,210}  % 邊框 #D2D2D2
+
+% ========== CUDA 語言定義 ==========
+\lstdefinelanguage{CUDA}{
+    language=C++,
+    morekeywords={__global__, __device__, __host__, __shared__, 
+                  __constant__, __syncthreads, dim3, cudaMalloc,
+                  cudaMemcpy, cudaFree, cudaMemcpyHostToDevice,
+                  cudaMemcpyDeviceToHost, cudaDeviceSynchronize},
+    % 型別關鍵字
+    morekeywords=[2]{double, float, int, char, void, size_t,
+                     uint, uint2, uint3, uint4,
+                     int2, int3, int4,
+                     float2, float3, float4,
+                     double2, double3, double4},
+    % CUDA 內建變數
+    morekeywords=[3]{blockIdx, threadIdx, blockDim, gridDim,
+                     warpSize},
+    sensitive=true
+}
+
+% ========== Monokai Light 樣式 ==========
+\lstdefinestyle{monokailight}{
+    language=CUDA,
+    backgroundcolor=\color{monokailight-bg},
+    basicstyle=\color{monokailight-fg}\ttfamily\footnotesize,
+    commentstyle=\color{monokailight-comment}\itshape,
+    keywordstyle=\color{monokailight-keyword}\bfseries,
+    keywordstyle=[2]\color{monokailight-type}\bfseries,      % 型別
+    keywordstyle=[3]\color{monokailight-function}\bfseries,  % CUDA 變數
+    stringstyle=\color{monokailight-string},
+    numberstyle=\tiny\color{monokailight-comment},
+    % 數字顏色
+    literate=
+        {0}{{{\color{monokailight-number}0}}}1
+        {1}{{{\color{monokailight-number}1}}}1
+        {2}{{{\color{monokailight-number}2}}}1
+        {3}{{{\color{monokailight-number}3}}}1
+        {4}{{{\color{monokailight-number}4}}}1
+        {5}{{{\color{monokailight-number}5}}}1
+        {6}{{{\color{monokailight-number}6}}}1
+        {7}{{{\color{monokailight-number}7}}}1
+        {8}{{{\color{monokailight-number}8}}}1
+        {9}{{{\color{monokailight-number}9}}}1,
+    % 版面設定
+    breaklines=true,
+    breakatwhitespace=false,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    % 框線設定
+    frame=single,
+    rulecolor=\color{monokailight-border},
+    framerule=0.8pt,
+    % 其他設定
+    columns=flexible,
+    escapeinside={(*@}{@*)},
+    xleftmargin=2em,
+    xrightmargin=0.5em,
+    framexleftmargin=1.5em
+}
+
+% ========== 設為預設樣式 ==========
+\lstset{style=monokailight}
+%14.
+% ========== 表格樣式設定 ==========
+\setlength{\arrayrulewidth}{0.5pt}  % 表格線條粗細
+\renewcommand{\arraystretch}{1.3}   % 行高
+%15listing 設定:
+\lstset{
+  language=C++,
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny,
+  stepnumber=1,
+  numbersep=8pt,
+%
+  keepspaces=true,      % ★保留空白
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+%
+  tabsize=2,            % ★tab 視為 2 個空白（可改 4）
+  breaklines=true,
+  breakatwhitespace=false,
+%
+  frame=single,
+  captionpos=b
+}
+
+
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+\section{前言}
+\noindent 此章節為將分佈函數的宣告以及使用進行記錄，大致分類爲兩類，
+其中一類為函數內宣告、函數內使用，此類分佈函數筆者稱為「簽套分度函數」，通常宣告形式為\ $\texttt{double** f\_new\ ,\ double** f\_old\ ,\ double* f\_new\ ,\ double* f\_old}$ ;
+另外一類則是主程式宣告之分佈函數，筆者稱之為「實際分佈函數」，經過指標陣列之宣告以及分配記憶體後，具體形式為三種\ 
+$\texttt{f\_h\_p[19][NX6*NY6*NZ6]\ ,\ ft[19][NX6*NY6*NZ6]\ ,\ fd[19][NX6*NY6*NZ6]}$
+，牽涉到的檔案有：
+\begin{itemize}
+  \item main.cu : 實際分佈函數的宣告與使用。
+  \item memory.h ：對實際分佈函數擴展從指標陣列到二維連續記憶體
+  \item evolution.h : 簽套分佈函數的宣告與使用。
+  \item communication.h : 簽套分佈函數的宣告與使用，以及實際分佈函數的使用。
+\end{itemize}
+\section{簽套分佈函數}
+\vspace{1.5ex}
+\noindent 此章節將羅列一系列函數式，牽涉雙重指標型記憶體：$\texttt{double** f\_old , f\_new}$。\\
+或者指標型單一記憶體：$\texttt{double* f\_old , f\_new}$。\\
+
+
+\subsection{函數式：evolution.h\ :\ $\texttt{stream\_collid}$}
+\vspace{1.5ex}
+\begin{enumerate}
+  \item 函數內宣告：$\texttt{\_\_global\_\_ void stream\_collid}$ : evolution.h\_337-338
+  \begin{lstlisting}[language=C,caption={evolution.h\_stream\_collid的f\_old與f\_new},label={evolution.h-stream-collid的f-old與f-new}]
+__global__ void stream_collid(
+double* f1_old, double*f2_old, double* f3_old, .....//編號重複
+double* f1_new, double*f2_new, double* f3_new, .....//編號重複
+//以下Lagrange權重參數
+){//....函數內部指令}\end{lstlisting}
+  \item 函數內使用：$\texttt{\_\_global\_\_ void stream\_collid}$ : edvolution.h\_438
+  \begin{lstlisting}[language=C,
+    caption={f\_old與、f\_new的使用情況.1},label={f-old與-f-new的使用情況}]
+if(k == 3){
+  //下邊界Half-way bounce-back
+  F5_in  = f6_old[index];
+  F11_in = f14_old[index];
+  F12_in = f13_old[index];
+  F15_in = f18_old[index];
+  F16_in = f17_old[index];
+  }\end{lstlisting}
+  \noindent 分析：由上述變數的使用可以知道，對於函數內宣告$\texttt{stream\_collid(double*, ....)}$，
+  (R\ (A\ 指標型單一記憶體)的(函數內宣告))\ 被定義為\ (R\ (T\ (E\ (A\ 指標型單一記憶體)的(相應一維連續記憶體))的(初始存放位址))的(宣告))
+  所以，此函數內所宣告的指標型單一記憶體$\texttt{double* f1\_old}$意味著，此指標型單一記憶體必須指向一個尺寸為$\texttt{NX6*NY6*NZ6}$的一維連續記憶體
+  \item 實際陣列：$\texttt{f1\_old[NX6*NY6*NZ6]} , \texttt{f1\_new[NX6*NY6*NZ6]}$
+  其中，$\texttt{NX6*NY6*NZ6}$為陣列尺寸。
+\end{enumerate}
+\subsection{函數式：evolution.h\ :\ $\texttt{Launch\_CollisionStreaming}$}
+\vspace{1.5ex}
+\noindent 在此我做了一點更改與原文不同，因為陣列的函數內部宣告將退化為指標形態，因此此篇為討論雙重指標的函數內部宣告。  
+\vspace{1.5ex}
+\begin{enumerate}
+  \item 函數內宣告：$\texttt{void Launch\_CollisionStreaming(double**,\ double**)}$：evolution.h\_778
+  \begin{lstlisting}[language=C,caption={Launch\_CollisionStreaming:宣告},label={Launch-CollisionStreaming-宣告}]
+void Launch_CollisionStreaming(double** f_old, double** f_new){//..
+}\end{lstlisting}
+  \item 使用地點：$\texttt{void Launch\_CollisionStreaming(double**,\ double**)}$：evolution.h\_859
+  \begin{lstlisting}[language=C,caption={Launch\_CollisionStreaming:使用},label={Launch-CollisionStreaming-使用}]
+stream_collide<<<griddim, blockdim, 0, stream0>>>(
+  f_old[0],f_old[1]//...第一個參數為分佈函數編號
+  f_new[0],f_new[1]//...同上
+  //以下爲Lagrange權重參數：逐一放入指標陣列的元素
+  //權重指標型一維度連續記憶體的元素
+  XPara0_d[0],XPara0_d[1]...
+  YPara0_d[0],YPara0_d[1]...\end{lstlisting}
+  \noindent 分析：由上述可以知道，對於函數內部宣告：$\texttt{Launch\_CollisionStraming(double**)}$
+  (T\ (A\ 雙重指標型單一記憶體)的(函數內部宣告))\ 被定義為\ (E\ (R\ (w\ (s\ (A\ 雙重指標記憶體)的(相應二維連續記憶體))的(初始存放位址))的(初始存放位址))的(宣告))
+  。所以，此函數內宣告$\texttt{double** f\_old}$意味著，指向的二維連續記憶體第一個指標的空間至少爲19個元素，而因為將使用進入函數$\texttt{stream
+  \_collid}$中，第二格指標的空間至少爲$\texttt{NX6*NY6*NZ6}$。
+  \item 實際陣列：$\texttt{f\_old[19][NX6*NY6*NZ6]} , \texttt{f\_new[19][NX6*NY6*NZ6]}$ ;
+\end{enumerate}
+\subsection{函數式：communication.h\ :\ $\texttt{SendSrcToCPU}$}
+\vspace{1.5ex}
+\begin{enumerate}
+  \item 函數內部宣告：$\texttt{void SendSrcToCPU}$：communication.h\_233
+  \begin{lstlisting}[language=C,caption={SendSrcToCPU:宣告},label={SendSrcToCPU-宣告}]
+void SendSrcToCPU(double** f_new, const size_t nBytes, const int num_arrays, ...) {//
+}\end{lstlisting}
+  \item 函數內部使用：$\texttt{void SendSrcToCPU}$：communication.h\_237\begin{lstlisting}[language=C,caption={SendSrcToCPU:使用},label={SendSrcToCPU-使用}]
+for( int i = 0; i < num_arrays; i++ ) {
+  const int dir = va_arg(args, int);
+  CHECK_CUDA( cudaMemcpy(fh_p[dir],f_new[dir],nBytes,cudaMemcpyDeviceToHost); )
+// SendSrcToCPU(f_new, nBytes, 19, 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18);
+}\end{lstlisting}
+  \noindent 分析：在cudaMemcpy的函數簽名中，
+  \begin{lstlisting}[language=C,caption={cudaMemcpy的函數簽名},label={cudaMemcpy的函數簽名}]
+cudaError_t cudaMemcpy( void* dst, const void* src, size_t count, cudaMemcpyKind kind )\end{lstlisting}
+ 對於函數$\texttt{cudaMemcpy}$第二參數為指標型記憶體，實際上，要嵌入的參數為「指向某一塊一維連續記憶體」的指標型單一記憶體，所以，若在函數內使用函數內宣告的雙重指標單一記憶體$\texttt{f\_new}$嵌入$\texttt{cudaMemcpy}$的第二參數，
+ 則代表將會使用到如下操作：
+ \begin{lstlisting}
+for(int i = 0 ; i < 19 ; i++){
+  for(int j = 0 ; j <= nBytes/(sizeof(double)) ; j++){
+    *(*(f_new+i)+0+j).... ; 
+  }
+}\end{lstlisting}
+  因此，上述之函數內部宣告，應該要擴充至作為相應二維連續記憶體的初始存放位址的初始存放位址的宣告。
+  \item 實際陣列：$\texttt{f\_new[19][NX6*NY6*NZ6]}$ ;
+  
+\end{enumerate}
+
+
+\subsection{函數式：communication.h\ :\ $\texttt{SendDataToCPU}$}
+\vspace{1.5ex}
+\begin{enumerate}
+  \item 函數內部宣告：$\texttt{void SendDataToCPU}$：communication.h\_260
+  \begin{lstlisting}[language=C,caption={SendDataToCPU:宣告},label={SendDataToCPU-宣告}]
+void SendDataToCPU(double** f_new){//....}\end{lstlisting}
+  \item 函數內部宣告：$\texttt{void SendDataToCPU}$：communication.h\_260
+\begin{lstlisting}[language=C,caption={SendDataToCPU:使用},label={SendDataToCPU-使用}]
+SendSrcToCPU(f_new, nBytes, 19, 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18);
+\end{lstlisting}
+\noindent 分析: 由於在此函數式內出現為使用$\texttt{void SendSrcToCPU}$，如前所述，函數$\texttt{SendSrcToCPU}$的第一個參數，雖然作為指定窗重指標記憶體，但由於對於函數內宣告作了以下操作\begin{lstlisting}
+for(int i = 0 ; i < 19 ; i++){
+  for(int j = 0 ; j <= nBytes/(sizeof(double)) ; j++){
+    *(*(f_new+i)+0+j).... //嵌入每一個指標陣列，且使用到每一個指標陣列的相對應一維連續記憶體; 
+  }
+}\end{lstlisting}
+，導致該雙重指標之函數內宣告，必須作為相應二維連續記憶體的
+初始存放位址的初始存放位址的宣告。
+\item 實際陣列：$\texttt{f\_new[19][NX6*NY6*NZ6]}$ ;
+\end{enumerate}
+
+
+\section{實際分佈函數}
+\subsection{Host端二維陣列：fh\_p[19][NX6*NY6*NZ6]}
+\noindent 下面將針對該二維陣列的宣告，維數擴展，以及使用，進行說明：雖然宣告的時候，表面上作為指標型一為連續記憶體，但是透過記憶體擴展，提升維數至二維陣列。
+\subsubsection{宣告}
+主程式宣告 : $\texttt{double* fh\_p[19]}$ : main.cu\_12
+\begin{lstlisting}[language=C,caption={fh\_p的宣告},label={fh-p的宣告}]
+double* fh_p[19];
+\end{lstlisting} 
+\subsubsection{配置記憶體}
+維數擴展 : $\texttt{void AllocateMemory(const size\_t,const int,.....)}$ : memory.h\_56
+\begin{lstlisting}[language=C,caption={對指標陣列double* f\_h\_p配置記憶體擴展形成二維陣列},label={fh-p記憶體配置}]
+size_t nBytes;
+nBytes = NX6 * NYD6 * NZ6 * sizeof(double);
+AllocateHostArray(nBytes,4,&rho_h_p,&u_h_p,&v_h_p,&w_h_p);\
+for(int i = 0 ; i < 19 ; i++){
+  CHECK_CUDA(cudaMallocHost((void**)&fh_p[i] , nBytes))
+//只需要簽入 指標型單一記憶體的初始存放位址 
+//CHECK_CUDA(cudaMallocHost((void**)fh_p+i , nBytes))
+  memset(fh_p[i],0.0,nBytes) ; }
+\end{lstlisting}
+\subsubsection{實際陣列}
+\noindent 當對於一維指標陣列的每一個元素進行記憶體擴展時，整體上將會形成二為陣列，其行數最大值為\ NX6*NY6*NZ6\ ，列述最大值為19。
+\begin{equation*}\begin{bmatrix}
+\texttt{(double*)\ fh\_p[0]} \longrightarrow\texttt{(double)\ f\_h\_p[0][NX6*NY6*NZ6]}\\
+\texttt{(double*)\ fh\_p[1]} \longrightarrow \texttt{(double)\ f\_h\_p[1][NX6*NY6*NZ6]} \\
+\texttt{(double*)\ fh\_p[2]} \longrightarrow  \texttt{(double)\ f\_h\_p[2][NX6*NY6*NZ6]} \\
+\vdots \\
+\texttt{(double*)\ fh\_p[18]} \longrightarrow \texttt{(double) \ f\_h\_p[18][NX6*NY6*NZ6]}
+\end{bmatrix}\end{equation*}
+實際陣列：$\texttt{fh\_p[19][NX6*NY6*NZ6]}$
+\subsubsection{陣列使用}
+\begin{enumerate}
+  \item   communication.h
+  執行 MPI 通訊 以及 GPU-CPU 資料傳輸的函數中使用：
+  \begin{itemize}
+    \item 91行: MPI\_Isend - 發送 fh\_p[dir] 資料
+    \begin{lstlisting}
+//void Isend_Sideways(const int istart, const int sw_nbr, const int itag_sw[23], MPI_Request reqSideways[23], const int num_arrays, ...) {
+for( int i = 0; i < num_arrays; i++ ) {
+  const int dir = va_arg(args, int);
+  CHECK_MPI(MPI_Isend(
+    (void *)&fh_p[dir][istart]
+    ,1
+    ,DataSideways
+    ,sw_nbr
+    ,itag_sw[i]
+    ,MPI_COMM_WORLD
+    ,&reqSideways[i])
+  );
+}\end{lstlisting}
+    \item 124行: MPI\_Irecv - 接收資料到 fh\_p[dir]
+    \begin{lstlisting}
+//void Irecv_Sideways(const int istart, const int sw_nbr, const int itag_sw[23], MPI_Request reqSideways[23], const int num_arrays, ...) {
+for( int i = 0; i < num_arrays; i++ ) {
+  const int dir = va_arg(args, int);
+  CHECK_MPI(MPI_Irecv(
+    (void *)&fh_p[dir][istart]
+    ,1
+    ,DataSideways
+    ,sw_nbr
+    ,itag_sw[i]
+    ,MPI_COMM_WORLD
+    ,&reqSideways[i])
+  );
+}\end{lstlisting}
+    \item 164行: cudaMemcpyAsync - 將 fh\_p[dir] 從 Host 複製到 Device (f\_new)
+    \begin{lstlisting}
+//void Wait_Sideways(double *f_new[19], const int iend_sw, MPI_Request reqSend[23], MPI_Request reqRecv[23], const int transfsize, cudaStream_t stream0, const int num_arrays, ...){//\dots
+CHECK_CUDA(cudaMemcpyAsync(
+  (void *)&f_new[dir][iend_sw]
+  ,(void *)&fh_p[dir][iend_sw]
+  ,transfsize*sizeof(double)
+	,cudaMemcpyHostToDevice
+  ,stream0)
+);\end{lstlisting}
+    \item 206行: cudaMemcpyAsync - 將 f\_new[dir] 從 Device 複製到 Host (fh\_p[dir])
+    \begin{lstlisting}
+//void SendBdryToCPU_Sideways(cudaStream_t stream, double *f_new[19], const int istart, const int num_arrays, ...) {
+for( int i = 0; i < num_arrays; i++ ) {
+  const int dir = va_arg(args, int);
+  CHECK_CUDA( cudaMemcpyAsync((void *)&fh_p[dir][istart],(void *)&f_new[dir][istart], nBytes, cudaMemcpyDeviceToHost, stream) );
+}
+    \end{lstlisting}
+    \item 225行: cudaMemcpy - 將 fh\_p[dir] 複製到 Device (fd[dir])
+    \item 226行: cudaMemcpy - 將 fh\_p[dir] 複製到 Device (ft[dir])
+    \begin{lstlisting}
+//void SendSrcToGPU(const size_t nBytes, const int num_arrays, ...) {
+for( int i = 0; i < num_arrays; i++ ) {
+  const int dir = va_arg(args, int);
+  CHECK_CUDA( cudaMemcpy( (void*)fd[dir], (void*)fh_p[dir], nBytes, cudaMemcpyHostToDevice ) );
+  CHECK_CUDA( cudaMemcpy( (void*)ft[dir], (void*)fh_p[dir], nBytes, cudaMemcpyHostToDevice ) );
+}
+    \end{lstlisting}
+    \item 239行: cudaMemcpy - 將 f\_new[dir] 從 Device 複製到 Host (fh\_p[dir])
+    \begin{lstlisting}
+//void SendSrcToCPU(double** f_new, const size_t nBytes, const int num_arrays, ...) {
+for( int i = 0; i < num_arrays; i++ ) {
+  const int dir = va_arg(args, int);
+  CHECK_CUDA( cudaMemcpy(fh_p[dir],f_new[dir],nBytes,cudaMemcpyDeviceToHost); )
+}
+    \end{lstlisting}
+  \end{itemize}
+  \item   initialization.h
+  初始化分佈函數的平衡態：
+  \begin{itemize}
+    \item 36行: 初始化 fh\_p[0][index] (平衡態分佈函數，方向0)
+    \item 38-40行: 初始化 fh\_p[dir][index] (平衡態分佈函數，方向1-18)
+    \begin{lstlisting}
+//void InitialUsingDftFunc() {//....
+fh_p[0][index] = W[0]*rho_h_p[index]*(1.0-1.5*udot); //36行
+for( int dir = 1; dir <= 18; dir++ ) {
+  fh_p[dir][index] = W[dir] * rho_h_p[index] *( 
+  1.0 + 
+  3.0 *( e[dir][0] * u_h_p[index] + e[dir][1] * v_h_p[index] + e[dir][2] * w_h_p[index])+ 
+  4.5 *( e[dir][0] * u_h_p[index] + e[dir][1] * v_h_p[index] + e[dir][2] * w_h_p[index] )*( e[dir][0] * u_h_p[index] + e[dir][1] * v_h_p[index] + e[dir][2] * w_h_p[index] )- 
+  1.5*udot );//38-40行 
+}\end{lstlisting}
+  \end{itemize}
+  \item   fileIO.h
+  輸出分佈函數資料：
+  \begin{itemize}
+    \item 277-295行: 輸出 fh\_p[0] 到 fh\_p[18] 的資料 (共19個方向)
+    \begin{lstlisting}
+void fileIO_PDF()
+{
+OutputData(fh_p[0],  "f0",  myid);
+OutputData(fh_p[1],  "f1",  myid);
+OutputData(fh_p[2],  "f2",  myid);
+OutputData(fh_p[3],  "f3",  myid);
+OutputData(fh_p[4],  "f4",  myid);
+OutputData(fh_p[5],  "f5",  myid);
+OutputData(fh_p[6],  "f6",  myid);
+OutputData(fh_p[7],  "f7",  myid);
+OutputData(fh_p[8],  "f8",  myid);
+OutputData(fh_p[9],  "f9",  myid);
+OutputData(fh_p[10], "f10", myid);
+OutputData(fh_p[11], "f11", myid);
+OutputData(fh_p[12], "f12", myid);
+OutputData(fh_p[13], "f13", myid);
+OutputData(fh_p[14], "f14", myid);
+OutputData(fh_p[15], "f15", myid);
+OutputData(fh_p[16], "f16", myid);
+OutputData(fh_p[17], "f17", myid);
+OutputData(fh_p[18], "f18", myid);
+} \end{lstlisting}
+  \end{itemize}
+  讀取分佈函數資料：
+  \begin{itemize}
+    \item 335-353行: 讀取資料到 fh\_p[0] 到 fh\_p[18] (共19個方向)
+    \begin{lstlisting}
+//void InitialUsingBkpData(){//...
+ReadData(fh_p[0],  result, "f0",  myid);
+ReadData(fh_p[1],  result, "f1",  myid);
+ReadData(fh_p[2],  result, "f2",  myid);
+ReadData(fh_p[3],  result, "f3",  myid);
+ReadData(fh_p[4],  result, "f4",  myid);
+ReadData(fh_p[5],  result, "f5",  myid);
+ReadData(fh_p[6],  result, "f6",  myid);
+ReadData(fh_p[7],  result, "f7",  myid);
+ReadData(fh_p[8],  result, "f8",  myid);
+ReadData(fh_p[9],  result, "f9",  myid);
+ReadData(fh_p[10], result, "f10", myid);
+ReadData(fh_p[11], result, "f11", myid);
+ReadData(fh_p[12], result, "f12", myid);
+ReadData(fh_p[13], result, "f13", myid);
+ReadData(fh_p[14], result, "f14", myid);
+ReadData(fh_p[15], result, "f15", myid);
+ReadData(fh_p[16], result, "f16", myid);
+ReadData(fh_p[17], result, "f17", myid);
+ReadData(fh_p[18], result, "f18", myid);
+    \end{lstlisting}
+  \end{itemize}
+\end{enumerate}
+
+\subsubsection{主要功能總結}
+\begin{enumerate}
+  \item GPU-CPU 之間的資料傳輸（cudaMemcpy）
+  \item MPI 多處理器間的通訊（MPI\_Isend/Irecv）
+  \item 初始化 LBM 分佈函數的平衡態
+  \item 檔案 I/O（備份與恢復模擬狀態）
+\end{enumerate}
+\vspace{1.5ex}
+
+
+\subsection{Device端二維陣列：fd[19][NX6*NY6*NZ6]與ft[19][NX6*NY6*NZ6]}
+上述之兩者在宣告時型態維指標型一維連續記憶體，使用上應填入ft = f\_new ; fd = f\_old (double**) 。
+\subsubsection{宣告}
+主程式宣告 : 
+$\texttt{double* fd[19]}$ 與 $\texttt{double* ft[19]}$ : main.cu\_17
+\begin{lstlisting}[language=C,caption={fd與ft的宣告},label={fd與ft的宣告}]
+double  *ft[19], *fd[19];
+\end{lstlisting} 
+\subsubsection{配置記憶體}
+維數擴展：$\texttt{void AllocateMemory()}$ : memory.h\_62
+\begin{lstlisting} 
+size_t nBytes;
+nBytes = NX6 * NYD6 * NZ6 * sizeof(double);
+AllocateDeviceArray(nBytes, 4,  &rho_d, &u, &v, &w);
+for( int i = 0; i < 19; i++ ) {
+  CHECK_CUDA( cudaMalloc( &fd[i], nBytes ) ); //只需要簽入進去 指標型單一記憶體的初始存放位址
+  CHECK_CUDA( cudaMemset( fd[i], 0.0, nBytes ) );
+  CHECK_CUDA( cudaMalloc( &ft[i], nBytes ) );    
+  CHECK_CUDA( cudaMemset( ft[i], 0.0, nBytes ) );}\end{lstlisting}
+\subsubsection{實際陣列}
+\begin{equation*}\begin{bmatrix}
+\texttt{(double*)\ f\_t[0]} \longrightarrow\texttt{(double)\ f\_t[0][NX6*NY6*NZ6]}\\
+\texttt{(double*)\ f\_t[1]} \longrightarrow \texttt{(double)\ f\_t[1][NX6*NY6*NZ6]} \\
+\texttt{(double*)\ f\_t[2]} \longrightarrow  \texttt{(double)\ f\_t[2][NX6*NY6*NZ6]} \\
+\vdots \\
+\texttt{(double*)\ f\_t[18]} \longrightarrow \texttt{(double) \ f\_t[18][NX6*NY6*NZ6]}
+\end{bmatrix}\end{equation*}\begin{equation*}\begin{bmatrix}
+\texttt{(double*)\ f\_d[0]} \longrightarrow\texttt{(double)\ f\_d[0][NX6*NY6*NZ6]}\\
+\texttt{(double*)\ f\_d[1]} \longrightarrow \texttt{(double)\ f\_d[1][NX6*NY6*NZ6]} \\
+\texttt{(double*)\ f\_d[2]} \longrightarrow  \texttt{(double)\ f\_d[2][NX6*NY6*NZ6]} \\
+\vdots \\
+\texttt{(double*)\ f\_d[18]} \longrightarrow \texttt{(double) \ f\_d[18][NX6*NY6*NZ6]}
+\end{bmatrix}\end{equation*}
+實際陣列：$\texttt{ft[19][NX6*NY6*NZ6]}\ ,\ \texttt{fd[19][NX6*NY6*NZ6]}$
+\subsubsection{陣列使用\ $\texttt{ft[19][NX6*NYD6*NZ6]}$}
+\begin{enumerate}
+  \item   communication.h
+  \begin{itemize}
+    \item 225行: cudaMemcpy - 將 fh\_p[dir] 從 Host 複製到 fd[dir] (初始化用)
+    \begin{lstlisting}
+CHECK_CUDA( cudaMemcpy( (void*)fd[dir], (void*)fh_p[dir], nBytes, cudaMemcpyHostToDevice ) );\end{lstlisting}
+  \end{itemize}
+  \item    main.cu
+  \begin{itemize}
+    \item 173行: Launch\_CollisionStreaming( ft, fd ) - 碰撞流動計算，ft 為輸入，fd 為輸出
+    \begin{lstlisting}
+Launch_CollisionStreaming( ft, fd );\end{lstlisting}
+    \item 182行: Launch\_CollisionStreaming( fd, ft ) - 碰撞流動計算，fd 為輸入，ft 為輸出
+    \begin{lstlisting}
+Launch_CollisionStreaming( fd, ft );\end{lstlisting}
+    \item 184行: Launch\_TurbulentSum( ft ) - 湍流統計計算，使用 ft 作為輸入
+    \begin{lstlisting}
+if( (int)TBSWITCH ) { Launch_TurbulentSum( ft ); }\end{lstlisting}
+    \item 215行: SendDataToCPU( ft ) - 將 ft 資料傳回 CPU (用於全域質量守恆修正)
+    \begin{lstlisting}
+SendDataToCPU( ft );\end{lstlisting}
+    \item 235行: SendDataToCPU( ft ) - 將 ft 資料傳回 CPU (用於質量守恆檢查，每100步)
+    \begin{lstlisting}
+SendDataToCPU( ft );\end{lstlisting}
+    \item 260行: SendDataToCPU( ft ) - 將 ft 資料傳回 CPU (模擬結束時輸出)
+    \begin{lstlisting}
+SendDataToCPU( ft );\end{lstlisting}
+  \end{itemize}
+\end{enumerate}
+\subsubsection{陣列使用\ $\texttt{fd[19][NX6*NYD6*NZ6]}$}
+\begin{enumerate}
+  \item   communication.h
+  \begin{itemize}
+    \item 226行: cudaMemcpy - 將 fh\_p[dir] 從 Host 複製到 ft[dir] (初始化用)
+    \begin{lstlisting}
+CHECK_CUDA( cudaMemcpy( (void*)ft[dir], (void*)fh_p[dir], nBytes, cudaMemcpyHostToDevice ) );\end{lstlisting}
+  \end{itemize}
+  \item    main.cu
+  \begin{itemize}
+    \item 173行: Launch\_CollisionStreaming( ft, fd ) - 碰撞流動計算，ft 為輸入，fd 為輸出
+    \begin{lstlisting}
+Launch_CollisionStreaming( ft, fd );\end{lstlisting}
+    \item 175行: Launch\_TurbulentSum( fd ) - 湍流統計計算，使用 fd 作為輸入
+    \begin{lstlisting}
+  if( (int)TBSWITCH ) { Launch_TurbulentSum( fd ); }
+    \end{lstlisting}
+    \item 182行: Launch\_CollisionStreaming( fd, ft ) - 碰撞流動計算，fd 為輸入，ft 為輸出
+    \begin{lstlisting}
+Launch_CollisionStreaming( fd, ft );\end{lstlisting}
+  \end{itemize}
+\end{enumerate}
+\end{document}

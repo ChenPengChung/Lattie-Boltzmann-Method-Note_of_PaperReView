@@ -1,0 +1,1461 @@
+﻿\documentclass[12pt]{article}
+\usepackage[a4paper,margin=2cm]{geometry} % 明確設定四邊
+\usepackage{fontspec} % 字體設定
+\usepackage{xeCJK}
+\usepackage{setspace} % 設定行距
+\linespread{1.2}
+\usepackage{titling} % 預設標題下移0.6in
+\usepackage{enumitem}
+\usepackage{amsmath} % 數學方程式
+\usepackage{graphicx} %圖片
+\usepackage{float} % 在導言區，讓圖片強制插在原地
+\usepackage{xcolor} %字體加入顏色
+\usepackage{listings}
+\usepackage{physics} % 物理符號
+\usepackage{wrapfig} % 文字環繞圖
+\usepackage{array} % 表格對齊控制
+\usepackage{caption}
+\usepackage{amsthm}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{etoolbox}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{hyperref}
+\usepackage{makecell}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  citecolor=blue,
+  linktoc=all
+}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+\tcbset{
+  highlightblock/.style={
+    enhanced,
+    breakable,
+    colback=gray!8,
+    colframe=gray!60,
+    boxrule=0.4pt,
+    arc=0pt,
+    boxsep=0pt,
+    left=4pt,
+    right=4pt,
+    top=4pt,
+    bottom=4pt,
+    before skip=0pt,
+    after skip=0pt
+  }
+}
+\usepackage{longtable}
+
+%1 註記行距設定
+\setlist[itemize]{itemsep=1.2pt, parsep=0pt, topsep=1pt}
+\setlist[enumerate]{itemsep=1.2pt, parsep=0pt, topsep=1pt}
+%2 圖表標題設定
+\captionsetup{
+    labelfont={footnotesize,bf},    % 標籤：小字體+粗體
+    skip=10pt                        % 標題與圖表的間距
+}
+%3 表格間距設定
+\setlength{\tabcolsep}{8pt} % 列間距（增加）
+\renewcommand{\arraystretch}{1.4} % 行間距（增加）
+%4 腳註設定
+\usepackage[bottom,hang]{footmisc} % 腳註置於頁面底部，懸掛縮排
+\setlength{\footnotesep}{10pt} % 腳註之間的間距（增加）
+\setlength{\skip\footins}{12pt plus 5pt minus 2pt} % 正文與腳註之間的間距（增加）
+\setlength{\footnotemargin}{1.5em} % 腳註標號與文字的間距（增加）
+\renewcommand{\footnoterule}{\vspace*{-3pt}\hrule width 0.4\columnwidth height 0.4pt\vspace*{3pt}} % 腳註分隔線
+%5 使用直立字體的定理樣式
+\newtheoremstyle{upright}
+  {6pt}{6pt}  % 定理環境前後間距（增加）
+  {\normalfont}% 使用正常字體，不使用斜體
+  {0pt}{\bfseries}{：}{0.5em}{}
+%6 定理環境定義
+\theoremstyle{upright}
+\newtheorem{definition}{定義}[section]
+\newtheorem{theorem}{定理}[section]
+\newtheorem{lemma}{引理}[section]
+\newtheorem{corollary}{推論}[section]
+\newtheorem{example}{例子}[section]
+% 重新正確定義 remark 環境 - 確保完全靠左對齊
+\makeatletter
+\@ifundefined{c@remark}{}{\renewcommand{\theremark}{}}
+\newenvironment{remark}{%
+  \par\vspace{0.0\baselineskip}%
+  \begingroup% 開始一個組以限制設置的範圍
+  \setlength{\parindent}{0pt}% 設置段落縮進為零
+  \setlength{\leftskip}{0pt}% 設置左邊距為零
+  \noindent\textbf{註記：}\\% 添加標題並強制換行
+  \ignorespaces% 忽略可能的空格
+  \setlist[enumerate]{itemsep=0pt, parsep=0pt, topsep=0.0pt, leftmargin=1.5em}%
+  \setlist[itemize]{itemsep=0pt, parsep=0pt, topsep=0.0pt, leftmargin=1.5em}%
+}{%
+  \endgroup% 結束組
+  \par\vspace{0.5\baselineskip}
+}
+\makeatother
+%7 手動定義中文數字（不含標點符號）
+\newcommand{\chinese}[1]{%
+  \ifcase#1 零\or 一\or 二\or 三\or 四\or 五\or 六\or 七\or 八\or 九\or 十\or
+  十一\or 十二\or 十三\or 十四\or 十五\or 十六\or 十七\or 十八\or 十九\or 二十\fi
+}
+
+%8 重新定義章節編號格式
+\renewcommand{\thesection}{\chinese{\value{section}}}
+\renewcommand{\thesubsection}{\chinese{\value{section}}、\arabic{subsection}}
+\renewcommand{\theequation}{\chinese{\value{section}}.\arabic{equation}}
+\renewcommand{\thesubsubsection}{\chinese{\value{section}}、\arabic{subsection}.\arabic{subsubsection}}
+\renewcommand{\thefigure}{\chinese{\value{section}}.\arabic{figure}}
+\renewcommand{\thedefinition}{\thesection、\arabic{definition}}
+\renewcommand{\thetheorem}{\thesection、\arabic{theorem}}
+\renewcommand{\theexample}{\thesection、\arabic{example}}
+
+% 为不同级别的标题增加编号后的空格
+\setlength{\cftsecnumwidth}{2.5em}  % section 编号宽度
+\setlength{\cftsubsecnumwidth}{3.5em}  % subsection 编号宽度
+\setlength{\cftsubsubsecnumwidth}{4.5em}  % subsubsection 编号宽度
+
+% 添加点线（可选）
+\renewcommand{\cftsubsubsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsubsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+%9 讓方程式計數器在每個section重置
+\counterwithin{equation}{section}
+%10 字體設定 - 優化以減少警告
+\IfFontExistsTF{Times New Roman}{%
+  \setmainfont{Times New Roman}%
+}{%
+  \setmainfont{TeX Gyre Termes}%
+}
+
+%\setCJKmainfont[
+%    BoldFont={Kaiti TC Bold},
+%    ItalicFont={Kaiti TC},
+%    BoldItalicFont={Kaiti TC Bold}
+%]{Kaiti TC}
+%\setCJKmonofont{Kaiti TC}
+\IfFontExistsTF{DFKai-SB}{%
+  \setCJKmainfont[
+    BoldFont={DFKai-SB},
+    ItalicFont={DFKai-SB},
+    BoldItalicFont={DFKai-SB}
+  ]{DFKai-SB}%
+  % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+  \setCJKmonofont{DFKai-SB}%
+}{%
+  \IfFontExistsTF{Kaiti TC}{%
+    \setCJKmainfont[
+      BoldFont={Kaiti TC Bold},
+      ItalicFont={Kaiti TC},
+      BoldItalicFont={Kaiti TC Bold}
+    ]{Kaiti TC}%
+    % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+    \setCJKmonofont{Kaiti TC}%
+  }{%
+    \IfFontExistsTF{Songti TC}{%
+      \setCJKmainfont{Songti TC}%
+      % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+      \setCJKmonofont{Songti TC}%
+    }{%
+      \setCJKmainfont{Heiti TC}%
+      % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+      \setCJKmonofont{Heiti TC}%
+    }%
+  }%
+}
+%11 標題設定
+\setlength{\droptitle}{-1in} % 上移標題1in
+\title{10.Lagrange預配置一維權重統整}
+\author{Chen Peng Chung}
+\setcounter{section}{0}
+% 12调整 subsection 的间距
+\titlespacing*{\section}
+{0pt}                    % 左边距
+{0.0in}                 % 标题前间距
+{0.0em}                  % 标题后间距
+\titlespacing*{\subsection}
+{0pt}                    % 左边距
+{-0.05in}                % 标题前间距
+{0.0em}                  % 标题后间距
+% 调整 subsubsection 的间距  
+\titlespacing*{\subsubsection}
+{0pt}                    % 左边距
+{0.0in}                 % 标题前间距
+{0.0em}                  % 标题后间距
+%13.
+
+% ========== Monokai Light 配色方案（淺灰背景）==========
+\definecolor{monokailight-bg}{RGB}{240,240,240}      % 淺灰背景 #F0F0F0
+\definecolor{monokailight-fg}{RGB}{39,40,34}         % 深色文字 #272822
+\definecolor{monokailight-comment}{RGB}{117,113,94}  % 註解 #75715E
+\definecolor{monokailight-string}{RGB}{152,118,24}   % 字串 #987618
+\definecolor{monokailight-keyword}{RGB}{244,0,95}    % 關鍵字 #F4005F
+\definecolor{monokailight-function}{RGB}{121,162,0}  % 函數 #79A200
+\definecolor{monokailight-number}{RGB}{137,89,168}   % 數字 #8959A8
+\definecolor{monokailight-type}{RGB}{0,129,152}      % 型別 #008198
+\definecolor{monokailight-operator}{RGB}{244,0,95}   % 運算符 #F4005F
+\definecolor{monokailight-border}{RGB}{210,210,210}  % 邊框 #D2D2D2
+
+% ========== CUDA 語言定義 ==========
+\lstdefinelanguage{CUDA}{
+    language=C++,
+    morekeywords={__global__, __device__, __host__, __shared__, 
+                  __constant__, __syncthreads, dim3, cudaMalloc,
+                  cudaMemcpy, cudaFree, cudaMemcpyHostToDevice,
+                  cudaMemcpyDeviceToHost, cudaDeviceSynchronize},
+    % 型別關鍵字
+    morekeywords=[2]{double, float, int, char, void, size_t,
+                     uint, uint2, uint3, uint4,
+                     int2, int3, int4,
+                     float2, float3, float4,
+                     double2, double3, double4},
+    % CUDA 內建變數
+    morekeywords=[3]{blockIdx, threadIdx, blockDim, gridDim,
+                     warpSize},
+    sensitive=true
+}
+
+% ========== Monokai Light 樣式 ==========
+\lstdefinestyle{monokailight}{
+    language=CUDA,
+    backgroundcolor=\color{monokailight-bg},
+    basicstyle=\color{monokailight-fg}\ttfamily\footnotesize,
+    commentstyle=\color{monokailight-comment}\itshape,
+    keywordstyle=\color{monokailight-keyword}\bfseries,
+    keywordstyle=[2]\color{monokailight-type}\bfseries,      % 型別
+    keywordstyle=[3]\color{monokailight-function}\bfseries,  % CUDA 變數
+    stringstyle=\color{monokailight-string},
+    numberstyle=\tiny\color{monokailight-comment},
+    % 數字顏色
+    literate=
+        {0}{{{\color{monokailight-number}0}}}1
+        {1}{{{\color{monokailight-number}1}}}1
+        {2}{{{\color{monokailight-number}2}}}1
+        {3}{{{\color{monokailight-number}3}}}1
+        {4}{{{\color{monokailight-number}4}}}1
+        {5}{{{\color{monokailight-number}5}}}1
+        {6}{{{\color{monokailight-number}6}}}1
+        {7}{{{\color{monokailight-number}7}}}1
+        {8}{{{\color{monokailight-number}8}}}1
+        {9}{{{\color{monokailight-number}9}}}1,
+    % 版面設定
+    breaklines=true,
+    breakatwhitespace=false,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    % 框線設定
+    frame=single,
+    rulecolor=\color{monokailight-border},
+    framerule=0.8pt,
+    % 其他設定
+    columns=flexible,
+    escapeinside={(*@}{@*)},
+    xleftmargin=2em,
+    xrightmargin=0.5em,
+    framexleftmargin=1.5em
+}
+
+% ========== 設為預設樣式 ==========
+\lstset{style=monokailight}
+%14.
+% ========== 表格樣式設定 ==========
+\setlength{\arrayrulewidth}{0.5pt}  % 表格線條粗細
+\renewcommand{\arraystretch}{1.3}   % 行高
+%15listing 設定:
+\lstset{
+  language=C++,
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny,
+  stepnumber=1,
+  numbersep=8pt,
+%
+  keepspaces=true,      % ★保留空白
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+%
+  tabsize=2,            % ★tab 視為 2 個空白（可改 4）
+  breaklines=true,
+  breakatwhitespace=false,
+%
+  frame=single,
+  captionpos=b
+}
+
+
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Lagrange權重指標記憶體對照表}
+\begin{table}[H]
+\centering
+\caption{宣告權重指標記憶體：$\texttt{double}^{*}$（有 BFL 者 f 改小寫）}
+\begingroup
+\fontsize{8}{9.5}\selectfont
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}ccc c | ccccccc@{}}
+\toprule
+\multicolumn{3}{c}{\multirow{2}{*}{\textbf{變數符號}}} &
+\multirow{2}{*}{\textbf{編號}} &
+\multicolumn{7}{c}{\textbf{索引 $i$}} \\
+\cmidrule(lr){5-11}
+\textbf{Var} & \textbf{F}  & & 0 & 1 & 2 & 3 & 4 & 5 & 6 \\
+\midrule
+
+\multirow{2}{*}{X} & \multirow{2}{*}{-} & & 0  & X0\_0  & X0\_1  & X0\_2  & X0\_3  & X0\_4  & X0\_5  & X0\_6 \\
+& & & 2  & X2\_0  & X2\_1  & X2\_2  & X2\_3  & X2\_4  & X2\_5  & X2\_6 \\
+\midrule
+
+\multirow{2}{*}{Y} & \multirow{2}{*}{-} & & 0  & Y0\_0  & Y0\_1  & Y0\_2  & Y0\_3  & Y0\_4  & Y0\_5  & Y0\_6 \\
+& & & 2  & Y2\_0  & Y2\_1  & Y2\_2  & Y2\_3  & Y2\_4  & Y2\_5  & Y2\_6 \\
+\midrule
+
+\multirow{8}{*}{Xi} & \multirow{8}{*}{F} & & 3  & XiF3\_0  & XiF3\_1  & XiF3\_2  & XiF3\_3  & XiF3\_4  & XiF3\_5  & XiF3\_6 \\
+& & & 4  & XiF4\_0  & XiF4\_1  & XiF4\_2  & XiF4\_3  & XiF4\_4  & XiF4\_5  & XiF4\_6 \\
+& & & 5  & XiF5\_0  & XiF5\_1  & XiF5\_2  & XiF5\_3  & XiF5\_4  & XiF5\_5  & XiF5\_6 \\
+& & & 6  & XiF6\_0  & XiF6\_1  & XiF6\_2  & XiF6\_3  & XiF6\_4  & XiF6\_5  & XiF6\_6 \\
+& & & 15 & XiF15\_0 & XiF15\_1 & XiF15\_2 & XiF15\_3 & XiF15\_4 & XiF15\_5 & XiF15\_6 \\
+& & & 16 & XiF16\_0 & XiF16\_1 & XiF16\_2 & XiF16\_3 & XiF16\_4 & XiF16\_5 & XiF16\_6 \\
+& & & 17 & XiF17\_0 & XiF17\_1 & XiF17\_2 & XiF17\_3 & XiF17\_4 & XiF17\_5 & XiF17\_6 \\
+& & & 18 & XiF18\_0 & XiF18\_1 & XiF18\_2 & XiF18\_3 & XiF18\_4 & XiF18\_5 & XiF18\_6 \\
+\midrule
+
+\multirow{4}{*}{XBFL} & \multirow{4}{*}{f} & & 37  & XBFLf37\_0  & XBFLf37\_1  & XBFLf37\_2  & XBFLf37\_3  & XBFLf37\_4  & XBFLf37\_5  & XBFLf37\_6 \\
+& & & 38  & XBFLf38\_0  & XBFLf38\_1  & XBFLf38\_2  & XBFLf38\_3  & XBFLf38\_4  & XBFLf38\_5  & XBFLf38\_6 \\
+& & & 49  & XBFLf49\_0  & XBFLf49\_1  & XBFLf49\_2  & XBFLf49\_3  & XBFLf49\_4  & XBFLf49\_5  & XBFLf49\_6 \\
+& & & 410 & XBFLf410\_0 & XBFLf410\_1 & XBFLf410\_2 & XBFLf410\_3 & XBFLf410\_4 & XBFLf410\_5 & XBFLf410\_6 \\
+\midrule
+
+\multirow{4}{*}{YBFL} & \multirow{4}{*}{f} & & 3  & YBFLf3\_0  & YBFLf3\_1  & YBFLf3\_2  & YBFLf3\_3  & YBFLf3\_4  & YBFLf3\_5  & YBFLf3\_6 \\
+& & & 4  & YBFLf4\_0  & YBFLf4\_1  & YBFLf4\_2  & YBFLf4\_3  & YBFLf4\_4  & YBFLf4\_5  & YBFLf4\_6 \\
+& & & 15 & YBFLf15\_0 & YBFLf15\_1 & YBFLf15\_2 & YBFLf15\_3 & YBFLf15\_4 & YBFLf15\_5 & YBFLf15\_6 \\
+& & & 16 & YBFLf16\_0 & YBFLf16\_1 & YBFLf16\_2 & YBFLf16\_3 & YBFLf16\_4 & YBFLf16\_5 & YBFLf16\_6 \\
+\midrule
+
+\multirow{4}{*}{XiBFL} & \multirow{4}{*}{f} & & 3  & XiBFLf3\_0  & XiBFLf3\_1  & XiBFLf3\_2  & XiBFLf3\_3  & XiBFLf3\_4  & XiBFLf3\_5  & XiBFLf3\_6 \\
+& & & 4  & XiBFLf4\_0  & XiBFLf4\_1  & XiBFLf4\_2  & XiBFLf4\_3  & XiBFLf4\_4  & XiBFLf4\_5  & XiBFLf4\_6 \\
+& & & 15 & XiBFLf15\_0 & XiBFLf15\_1 & XiBFLf15\_2 & XiBFLf15\_3 & XiBFLf15\_4 & XiBFLf15\_5 & XiBFLf15\_6 \\
+& & & 16 & XiBFLf16\_0 & XiBFLf16\_1 & XiBFLf16\_2 & XiBFLf16\_3 & XiBFLf16\_4 & XiBFLf16\_5 & XiBFLf16\_6 \\
+\bottomrule
+\end{tabular}%
+}
+\endgroup
+\end{table}
+\noindent 注意事項 : 
+\begin{itemize}
+  \item 對於\ Y\ 方向 BFL條件下的權重指標型記憶體\ :\ 為\ YBFLf3\_0\ $\leftrightarrow$\ YBFLParaF378\_d[0]\ ,YBFLf4\_0\ $\leftrightarrow$\ YBFLParaF4910\_d[0] 
+  \item 對於Lagrange權重指標陣列的元素的命名規則:
+    \begin{itemize}
+      \item 二維陣列\ :\ 矩陣名稱\ [A]\ [B]
+      \item  矩陣名稱\ :\ 變數符號 + Para + F + (內插牽涉的分佈函數編號) + \_d
+      \item A\ :\ 內插成員編號(0 base)
+      \item B\ :\ 空間位置點編號 ($\texttt{idx = j*NX6*NZ6+ \k*NX6 + i}$或者是$\texttt{idx\_xi = j*NZ6+k}$)
+\end{itemize}
+\end{itemize}
+\begin{table}[H]
+\centering
+\caption{實際使用權重指標型記憶體：$\texttt{double}^{*}$（其中，F 一律為大寫）}
+\begingroup
+\tiny
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\makebox[\linewidth][c]{
+\begin{tabular}{ccccc|ccccccc}
+\toprule
+\multirow{2}{*}{\textbf{變數}} &
+\multirow{2}{*}{\textbf{F}} &
+\multirow{2}{*}{\textbf{次編號}} &
+\multirow{2}{*}{\textbf{類型}} &
+\multirow{2}{*}{\textbf{Idx}} &
+\multicolumn{7}{c}{\textbf{索引 $i$}} \\
+\cmidrule(lr){6-12}
+& & & & & 0 & 1 & 2 & 3 & 4 & 5 & 6 \\
+\midrule
+
+% ================= X =================
+\multirow{2}{*}{X} & \multirow{2}{*}{--} & 0 & Para & 0 &
+XPara0\_d[0] & XPara0\_d[1] & XPara0\_d[2] & XPara0\_d[3] & XPara0\_d[4] & XPara0\_d[5] & XPara0\_d[6] \\
+& & 2 & Para & 2 &
+XPara2\_d[0] & XPara2\_d[1] & XPara2\_d[2] & XPara2\_d[3] & XPara2\_d[4] & XPara2\_d[5] & XPara2\_d[6] \\
+\midrule
+
+% ================= Y =================
+\multirow{2}{*}{Y} & \multirow{2}{*}{--} & 0 & Para & 0 &
+YPara0\_d[0] & YPara0\_d[1] & YPara0\_d[2] & YPara0\_d[3] & YPara0\_d[4] & YPara0\_d[5] & YPara0\_d[6] \\
+& & 2 & Para & 2 &
+YPara2\_d[0] & YPara2\_d[1] & YPara2\_d[2] & YPara2\_d[3] & YPara2\_d[4] & YPara2\_d[5] & YPara2\_d[6] \\
+\midrule
+
+% ================= Xi =================
+\multirow{8}{*}{Xi} & \multirow{8}{*}{F} & 3 & Para & 3 &
+XiParaF3\_d[0] & XiParaF3\_d[1] & XiParaF3\_d[2] & XiParaF3\_d[3] & XiParaF3\_d[4] & XiParaF3\_d[5] & XiParaF3\_d[6] \\
+& & 4 & Para & 4 &
+XiParaF4\_d[0] & XiParaF4\_d[1] & XiParaF4\_d[2] & XiParaF4\_d[3] & XiParaF4\_d[4] & XiParaF4\_d[5] & XiParaF4\_d[6] \\
+& & 5 & Para & 5 &
+XiParaF5\_d[0] & XiParaF5\_d[1] & XiParaF5\_d[2] & XiParaF5\_d[3] & XiParaF5\_d[4] & XiParaF5\_d[5] & XiParaF5\_d[6] \\
+& & 6 & Para & 6 &
+XiParaF6\_d[0] & XiParaF6\_d[1] & XiParaF6\_d[2] & XiParaF6\_d[3] & XiParaF6\_d[4] & XiParaF6\_d[5] & XiParaF6\_d[6] \\
+& & 15 & Para & 15 &
+XiParaF15\_d[0] & XiParaF15\_d[1] & XiParaF15\_d[2] & XiParaF15\_d[3] & XiParaF15\_d[4] & XiParaF15\_d[5] & XiParaF15\_d[6] \\
+& & 16 & Para & 16 &
+XiParaF16\_d[0] & XiParaF16\_d[1] & XiParaF16\_d[2] & XiParaF16\_d[3] & XiParaF16\_d[4] & XiParaF16\_d[5] & XiParaF16\_d[6] \\
+& & 17 & Para & 17 &
+XiParaF17\_d[0] & XiParaF17\_d[1] & XiParaF17\_d[2] & XiParaF17\_d[3] & XiParaF17\_d[4] & XiParaF17\_d[5] & XiParaF17\_d[6] \\
+& & 18 & Para & 18 &
+XiParaF18\_d[0] & XiParaF18\_d[1] & XiParaF18\_d[2] & XiParaF18\_d[3] & XiParaF18\_d[4] & XiParaF18\_d[5] & XiParaF18\_d[6] \\
+\midrule
+
+% ================= XBFL =================
+\multirow{4}{*}{XBFL} & \multirow{4}{*}{F} & 37 & BFL & 37 &
+XBFLParaF37\_d[0] & XBFLParaF37\_d[1] & XBFLParaF37\_d[2] & XBFLParaF37\_d[3] & XBFLParaF37\_d[4] & XBFLParaF37\_d[5] & XBFLParaF37\_d[6] \\
+& & 38 & BFL & 38 &
+XBFLParaF38\_d[0] & XBFLParaF38\_d[1] & XBFLParaF38\_d[2] & XBFLParaF38\_d[3] & XBFLParaF38\_d[4] & XBFLParaF38\_d[5] & XBFLParaF38\_d[6] \\
+& & 49 & BFL & 49 &
+XBFLParaF49\_d[0] & XBFLParaF49\_d[1] & XBFLParaF49\_d[2] & XBFLParaF49\_d[3] & XBFLParaF49\_d[4] & XBFLParaF49\_d[5] & XBFLParaF49\_d[6] \\
+& & 410 & BFL & 410 &
+XBFLParaF410\_d[0] & XBFLParaF410\_d[1] & XBFLParaF410\_d[2] & XBFLParaF410\_d[3] & XBFLParaF410\_d[4] & XBFLParaF410\_d[5] & XBFLParaF410\_d[6] \\
+\midrule
+
+% ================= YBFL =================
+\multirow{4}{*}{YBFL} & \multirow{4}{*}{F} & 3 & BFL & 3 &
+YBFLParaF378\_d[0] & YBFLParaF378\_d[1] & YBFLParaF378\_d[2] & YBFLParaF378\_d[3] & YBFLParaF378\_d[4] & YBFLParaF378\_d[5] & YBFLParaF378\_d[6] \\
+& & 4 & BFL & 4 &
+YBFLParaF4910\_d[0] & YBFLParaF4910\_d[1] & YBFLParaF4910\_d[2] & YBFLParaF4910\_d[3] & YBFLParaF4910\_d[4] & YBFLParaF4910\_d[5] & YBFLParaF4910\_d[6] \\
+& & 15 & BFL & 15 &
+YBFLParaF15\_d[0] & YBFLParaF15\_d[1] & YBFLParaF15\_d[2] & YBFLParaF15\_d[3] & YBFLParaF15\_d[4] & YBFLParaF15\_d[5] & YBFLParaF15\_d[6] \\
+& & 16 & BFL & 16 &
+YBFLParaF16\_d[0] & YBFLParaF16\_d[1] & YBFLParaF16\_d[2] & YBFLParaF16\_d[3] & YBFLParaF16\_d[4] & YBFLParaF16\_d[5] & YBFLParaF16\_d[6] \\
+\midrule
+
+% ================= XiBFL =================
+\multirow{4}{*}{XiBFL} & \multirow{4}{*}{F} & 3 & BFL & 3 &
+XiBFLParaF3\_d[0] & XiBFLParaF3\_d[1] & XiBFLParaF3\_d[2] & XiBFLParaF3\_d[3] & XiBFLParaF3\_d[4] & XiBFLParaF3\_d[5] & XiBFLParaF3\_d[6] \\
+& & 4 & BFL & 4 &
+XiBFLParaF4\_d[0] & XiBFLParaF4\_d[1] & XiBFLParaF4\_d[2] & XiBFLParaF4\_d[3] & XiBFLParaF4\_d[4] & XiBFLParaF4\_d[5] & XiBFLParaF4\_d[6] \\
+& & 15 & BFL & 15 &
+XiBFLParaF15\_d[0] & XiBFLParaF15\_d[1] & XiBFLParaF15\_d[2] & XiBFLParaF15\_d[3] & XiBFLParaF15\_d[4] & XiBFLParaF15\_d[5] & XiBFLParaF15\_d[6] \\
+& & 16 & BFL & 16 &
+XiBFLParaF16\_d[0] & XiBFLParaF16\_d[1] & XiBFLParaF16\_d[2] & XiBFLParaF16\_d[3] & XiBFLParaF16\_d[4] & XiBFLParaF16\_d[5] & XiBFLParaF16\_d[6] \\
+\bottomrule
+\end{tabular}}
+\endgroup
+\end{table}
+
+
+
+\section{專論 :  XPara0\_h[6][NX] , XPara2\_h[6][NX] , YPara0\_h[6][NY] , YPara2\_h[6][NY] 的意義}
+\vspace{1.5ex}
+簡單說，這四者均為與插值有關的參數(權重)，分為以下函數開始分析 : 
+\subsection{函數式 : \texttt{Lagrange\_6th}}
+\begin{lstlisting}[language=C,caption = {initializationTool.h52} , label={initializationTool.h}]
+double Lagrange_6th(
+double x,double x_i, //1.待內插點2.輪到誰 
+double x_1,double x_2,double x_3,double x_4,double x_5,double x_6//內插成員，跳過x_i，只以1,2,3,4,5,6表示
+){
+  double Para = (x-x_1)/(x_i-x_1)*(x-x_2)/(x_i-x_2)*(x-x_3)/(x_i-x_3)*(x-x_4)/(x_i-x_4)*(x-x_5)/(x_i-x_5)*(x-x_6)/(x_i-x_6) ; 
+  return Para ; //Para為對應f_{i}的比例權重
+}
+\end{lstlisting}
+\noindent 上述程式碼為連乘符號的程式碼具象化，對應在求和符號中的編號$i$。
+\begin{equation}
+  \texttt{Lagrange\_6th(x,x\_i,x\_1,x\_2,x\_3,x\_4,x\_5,x\_6)} 
+  = \prod_{j = 1 \\ j \ne i}^{6} \frac{\texttt{x - x\_j}}{\texttt{x\_i - x\_j}}
+\end{equation}
+
+\subsection{函數式 : \texttt{GetParameter\_6th}}
+\begin{lstlisting}[language=C,caption={initializationTool.h61},label={initializationTool.h61} , basicstyle=\footnotesize\ttfamily]
+void GetParameter_6th(
+double* Para_h[7] ,//Para_h[0],Para_h[1],...Para_h[6]作為一個指標陣列 尺寸為7
+double Position ,//Position為真正要內插的位置
+double* Pos ,//Pos作為一個指向double的指標變數//Pos 的型別 = double*；Para_h的型別 = double**
+double i , double n//n為處理過後的內插成員index!
+){//這是void函數，不會回傳，只需做某些事情
+  Para[0][i]=Lagrange_6th(Position,Pos[n+0],Pos[n+1],Pos[n+2],Pos[n+3],Pos[n+4],Pos[n+5],Pos[n+6]) ; 
+  Para[1][i]=Lagrange_6th(Position,Pos[n+1],Pos[n+0],Pos[n+2],Pos[n+3],Pos[n+4],Pos[n+5],Pos[n+6]) ;
+  Para[2][i]=Lagrange_6th(Position,Pos[n+2],Pos[n+0],Pos[n+1],Pos[n+3],Pos[n+4],Pos[n+5],Pos[n+6]) ;
+  Para[3][i]=Lagrange_6th(Position,Pos[n+3],Pos[n+0],Pos[n+1],Pos[n+2],Pos[n+4],Pos[n+5],Pos[n+6]) ;
+  Para[4][i]=Lagrange_6th(Position,Pos[n+4],Pos[n+0],Pos[n+1],Pos[n+2],Pos[n+3],Pos[n+5],Pos[n+6]) ;
+  Para[5][i]=Lagrange_6th(Position,Pos[n+5],Pos[n+0],Pos[n+1],Pos[n+2],Pos[n+3],Pos[n+4],Pos[n+6]) ;
+  Para[6][i]=Lagrange_6th(Position,Pos[n+6],Pos[n+0],Pos[n+1],Pos[n+2],Pos[n+3],Pos[n+4],Pos[n+5]) ;
+}
+\end{lstlisting}
+\paragraph{(1). 如上可以看到，所謂對應關係 : }
+\begin{enumerate}
+  \centering
+  \item $\texttt{Position} \longleftrightarrow \texttt{x}$
+  \item $\texttt{Pos[n]} \longleftrightarrow \texttt{x\_i}$ 
+  \item $\texttt{Pos[n+1]} \longleftrightarrow \texttt{x\_1}$ 
+  \item $\texttt{Pos[n+2]} \longleftrightarrow \texttt{x\_2}$ 
+  \item $\texttt{Pos[n+3]} \longleftrightarrow \texttt{x\_3}$ 
+  \item $\texttt{Pos[n+4]} \longleftrightarrow \texttt{x\_4}$ 
+  \item $\texttt{Pos[n+5]} \longleftrightarrow \texttt{x\_5}$ 
+  \item $\texttt{Pos[n+6]} \longleftrightarrow \texttt{x\_6}$ 
+\end{enumerate}
+\noindent 他把要內插的各個點用陣列元素取代
+，其中，第幾個元素的"n"代表處理過後的index編號。
+所以陣列元素$\texttt{Pos[n+0,1,2,3,4,5,]}$為實際內插成員，
+而n為$\texttt{Position}$最靠近的網格點的編號-3，為什麼是-3，因為六階Lagrange內插插中間那個非空間計算點的位置。
+$${\color{red}\text{ \texttt{n}\ 是 \texttt{Position} 的最靠近網格點的編號-3}}$$
+換言之，還有以下結論:
+$${\color{red}\text{\texttt{Position} 的最靠近網格點 = \texttt{Pos[n+3]}}}$$
+\paragraph{ {\color{red}(2). \texttt{Para\_h[0~6][i]}是什麼 ? }}
+
+
+\begin{enumerate}
+  \centering
+  \item $\texttt{Para\_h[0][i]}$ : 對應位置編號$\texttt{n+0}$的連乘權重係數
+  \item $\texttt{Para\_h[1][i]}$ : 對應位置編號$\texttt{n+1}$的連乘權重係數
+  \item $\texttt{Para\_h[2][i]}$ : 對應位置編號$\texttt{n+2}$的連乘權重係數
+  \item $\texttt{Para\_h[3][i]}$ : 對應位置編號$\texttt{n+3}$的連乘權重係數
+  \item $\texttt{Para\_h[4][i]}$ : 對應位置編號$\texttt{n+4}$的連乘權重係數
+  \item $\texttt{Para\_h[5][i]}$ : 對應位置編號$\texttt{n+5}$的連乘權重係數
+  \item $\texttt{Para\_h[6][i]}$ : 對應位置編號$\texttt{n+6}$的連乘權重係數
+\end{enumerate}
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{19.png}
+  \caption{$\texttt{Para\_h[0][i]}$ 的對應關係}
+  \label{Para二維矩陣對應關係}
+\end{figure}
+
+\begin{equation}
+\mathrm{GetParameter\_6th(Para[7],Position,...)} \implies 
+\begin{bmatrix}
+\texttt{Para\_h[0][i]} \\
+\texttt{Para\_h[1][i]} \\
+\texttt{Para\_h[2][i]} \\
+\texttt{Para\_h[3][i]} \\
+\texttt{Para\_h[4][i]} \\
+\texttt{Para\_h[5][i]} \\
+\texttt{Para\_h[6][i]}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\prod_{j = 1  j \ne i}^{6} \frac{\texttt{Position - Pos[n+j]}}{\texttt{Pos[n+0] - Pos[n+j]}} \\
+\prod_{j = 1  j \ne i}^{6} \frac{\texttt{Position - Pos[n+j]}}{\texttt{Pos[n+1] - Pos[n+j]}} \\
+\prod_{j = 1  j \ne i}^{6} \frac{\texttt{Position - Pos[n+j]}}{\texttt{Pos[n+2] - Pos[n+j]}} \\
+\prod_{j = 1  j \ne i}^{6} \frac{\texttt{Position - Pos[n+j]}}{\texttt{Pos[n+3] - Pos[n+j]}} \\
+\prod_{j = 1  j \ne i}^{6} \frac{\texttt{Position - Pos[n+j]}}{\texttt{Pos[n+4] - Pos[n+j]}} \\
+\prod_{j = 1  j \ne i}^{6} \frac{\texttt{Position - Pos[n+j]}}{\texttt{Pos[n+5] - Pos[n+j]}} \\
+\prod_{j = 1  j \ne i}^{6} \frac{\texttt{Position - Pos[n+j]}}{\texttt{Pos[n+6] - Pos[n+j]}}
+\end{bmatrix}
+\end{equation}
+
+
+
+\paragraph{ \textbf{(3). 指標陣列與一維指標的索引行為} }
+\vspace{-2,5ex}
+\paragraph{為什麼宣告一個「指標陣列」後，可用 \texttt{Para\_h[0][i]}?}
+\begin{itemize}
+  \item 若 \texttt{Para\_h} 型別為 \texttt{double **}，它本身是一個「指向指標的指標」。\texttt{Para\_h[0]} 等價於 \texttt{*(Para\_h + 0)}，取出第一個「列指標」；再索引 \texttt{[i]}，等價於 \texttt{*(*(Para\_h + 0) + i)}，取得該列的第 $i$ 個元素。
+  \item 要成立，\texttt{Para\_h} 必須先指向一個「指標陣列」（每個元素是一列的起始位址），且每個列指標也必須指向已配置的連續元素區塊。常見作法：
+  \begin{itemize}
+    \item 先配置「連續指標記憶體」：\texttt{Para\_h = (double**)malloc(Ny * sizeof(double*))}；
+    \item 每一元素再配置一塊連續記憶體，每一塊連續記憶體的初始存放位址就是該元素：\texttt{Para\_h[y] = (double*)malloc(Nx * sizeof(double))}。
+  \end{itemize}
+  \item 如果 \texttt{Para\_h} 未初始化或列指標未配置，\texttt{Para\_h[0][i]} 只是對隨機位址做兩次間接存取，屬未定義行為。
+\end{itemize}
+
+\paragraph{為什麼只宣告 \texttt{Pos} 指標就能寫 \texttt{Pos[n]}?}
+\begin{itemize}
+  \item 在 C/C++ 中，\texttt{Pos[n]} 被編譯成 \texttt{*(Pos + n)} 的指標算術；編譯器不會檢查記憶體是否已配置，也不知道有效長度。
+  \item 若 \texttt{Pos} 尚未指向合法的連續區塊（例如尚未 \texttt{malloc/new}，或指向的區塊長度不足），\texttt{Pos[n]} 會解參考未定義位址，仍屬未定義行為，可能讀到垃圾值、撞到保護頁、或靜悄悄破壞他處資料。
+  \item 正確流程：先配置或讓 \texttt{Pos} 指向已存在的陣列，再用索引；並確保 \texttt{n} 在配置長度內。例如
+\begin{lstlisting}[language=C,caption={函數內宣告的自由性}]
+double *Pos = (double*)malloc(N * sizeof(double)); // 或指向現有陣列
+/* 使用 Pos[0..N-1] */
+free(Pos);\end{lstlisting}
+\end{itemize}
+
+\paragraph{重點}
+\begin{itemize}
+  \item \textbf{語法允許} 用 \texttt{p[n]} 是因為它只是指標算術，不代表記憶體已合法。
+  \item \textbf{安全性} 取決於指標是否指向足夠長度的已配置（或靜態存在的）連續記憶體；否則都是未定義行為。
+  \item 在函數括號內所宣告的指標型記憶體，如$\texttt{GetParameter(double* Pos....)}$，自動將其映射為一維矩陣 $\texttt{Pos[?]}$ ，其陣列大小由其他宣告之變數決定。
+\end{itemize}
+\vspace{1.5ex}
+\paragraph{\textbf{(4). $\texttt{i}$ 是什麼? }}
+\begin{center}$\texttt{i}$\ 是 (z(G(A非物理空間計算點)的(最靠近物理空間計算點))的(編號))
+\end{center}
+\begin{lstlisting}[language=C,caption={$\texttt{GetParameter\_6th}$函數簽名},label={GetParameter:6th函數簽名} , basicstyle=\footnotesize\ttfamily]
+void GetParameter_6th(
+//1.
+輸出: 有關於該最近網格點的各個內插權重連乘數(二維陣列描述)(第一格放:內插編號:0~6，第二格放該網格點位置)
+//2. 
+輸入:非物理空間點位置
+//3. 
+內插成員的實際位置陣列的初始存放位址
+//4. 
+最靠近的網格點的編號
+//5. 
+最靠近的網格點的編號-3 //內插起始編號 
+)
+\end{lstlisting}
+\noindent 舉例 : {\color{red}y方向($Stream-wise$ )方向預先配置內插權重}
+\begin{lstlisting}
+//initialization.h217-219
+for(int i = 3 ; i < NYD6-3 ; i++){//double*(陣列),double,double*,int,int
+    GetParameter_6th(YPara0_h,y_h[i]-minsize,y_h[i-3],i,i-3) ; //y方向預配置內拆權重係數二維陣列
+    GetParameter_6th(YPara2_h,y_h[i]+minsize,y_h[i-3],i,i-3) ; //y方向預配置內拆權重係數二維陣列
+}
+\end{lstlisting}
+
+\begin{itemize}
+\item
+\texttt{GetParameter\_6th} 的第一個參數寫成 
+\texttt{double* Para\_h[7]}（或你口述的 double*），但在函式參數位置
+「陣列形參」會自動退化成指標；\texttt{double* Para\_h[7]} 退化成 
+\texttt{double** Para\_h}。因此呼叫時可以傳入 \texttt{double**}
+（例如 \texttt{YPara0\_h} 如果宣告成 \texttt{double**} 或 
+\texttt{double *YPara0\_h[7]}），編譯器會視為「指向指標的指標」，
+型別就對得上。換句話說，形參看起來像一維指標陣列，但在函式裡實際型別是 
+\texttt{double**}，所以傳入 \texttt{double**}/指標陣列都是合法的。
+\item 函數內定義的 \texttt{double* Para\_h[7]} 的初始存放位址 = \texttt{double** Para\_h} ，但是在C語言中，兩者等效，換言之，後續產生的二維陣列的列數，要由自己決定。
+\end{itemize}
+\noindent 上述程式碼你得到什麼 ? 
+
+\begin{equation}
+\mathrm{GetParameter\_6th(...)} \implies 
+\begin{bmatrix}
+\texttt{YPara\_h[0][i]} \\
+\texttt{YPara\_h[1][i]} \\
+\texttt{YPara\_h[2][i]} \\
+\texttt{YPara\_h[3][i]} \\
+\texttt{YPara\_h[4][i]} \\
+\texttt{YPara\_h[5][i]} \\
+\texttt{YPara\_h[6][i]}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\prod_{j = 1  j \ne i}^{6} \frac{\texttt{y\_h[i]-minsize - y\_h[i-3+j]}}{\texttt{y\_h[i-3+0] - y\_h[i-3+j]}} \\
+\prod_{j = 1  j \ne i}^{6} \frac{\texttt{y\_h[i]-minsize - y\_h[i-3+j]}}{\texttt{y\_h[i-3+1] - y\_h[i-3+j]}} \\
+\prod_{j = 1  j \ne i}^{6} \frac{\texttt{y\_h[i]-minsize - y\_h[i-3+j]}}{\texttt{y\_h[i-3+2] - y\_h[i-3+j]}} \\
+\prod_{j = 1  j \ne i}^{6} \frac{\texttt{y\_h[i]-minsize - y\_h[i-3+j]}}{\texttt{y\_h[i-3+3] - y\_h[i-3+j]}} \\
+\prod_{j = 1  j \ne i}^{6} \frac{\texttt{y\_h[i]-minsize - y\_h[i-3+j]}}{\texttt{y\_h[i-3+4] - y\_h[i-3+j]}} \\
+\prod_{j = 1  j \ne i}^{6} \frac{\texttt{y\_h[i]-minsize - y\_h[i-3+j]}}{\texttt{y\_h[i-3+5] - y\_h[i-3+j]}} \\
+\prod_{j = 1  j \ne i}^{6} \frac{\texttt{y\_h[i]-minsize - y\_h[i-3+j]}}{\texttt{y\_h[i-3+6] - y\_h[i-3+j]}}
+\end{bmatrix}
+\end{equation}
+\noindent 其中，產生的二維陣列(我把它當成一維陣列) $\texttt{YPara[A][B]}$ 中，A代表 內插成員之編號，B為 非物理空間計算點的最近物理空間計算點的編號。\\
+(1.)在GetParametert\_6一使用時，相對於指定的物理間計算點(i)，七個內插成員隨之確定，與非物理空間點的位置無關
+，所以GetParametert\_6是be based on "i"的。(2.)不過一般而言，Position的最近物理空間計算點的編號=i。 
+\paragraph{\textbf{(5).$\texttt{GetParameter}$函數式的呼叫與統計} }
+%\paragraph{\textbf{第一類: $\texttt{x/y/xi}$方向預配置的內插權重係數}}
+\begin{enumerate}
+  \item 產生\texttt{x/y/xi} 方向預配置連乘權重一維陣列
+  \begin{itemize}
+    \item 產生\texttt{xi} 方向預配置連乘權重一維陣列
+    \begin{lstlisting}
+//(1.) xi/z方向 存在buffer layers
+//(2.) xi/z方向 不取用buffer layers
+//(3.) xi/z方向 的buffer layers 不做更新也沒有讀取使用
+if(k>=3 && k <+6){//取下邊界靠近的幾個物理空間計算點 
+  GetParameter_6th(XiPara0_h,pos,Pos, 
+}else if(k>=NZ6-7 && k<=NZ6-4){//取上邊界靠近的幾個物理空間計算點
+}else{
+}
+    \end{lstlisting}
+    \item 產生\texttt{x} 方向預配置連乘權重一維陣列
+    \item 產生\texttt{y} 方向預配置連乘權重一維陣列
+  \end{itemize}
+  
+\end{enumerate}
+\subsection{函數式：$\texttt{GetNonuniParameter}$}
+\noindent 目的：讓 物理間計算點的距離最小值 與 晶格節點 的距離相等，為此程式碼作區間搜尋法之目的。
+\subsection{非均勻網格系統之座標映射\ :\ $\texttt{tanh}$函數\ }
+\vspace{1.5ex}
+\noindent 本程式碼唯獨在Z方向採用座標映射，形成網格拉伸關係，在此理解上，先不考慮誰是均勻網格系統，非均勻網格系統，以及不管編號，單純先以連續域
+的區段的映射關係做討論:
+\begin{equation}\label{eq:hyperbolic_tangent1}
+  z = \frac{L}{2a} \tanh\left(\frac{\xi}{2}\ln\left(\frac{1+a}{1-a}\right)\right)
+\end{equation}
+\noindent 其中，$\xi$  有如下定義 : 
+\begin{equation}\label{eq:eq2}
+  \xi = -1 + 2\frac{j}{N}
+\end{equation}
+\noindent 對於上述映射關係:
+\begin{equation}\begin{aligned}
+  z \in [-\frac{L}{2} , \frac{L}{2}] \rightarrow \xi \in [-1, 1]  \rightarrow j \in [0, N] \\
+\end{aligned}\end{equation}
+\noindent 由公式 \eqref{eq:hyperbolic_tangent1}可知，各參數的名詞意義如下: 
+\begin{itemize}
+  \item z : 離散化\ z\ 座標
+  \item j : 離散化正規化\ z\ 座標
+  \item L : 物理空間總長度
+  \item a : 控制網格拉伸程度的參數
+  \item N : 計算點包圍的總長度  
+\end{itemize}
+\noindent 處理上，會將j 作為正規化座標系統，作為實際運算上的坐標系，因此在對此區域 ($j \in[0 , N/2]$) 做網格劃分時，會以均勻切割做處理。
+透過 上述之映射關係，映射成 z座標系統，範圍為 $z \in [-\frac{L}{2} , \frac{L}{2}]$ ，此連續區段的區域，通常被當成時真實物理域。若對於變數$j \in [0 , \frac{N}{x}]$
+採用均勻切割，則會在 z座標系中形成非均勻網格系統。且兩套系統彼此一一對應。
+\begin{equation*}
+  j = 0,1,2,3,...,N \in [0 , N] 
+  \longleftrightarrow z = z_0,z_1,z_2,z_3,...,z_N \in [-\frac{L}{2} , \frac{L}{2}]
+\end{equation*}
+後續為讓z方向
+的第一個Z座標點能夠與 
+第一個物理空間計算點
+重合，再對上式\eqref{eq:hyperbolic_tangent} 做兩段平移處理，用處有二，第一\ :\ 先讓映射過後的z座標從0開始計算；第二\ :\ 讓第一個z座標計算點與第一個物理空間計算點重合。
+因此有下式之關係:
+\begin{equation}\label{eq:hyperbolic_tangent}
+  z = \frac{L}{2} + \frac{\texttt{LatticeSize}}{2}+\frac{L}{2a} \tanh\left(\frac{\xi}{2}\ln\left(\frac{1+a}{1-a}\right)\right) = \frac{L}{2a} \tanh\left(\frac{-1 + 2\frac{j}{N}}{2}\ln\left(\frac{1+a}{1-a}\right)\right)
+\end{equation}
+程式碼如下呈現 : 
+\begin{lstlisting}[language=C , caption = {Hyperbolic\ Tangent\ Function} , label={HyperbolicTangentFuntion}]
+#define tanhFunction( L, LatticeSize, a, j, N )    
+(           \
+    L/2.0 + LatticeSize/2.0 + ((L/2.0)/a)*tanh((-1.0+2.0*(double)(j)/(double)(N))/2.0*log((1.0+a)/(1.0-a)))     \
+)
+\end{lstlisting}
+
+\paragraph{平移$\texttt{minsize/2.0}$的意義 : }
+乍看之下，平移此段距離為之意義為在“z方向“與壁面抱持相距離 $\texttt{minsize/2.0}$ 的距離。
+然而，$\texttt{minsize/2.0}$ 是
+{\color{red}插值晶格波茲曼法中，沿單一方向的遷移距離。}，所以當物理空間計算點的z方向邊界點與壁面在z方向上保持相距“半個”streaming"
+距離時，就可以對於邊界點上的編號五碰撞後分布函數以“Half-way Bounce Back"格式處理邊界條件。所以
+$$\text{讓每一個z方向下邊界點與壁面保持相距“半個”streaming"距離}$$
+\paragraph{Hyperbolic Tangent Funtion 中的分割數，與實際應用上有所差異 : }
+可是 j 作為 正規化座標系統，N為切割之網格數。因此，不管是正規化座標系統$j$，還是映射過後的座標$z$，均相對於$N$ (切割之網格數)作為網格節點，
+所以預設上 : 
+由方程式 \eqref{eq:hyperbolic_tangent1}
+\begin{enumerate}
+  \item $z_{i} \in [-\frac{L}{2} , \frac{L}{2}]$ 一共切割為 N+1個
+  \item $j \in [0 , N]$ 一共切割為 N+1個
+\end{enumerate}
+\noindent 可是經由方程式平移後，\eqref{eq:hyperbolic_tangent}，j正規化座標系統第一個點
+對應到第一個物理空間計算點，為第一個網格中心點。因此，若要定義Z座標或者j座標對應到網格中心點，則當切割數量為N時，公式中的N必須改為N-1，如此，座標點的對應數量才是真正的切割數。
+\\
+\noindent 程式碼具體實現如下:
+\begin{lstlisting}[language=C,caption={initializationbTool.h17},label={initializationbTool.h17}]
+// double GetNonuniParameter()
+x_temp[0] = tanhFunction(total, minSize, a_mid, 0, (NZ6-7));//他是放NZ6-7不是放入NZ6-6，但是Z方向網格數是NZ6-6，他放NZ6-7的意義在於讓真正的網格數量j 一共有NZ6-6個。
+
+\end{lstlisting}
+\textbf{$\texttt{tanhFunction}$的函數簽名： }
+
+\begin{lstlisting}[language=C,caption={Hyperbolic\ Tangent\ Function\ 簽名},label={HyperbolicTangentFunctionSignature}]
+#define tanhFunction(物理空間計算點所包圍的總長度,minsize,
+控制網格拉伸的參數,正規化坐標,切割之網格數-1)    
+\end{lstlisting}
+\subsection{$\texttt{minSize}$的物理意義：}
+\vspace{1.5ex}
+\textbf{定義：}
+\begin{lstlisting}
+#define     minSize             ((LZ-1.0)/(NZ6-6)*0.6)
+\end{lstlisting}
+\noindent 從上式僅可看出，$\texttt{minSize}$為 z方向上，在均勻切割下，單一網格的0.6倍長。
+然而，$\texttt{minSize}$的物理意義在於 :（你怎麼使用它）
+\begin{itemize}
+  \item $\texttt{minSize}$被定義為(T(A非物理空間點)跟(G(A非物理空間點)的(遷移後空間點))的(距離))
+  \item $\texttt{minSize}$為單一Lattice的大小
+\end{itemize}
+$\texttt{minSize}$的實際定義與物理空間計算點之間距分配:
+\begin{itemize}
+  \item $\texttt{minSize}$\ :\ $(LZ - y = 0.0 \text{的山坡高度})/\text{(Z方向物理空間計算點數量)}*0.6 $，因此，此量為預先配置。
+  \item $\texttt{dx}$ \ :\ 物理空間計算點間的最小距離
+  \item 物理空間計算點一定作為在真實物理網格之節點
+  \item 物理空間計算點 必然為Lattice的中心點 
+  \item 計算$\texttt{minSize}$所用的網格數目為Z方向物理空間計算點數量；
+  \item 計算$\texttt{dx}$ 所用的網格數目為Z方向物理空間計算點數量-1；
+\end{itemize}
+\noindent 如下程式碼可以呈現這一點，關於z方向的參數如何選取:
+\begin{lstlisting}
+double GetNonuniParameter() {
+  double total = LZ - HillFunction( 0.0 ) - minSize;
+  //選取物空間計算點的最大間距做為分配之總長度 
+  double a_temp[2] = {0.1, 1.0};
+  double a_mid;
+  double x_temp[2], dx;
+  do{
+    a_mid = (a_temp[0]+a_temp[1]) / 2.0;
+    //dx = Z方向y = 0.0 非均勻網格下的最小間距 (從y=  0,0取)
+    //minSize的定義為以LZ-(y = 0.0下的山坡高度)為總長度均勻切割下的網格大小*0.6
+    //判斷標準 最小的網格必須要大於minSize
+    x_temp[0] = tanhFunction(total, minSize, a_mid, 0, (NZ6-7));
+    x_temp[1] = tanhFunction(total, minSize, a_mid, 1, (NZ6-7));
+    dx = x_temp[1] - x_temp[0];
+    //物理空間計算點的間距最小值
+        if( dx - minSize >= 0.0 ){
+            a_temp[0] = a_mid;
+        } else {
+            a_temp[1] = a_mid;
+        }
+    } while ( fabs( dx - minSize ) > 1e-14 );
+  return a_mid; }\end{lstlisting}
+\noindent 所以從上述可以預見，$minSize$可以預先配置，而$dx$則必須由LatticeSize確定了以後由(y = 0.0)下物理空間計算點的最大包圍長度計算分配決定。
+所以$dx$的分配邏輯為 : 1. 物理空間計算點作為真實物理網格之節點，2. 先決定好分配之真實物理網格之總長度，再分配物理空間計算點，其中，總長度的決定必須滿足Half-way Bounce Back。所以是"先定義$\texttt{minSize}$"，再分配決定"物理空間計算點間距"。(最小者為$dx$如上呈現)\\
+
+
+
+
+\subsection{(含山丘)離散化區域Z座標：$\texttt{z\_h}$ : 邊號從3開始，到NZ6-4結束}
+\vspace{1.5ex}
+\begin{lstlisting}[language=C , caption={initializationTool.h120定義z\_h}]
+//此程式碼為動態定義(U(B物理間計算點)的(真實Z座標))擬合山丘高度，再同一個山丘高度下，定義z座標所對應矩陣編號: k = 3
+for( int j = 0; j < NYD6; j++ ){
+  double total = LZ - HillFunction( y_h[j] ) - minSize;
+  for( int k = bfr; k < NZ6-bfr; k++ ){
+    z_h[j*NZ6+k] = tanhFunction( total, minSize, a, (k-3), (NZ6-7) ) + 
+                  HillFunction( y_h[j] );
+  }
+  z_h[j*NZ6+2] = HillFunction( y_h[j] );
+  z_h[j*NZ6+(NZ6-3)] = (double)LZ;
+\end{lstlisting}
+\noindent 上述對於\texttt{tanhFunction} 的使用，因為上述\texttt{tanhFunction} 的簽名是簽入\texttt{j}，可以發現: 對於真實Z座標矩陣，矩陣所對應的編號正是正規化Z方向座標系統j 。
+所以有 $$\texttt{z\_h[j*NZ+(3$\rightarrow$NZ6-4)] = tanhFunction(total,minSize,a,\text{正規化坐標系}+3,(NZ6-7))+...}$$
+\begin{table}[H]
+  \centering
+  \caption{z\_h座標系統}
+  \label{tab:{z:h座標系統}}
+  \begin{tabular}{|c|c|}
+    \hline
+    \textbf{中文名稱} & \textbf{(含山丘)離散化區域Z座標} \\
+    \hline
+    \textbf{對應關係} & z\_h [NZ\ *\ j\ +\ k] \\
+    \hline
+    \textbf{自變數} &  NZ\ *\ j\ +\ k \\
+    \hline
+    \textbf{j\ 定義域} & $j\ \in [0\ ,\ NYD6-1]$\\
+    \hline
+    \textbf{k\ 定義域} & $k\ \in 2\ ,\ [3\ ,\ NZ6-4]\ ,\ NZ6-3 $\\
+    \hline
+    \textbf{值域} & $\texttt{z\_h} [\texttt{NZ}\ *\ \texttt{j}\ +\ \texttt{k}] \in \texttt{Hill}(\texttt{y\_h}[\texttt{j}])\ ,\ [\texttt{Hill}(\texttt{y\_h}[\texttt{j}])+\texttt{minSize}\ ,\ \texttt{LZ-minSize}]\ ,\ \texttt{LZ}$ \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{(不含山丘)離散化無因次化Z座標：xi\_h}
+\vspace{1.5ex}
+\noindent 如下為該變數的程式碼定義:
+\begin{lstlisting}[language=C , caption={initializationTool.h130定義xi\_h}]
+for(int i = 3 ; i < NZ6-4 ; i++){
+  xi_h[k] = tanhFunction( LXi, minSize, a, (k-3), (NZ6-7) ) - minSize/2.0;
+}
+\end{lstlisting}
+\begin{table}[H]
+  \centering
+  \caption{xi\_h坐標系統}
+  \label{tab:{xi:h座標系統}}
+  \begin{tabular}{|c|c|}
+    \hline
+    \textbf{中文名稱} & \textbf{(不含山丘)離散化無因次化Z座標} \\
+    \hline
+    \textbf{對應關係} & xi\_h [k] \\
+    \hline
+    \textbf{自變數} &  k \\
+    \hline
+    \textbf{定義域} & $k \in [3\ ,\ NZ6-4]$ \\
+    \hline
+    \textbf{值域} & $xi\_h [k] \in [0\ ,\ 10]$ \\
+    \hline 
+  \end{tabular}
+\end{table}
+\begin{figure}[H]
+  \centering
+  \begin{minipage}{0.42\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{30.png}
+    \caption{xi\_h座標系統示意圖}
+    \label{fig:xi_h_1}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.53\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{29.png}
+    \caption{xi\_h座標系統示意圖}
+    \label{fig:xi_h_2}
+  \end{minipage}
+\end{figure}
+\subsection{(含山丘)離散化全域Z座標：z\_global}
+\vspace{1.5ex}
+\noindent 如下為該變數的程式碼定義:
+\begin{lstlisting}[language=C,caption={z\_global座標系統}]
+double  y_global[NY6] ; //宣告陣列尺寸之大小但是y_global並非全域變數
+double  z_global[NY6*NZ6] ;//定義z_global輸出全域網格
+for(int j = 0 ; j < NY6 ; j++){
+  double dy = (LY-HillFunction(y_global[j])) / (NZ6-1);
+  y_global[j] = j * dy ; 
+  for(int k = 3 ; k < NZ6-3 ; k++){
+    z_global[j*NZ6+k] = tanhFunction(total,minSize,a,(k-3),(NZ6-7)) + 
+                      + HillFunction(y_global[j]) ;
+  }
+  z_global[j*NZ6+2] = HillFunction(y_global[j]) ;
+  z_global[j*NZ6+(NZ6-3)] = (double)LZ ;
+}
+\end{lstlisting}
+如圖\ref{fig:xi_h_2}\ 變量$\texttt{z\_global[NZ*j+k]}$為物理空間計算點的(含山丘)離散化全域Z座標，當$\texttt{z\_global[NZ*j+k]}$
+=$\texttt{z\_[3]}$時，
+(定義域起始點為3)則其值代表山丘的表面：$\texttt{z\_global[3]} = \texttt{HillFunction(y\_global[j])}$\\
+當$\texttt{z\_global[NZ*j+k]}$=$\texttt{z\_[NZ6-3]}$時，
+(定義域終止點為NZ6-3)則其值代表離散化區域的最高點(在計算點區域高半個$\texttt{minSize}$)：$\texttt{z\_global[NZ6-3]} = \texttt{LZ}$。\\
+與物理空間計算點的對應範圍為：$$\texttt{if k}\in \texttt{[3,NZ6-4]}\ ,\ \texttt{z\_global[NZ6*j+k]}\in \texttt{[HillFunction+0.5minSize\ ,\ LZ-0.5minSize]}$$
+
+\begin{table}[H]
+  \centering
+  \caption{z\_global坐標系統}
+  \label{z:global坐標系統}
+  \begin{tabular}{|c|c|}
+    \hline
+    \textbf{中文名稱} & \textbf{z\_global坐標系統} \\
+    \hline
+    \textbf{對應關係} & z\_global [NZ\ *\ j\ +\ k] \\
+    \hline
+    \textbf{自變數} &  NZ\ *\ j\ +\ k \\
+    \hline
+    \textbf{j\ 定義域} & $j\ \in [0\ ,\ NY6-1]$\\
+    \hline
+    \textbf{k\ 定義域} & $k\ \in 2\ ,\ [3\ ,\ NZ6-4]\ ,\ NZ6-3 $\\
+    \hline
+    \textbf{值域} & {\footnotesize $\texttt{z\_global} [\texttt{NZ}\ *\ \texttt{j}\ +\ \texttt{k}] \in \texttt{Hill}(\texttt{y\_global}[\texttt{j}])\ ,\ [\texttt{Hill}(\texttt{y\_global}[\texttt{j}])+\texttt{minSize}\ ,\ \texttt{LZ-minSize}]\ ,\ \texttt{LZ}$ }\\
+    \hline
+  \end{tabular}
+\end{table}
+
+
+\section{專論 :  XPara0\_h[6][NX] , XPara2\_h[6][NX] , YPara0\_h[6][NY] , YPara2\_h[6][NY] 的意義\ 2}
+\vspace{1.5ex}
+\begin{center}
+  若定義式中$\texttt{Position}$填入$\texttt{y\_h[i]-minSize}$，則代表內插分成員為前3後4插。\\
+  若定義式中$\texttt{Position}$填入$\texttt{y\_h[i]+minSize}$，則代表內插分成員為前4後3插。
+\end{center}
+\noindent 並快速給定對應關係 ：
+\begin{equation}
+\begin{bmatrix}
+\texttt{Y0\_0} \\
+\texttt{Y0\_1} \\
+\texttt{Y0\_2} \\
+\texttt{Y0\_3} \\
+\texttt{Y0\_4} \\
+\texttt{Y0\_5} \\
+\texttt{Y0\_6} \\
+\end{bmatrix}
+\longleftrightarrow
+\begin{bmatrix}
+\texttt{YPara0\_d[0][i]} \\
+\texttt{YPara0\_d[1][i]} \\
+\texttt{YPara0\_d[2][i]} \\
+\texttt{YPara0\_d[3][i]} \\
+\texttt{YPara0\_d[4][i]} \\
+\texttt{YPara0\_d[5][i]} \\
+\texttt{YPara0\_d[6][i]} \\
+\end{bmatrix}
+\begin{bmatrix}
+\texttt{Y2\_0} \\
+\texttt{Y2\_1} \\
+\texttt{Y2\_2} \\
+\texttt{Y2\_3} \\
+\texttt{Y2\_4} \\
+\texttt{Y2\_5} \\
+\texttt{Y2\_6} \\
+\end{bmatrix}
+\longleftrightarrow
+\begin{bmatrix}
+\texttt{YPara2\_d[0][i]} \\
+\texttt{YPara2\_d[1][i]} \\
+\texttt{YPara2\_d[2][i]} \\
+\texttt{YPara2\_d[3][i]} \\
+\texttt{YPara2\_d[4][i]} \\
+\texttt{YPara2\_d[5][i]} \\
+\texttt{YPara2\_d[6][i]} \\
+\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+\begin{bmatrix}
+\texttt{X0\_0} \\
+\texttt{X0\_1} \\
+\texttt{X0\_2} \\
+\texttt{X0\_3} \\
+\texttt{X0\_4} \\
+\texttt{X0\_5} \\
+\texttt{X0\_6} \\
+\end{bmatrix}
+\longleftrightarrow
+\begin{bmatrix}
+\texttt{XPara0\_d[0][i]} \\
+\texttt{XPara0\_d[1][i]} \\
+\texttt{XPara0\_d[2][i]} \\
+\texttt{XPara0\_d[3][i]} \\
+\texttt{XPara0\_d[4][i]} \\
+\texttt{XPara0\_d[5][i]} \\
+\texttt{XPara0\_d[6][i]} \\
+\end{bmatrix}
+\begin{bmatrix}
+\texttt{X2\_0} \\
+\texttt{X2\_1} \\
+\texttt{X2\_2} \\
+\texttt{X2\_3} \\
+\texttt{X2\_4} \\
+\texttt{X2\_5} \\
+\texttt{X2\_6} \\
+\end{bmatrix}
+\longleftrightarrow
+\begin{bmatrix}
+\texttt{XPara2\_d[0][i]} \\
+\texttt{XPara2\_d[1][i]} \\
+\texttt{XPara2\_d[2][i]} \\
+\texttt{XPara2\_d[3][i]} \\
+\texttt{XPara2\_d[4][i]} \\
+\texttt{XPara2\_d[5][i]} \\
+\texttt{XPara2\_d[6][i]} \\
+\end{bmatrix}
+\end{equation}
+\noindent 如下以$\texttt{XPara0\_h}$與$\texttt{XPara0\_d}$為例子說明作為二為陣列如何宣告，定義，以及記憶體配置，與使用：
+\begin{itemize}
+  \item \textbf{$\texttt{XPara0\_h[A][B]}$與$\texttt{XPara0\_d[A][B]}$的宣告：}\\
+  宣告記憶體為宣告一個尺寸為7的指標陣列。
+  \begin{lstlisting}[language=C,caption={main.cu45},label={main.cu45}]
+double //宣告為一維指標陣列
+*XPara0_h[7],*XPara0_d[7],*XPara2_h[7],*XPara2_d[7],
+*YPara0_h[7],*YPara0_d[7],*YPara2_h[7],*YPara2_d[7],
+\end{lstlisting}
+  \item \textbf{$\texttt{XPara0\_h[A][B]}$與$\texttt{XPara0\_d[A][B]}$的記憶體配置為：}
+\begin{lstlisting}[language=C,caption={memory.h81-86,91-96},label={memory.h81-86,91-96}]
+for( int i = 0; i < 7; i++ ){
+  //memory.h81-86
+  CHECK_CUDA( cudaMallocHost( (void**)&YPara0_h[i], nBytes ) );
+  //對主機變數
+  CHECK_CUDA( cudaMallocHost( (void**)&YPara2_h[i], nBytes ) );
+  CHECK_CUDA( cudaMalloc( &YPara0_d[i], nBytes ) );
+  //對GPU變數
+  CHECK_CUDA( cudaMalloc( &YPara2_d[i], nBytes ) );
+}
+for( int i = 0; i < 7; i++ ){
+  CHECK_CUDA( cudaMallocHost( (void**)&XPara0_h[i], nBytes ) );
+  //對主機變數
+  CHECK_CUDA( cudaMallocHost( (void**)&XPara2_h[i], nBytes ) );
+  CHECK_CUDA( cudaMalloc( &XPara0_d[i], nBytes ) );
+  //對GPU變數
+  CHECK_CUDA( cudaMalloc( &XPara2_d[i], nBytes ) );
+}
+\end{lstlisting} 
+  \item \textbf{$\texttt{XPara0\_h[A][B]}$定義與$\texttt{XPara0\_d[A][B]}$的傳遞：}\\
+  本部分為 先定義主機端二維陣列，作為單一方向預配置一維連乘權重陣列，再將此定義好的主機端記憶體透過指標陣列的方式傳遞給GPU端。
+  換言之，二維度係樹之配置為先在主機端定義好，再將主機端的資料往GPU端傳遞。
+  \begin{lstlisting}[language=C,caption={initialization.h201},label={initialization.h201}]
+void GetIntrplPara_X(){
+for(int i = 3 , i <= NX6-4 ; i++){
+//GetParametert_6th(指定二為陣列的初始存放位址的位址,非物理空間計算點,七個物理空間計算點,指定的物理空間計算點的編號指定的物理空間計算點的編號-3.)
+  GetParameter_6th( XPara0_h, x_h[i]-minSize, x_h, i, i-3 );
+  GetParameter_6th( XPara2_h , x_h[i]+minSize, x_h, i, i-3);
+}
+//將主機端的內插權重係數二維陣列傳遞給GPU端
+for(int i = 3 ; i <= NX6-4 ; i++){
+  CHECK_CUDA( cudaMemcpy(XPara0_d[i], XPara0_h[i], NX6*sizeof(double), cudaMemcpyHostToDevice) );
+  CHECK_CUDA( cudaMemcpy(XPara2_d[i], XPara2_h[i], NX6*sizeof(double), cudaMemcpyHostToDevice) );
+}//cudaMemcpyHostToDevice 為 cudaMemcpy()的其中一個指令參數
+}\end{lstlisting}
+\noindent 如上可以預見：\textbf{$\texttt{XPara0\_h[A][B]}$}與\textbf{$\texttt{XPara0\_d[A][B]}$}的意義為：
+\\
+X方向預配置一維連乘權重陣列，其中A+i代表內插成員的編號，B代表物理空間計算點的編號。
+分析函數式：
+{\begin{center}
+  $\texttt{GetParameter\_6th( XPara0\_h, x\_h[i]-minSize, x\_h, i, i-3 );}$
+  \\$\Downarrow$\\
+  $\texttt{XPara0\_h[0][i]}$ = 內插成員1的連乘權重係數\\
+  $\texttt{XPara0\_h[1][i]}$ = 內插成員2的連乘權重係數\\
+  $\texttt{XPara0\_h[2][i]}$ = 內插成員3的連乘權重係數\\
+  $\texttt{XPara0\_h[3][i]}$ = 內插成員4的連乘權重係數\\
+  $\texttt{XPara0\_h[4][i]}$ = 內插成員5的連乘權重係數\\
+  $\texttt{XPara0\_h[5][i]}$ = 內插成員6的連乘權重係數\\
+  $\texttt{XPara0\_h[6][i]}$ = 內插成員7的連乘權重係數\\
+\end{center}}
+當i值掃描到某一個物理座標時(從3到NX6-4)，此x方向預配置連乘權重一維陣列為相應於該物理空間計算點的右側一個$\texttt{minSize}$的距離之非物理空間計算點的Lagrange七點內插係數。\\
+分析函數式：
+{\begin{center}
+  $\texttt{GetParameter\_6th( XPara2\_h , x\_h[i]+minSize, x\_h, i, i-3);}$\\
+  $\Downarrow$\\
+  $\texttt{XPara2\_h[0][i]}$ = 內插成員1的連乘權重係數\\
+  $\texttt{XPara2\_h[1][i]}$ = 內插成員2的連乘權重係數\\
+  $\texttt{XPara2\_h[2][i]}$ = 內插成員3的連乘權重係數\\
+  $\texttt{XPara2\_h[3][i]}$ = 內插成員4的連乘權重係數\\
+  $\texttt{XPara2\_h[4][i]}$ = 內插成員5的連乘權重係數\\
+  $\texttt{XPara2\_h[5][i]}$ = 內插成員6的連乘權重係數\\
+  $\texttt{XPara2\_h[6][i]}$ = 內插成員7的連乘權重係數\\
+\end{center}}
+\item \textbf{$\texttt{XPara0\_h[A][B]}$與$\texttt{XPara0\_d[A][B]}$的使用：}\\
+\end{itemize}
+
+
+\section{專論：XiParaF3\_d[6][NZ6*NYD6]的意義: }
+\subsection{分配記憶體}
+\subsection{函數式：$\texttt{GetXiParameter}$}
+\noindent 此函數式為一套建模組函數式：目標為寫入對應輸入的實際位置點$\texttt{pos\_z,\ pos\_y}$的z方向預配置權重一維連續記憶體的某一個元素，程式碼如下：
+\begin{lstlisting}[language = C]
+void GetXiParameter(double** XiPara, double pos_z, double pos_y , double* xi_h, 
+double IdxToStore , double k){
+  double L = LZ - HillFunction(pos_y) - minSize;
+  double pos_xi = (LXi/L)*(pos_z - HillFunction(pos_y) - 0.5*minSize ;
+  if(k>=3 && k <= NZ6-4){//也是配置單方向上的一維權重陣咧
+    GetParameter_6th(XiPara, pos_xi, xi_h, IdxToStore,k-3);
+  }else if(k<3 && k >= 0){
+    GetParameter_6th(XiPara, pos_xi, xi_h, IdxToStore,3);
+  }else if(k >= NZ6-3 && k < NZ6){
+    GetParameter_6th(XiPara, pos_xi, xi_h, IdxToStore,NZ6-4);
+  }}\end{lstlisting}
+從程式碼可以看出，命名$\texttt{L}$的目的為計算不含山丘無因次化Z座標$\texttt{pos\_xi}$。
+再利用$\texttt{Getparameter\_6th}$配合(不含山丘)離散化無因次化Z座標$\texttt{xi\_h}$，寫入Z方向預配置權重一維記憶體。\vspace{-3ex}
+\paragraph{\textbf{為什麼需要兩個參數 : $\texttt{pos\_y,\ pos\_z}$}？} 在實際使用上，$\texttt{pos\_y,\ pos\_z}$會填入以下形式：
+\begin{lstlisting}[language = C]
+GetXiParameter(XiParaFe_d , z[j*NZ6+k] , y_h[j] + minSize , xi_h , j*NZ6+k , k );
+\end{lstlisting}
+\noindent 可以發現，$\texttt{pos\_y}$填入為$\texttt{y\_h[j] + minSize}$，而$\texttt{pos\_z}$填入為$\texttt{z[j*NZ6+k]}$。\\
+\noindent 實際上寫入$\texttt{XiParaF3\_d[m][i]}$元素的函數為$\texttt{GetParameter\_6th(XiParaF3\_d,pos\_xi,xi\_h,...)}$
+，換言之
+\begin{equation}\begin{aligned}\label{eq:e}
+\texttt{XiParaF3\_d[0][index]} = \prod_{i = 0,\ i \neq 0}^{6} \frac{\texttt{pos\_xi} - \texttt{xi\_h[index-3+i]}}{\texttt{xi\_h[index-3+0] - xi\_h[index-3+i]}}
+\end{aligned}\end{equation}
+\noindent 所以參與單一位置點，六項權重係數的寫入實際上還是用到單一方向的量：$\texttt{pos\_xi,\ xi\_h[index]}$，只是因為
+因為物理空間計算點所包圍的長度$\texttt{total}$隨著不同y值而變，作為一個定義域為一維的函數式$\texttt{total = total(y)}$
+導致同一個高度的Z座標因為在不同y值，其無因次化Z座標$\texttt{pos\_xi}$會不同，所以需要兩個參數來決定實際寫入的權重係數，也因此，為了明白起見，我們將方程式\eqref{eq:e}寫為如下：
+\begin{equation}\begin{aligned}
+\texttt{XiParaF3\_d[0][index]} = \prod_{i = 0,\ i \neq 0}^{6} \frac{\texttt{pos\_xi(pos\_y,\ pos\_z)} - \texttt{xi\_h[index-3+i]}}{\texttt{xi\_h[index-3+0] - xi\_h[index-3+i]}}
+\end{aligned}\end{equation}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{31.png}
+\caption{Z方向權重插值映射關係}
+\label{fig:31}
+\end{figure}
+\paragraph{曲線坐標系下的一維Lagrange內插}
+\begin{itemize}
+  \item ($Z_1$\ (A\ (c\ 一維Lagrange內插)的(非物理間計算點))的(座標))被定義為(G\ 無因次化座標)
+  \item ($Z_2$\ (B\ (c\ 一維Lagrange內插)的(物理間計算點))的(座標))被定義為(Q\ 離散化無因次化座標)
+  \item ($n_1$\ ($B_{1}$\ (c\ 一維Lagrange內插)的(物理間計算點))的(垂直座標)) 被定義為\\
+  ($n_2$\ ($B_{2}$\ (c\ 一維Lagrange內插)的(物理間計算點))的(垂直座標))  
+  \item ($n_3$\ ($A$\ (c\ 一維Lagrange內插)的(非物理間計算點))的(垂直座標)) 被定義為\\
+  ($n_2$\ ($B_{2}$\ (c\ 一維Lagrange內插)的(物理間計算點))的(垂直座標))  
+\end{itemize}
+因此，才有如圖\ref{fig:31}所顯示的無因次化技巧。
+其中，程式碼操作技巧為：
+\begin{lstlisting}[language = C]
+double L = LZ - HillFunction(pos_y) - minSize;//截取該位置的總長度
+double pos_xi = (LXi/L)*(pos_z - HillFunction(pos_y) - 0.5*minSize );//此Z座標為一維Lagrange內插的基準座標
+\end{lstlisting}
+如上，則顯示\ Mappig\ 過程中，的座標轉換。
+
+\subsection{實際寫入內容：$\texttt{GetIntrplParameter\_Xi}$}
+\paragraph{為什麼需要預配置權重陣列的第二個參數尺寸為二維：$\texttt{NZ6*NYD6}$}
+因為在$\texttt{y\_z}$平面上，每一個物理空間計算點的相應非物理空間計算點的Z方向預配置連乘權重一維連續記憶體
+都不一樣，會受到座標比例影響內插計算結果。 
+所以需要配置二維記憶體，第一個座標為內插成員編號，第二個座標為物理空間計算點在$\texttt{y\_z}$平面上的ㄧ維座標索引。
+\begin{lstlisting}[language = C]
+void GetIntrplParameter_Xi(){
+//目的，寫入尺寸為7*(NZ6*NYD6)的二維連續記憶體，將每個位置點各個編號的連乘權重寫各個元素
+for(int j = 3 ; j <= NZ6-4 ; j++){
+  
+}
+}
+\end{lstlisting}
+
+
+
+\subsection{雙重索引結構解析}
+
+在 \texttt{XiParaF3\_d} 二維陣列中，索引 \texttt{[m][i]} 具有明確的物理與數值意義：
+
+\paragraph{第一層索引 \texttt{[m]} ($m = 0, 1, \ldots, 6$)}
+
+選擇 7 個 Lagrange 基函數中的第 $m+1$ 個：
+
+\begin{align}
+\texttt{XiParaF3\_d[0][i]} &\rightarrow L_1(\xi^*) \text{ 的係數} \\
+\texttt{XiParaF3\_d[1][i]} &\rightarrow L_2(\xi^*) \text{ 的係數} \\
+&\vdots \notag \\
+\texttt{XiParaF3\_d[6][i]} &\rightarrow L_7(\xi^*) \text{ 的係數}
+\end{align}
+
+\paragraph{第二層索引 \texttt{[i]} (空間位置)}
+
+線性化的二維空間索引：
+\begin{equation}
+i = j \times \text{NZ6} + k
+\end{equation}
+
+其中：
+\begin{itemize}
+\item $j \in [0, \text{NYD6}-1] = [0, 38]$：Y 方向格點索引
+\item $k \in [0, \text{NZ6}-1] = [0, 69]$：Z 方向格點索引
+\item $i \in [0, \text{NYD6} \times \text{NZ6} - 1] = [0, 2729]$：線性化索引
+\end{itemize}
+
+\subsection{具體數值範例}
+
+\paragraph{範例 1：邊界格點}
+
+考慮 Y-Z 平面的邊界格點 $(j=3, k=3)$（底部緩衝區邊界）：
+
+\begin{equation}
+i = 3 \times 70 + 3 = 213
+\end{equation}
+
+則：
+\begin{itemize}
+\item \texttt{XiParaF3\_d[0][213]} = 第1個 Lagrange 基函數在 $(j=3, k=3)$ 的值
+\item \texttt{XiParaF3\_d[3][213]} = 第4個 Lagrange 基函數在 $(j=3, k=3)$ 的值（中心點）
+\item \texttt{XiParaF3\_d[6][213]} = 第7個 Lagrange 基函數在 $(j=3, k=3)$ 的值
+\end{itemize}
+
+\paragraph{範例 2：內部格點}
+
+考慮內部格點 $(j=20, k=35)$：
+
+\begin{equation}
+i = 20 \times 70 + 35 = 1435
+\end{equation}
+
+在 F3 方向進行插值時：
+
+\begin{equation}
+\begin{split}
+f_3^{\text{interp}}(20, 35) &= \sum_{m=0}^{6} f_4(\xi_{m+1}, 20, 35) \cdot \texttt{XiParaF3\_d[m][1435]} \\
+&= f_4(\xi_1) \cdot \texttt{XiParaF3\_d[0][1435]} \\
+&\quad + f_4(\xi_2) \cdot \texttt{XiParaF3\_d[1][1435]} \\
+&\quad + \cdots \\
+&\quad + f_4(\xi_7) \cdot \texttt{XiParaF3\_d[6][1435]}
+\end{split}
+\end{equation}
+
+\subsection{物理意義詮釋}
+
+\paragraph{F3 方向的特殊性}
+
+F3 方向為 $(0, +1, 0)$，代表純 Y 方向的正向流動。但在 ISLBM 中，由於 Periodic Hill 幾何的影響，實際的流線並非直線，而是沿著變換後的 $\xi$ 座標追蹤。
+
+\paragraph{為何需要 Y-$\xi$ 二維插值}
+
+雖然 F3 的速度向量只有 Y 分量，但由於：
+
+\begin{enumerate}
+\item Periodic Hill 的高度隨 Y 變化：$H = H(y)$
+\item Z 方向網格非均勻：使用 $\xi$ 變換
+\item 流線在 Y-Z 平面上彎曲
+\end{enumerate}
+
+因此需要在 Y-$\xi$ 平面進行二維插值，而非單純的 Y 方向一維插值。
+
+\subsection{記憶體佈局與效能考量}
+
+\paragraph{陣列記憶體佈局}
+
+\texttt{XiParaF3\_d} 在 GPU 記憶體中的實際配置：
+
+\begin{lstlisting}[language=C, basicstyle=\ttfamily\small]
+XiParaF3_d[0] -> 連續記憶體區塊 [NYD6×NZ6 個 double]
+                ┌─────────────────────────────────┐
+                │ [0][1][2]...[2729]              │
+                └─────────────────────────────────┘
+XiParaF3_d[1] -> 連續記憶體區塊 [NYD6×NZ6 個 double]
+                ┌─────────────────────────────────┐
+                │ [0][1][2]...[2729]              │
+                └─────────────────────────────────┘
+  ...
+XiParaF3_d[6] -> 連續記憶體區塊 [NYD6×NZ6 個 double]
+                ┌─────────────────────────────────┐
+                │ [0][1][2]...[2729]              │
+                └─────────────────────────────────┘
+\end{lstlisting}
+
+\paragraph{Coalesced Memory Access}
+
+在 CUDA kernel 中，當相鄰 thread 存取相鄰的 \texttt{i} 值時：
+
+\begin{itemize}
+\item Thread 0 讀取 \texttt{XiParaF3\_d[m][i]}
+\item Thread 1 讀取 \texttt{XiParaF3\_d[m][i+1]}
+\item Thread 2 讀取 \texttt{XiParaF3\_d[m][i+2]}
+\item $\cdots$
+\end{itemize}
+
+由於這些記憶體位址連續，GPU 可以將它們合併為單次記憶體交易（coalesced access），大幅提升效能。
+
+\paragraph{快取友善性}
+
+當計算某格點的插值時，需要連續讀取：
+\begin{equation}
+\texttt{XiParaF3\_d[0][i]}, \texttt{XiParaF3\_d[1][i]}, \ldots, \texttt{XiParaF3\_d[6][i]}
+\end{equation}
+
+雖然這 7 個值位於不同的陣列，但若 \texttt{i} 相同，它們的記憶體位址模式規律，有利於 L1/L2 快取預取。
+
+\subsection{程式碼追蹤}
+
+\paragraph{初始化階段（initialization.h:201--256）}
+
+計算每個格點 $(j, k)$ 的 Lagrange 係數：
+
+\begin{lstlisting}[language=Python, basicstyle=\ttfamily\small]
+for j in range(NYD6):
+    for k in range(NZ6):
+        i = j * NZ6 + k
+        ξ_target = GetTargetXi(j, k)  # 目標 ξ 座標
+
+        for m in range(7):
+            XiParaF3_h[m][i] = Lagrange_6th(
+                ξ_target,
+                ξ_m,      # 第 m+1 個基點
+                ξ_1, ξ_2, ..., ξ_7  # 全部 7 個基點
+            )
+\end{lstlisting}
+
+\paragraph{記憶體傳輸（initialization.h）}
+
+將計算好的係數從 Host 傳至 Device：
+
+\begin{lstlisting}[language=Python, basicstyle=\ttfamily\small]
+for m in range(7):
+    cudaMemcpy(
+        XiParaF3_d[m],           # Device 目標
+        XiParaF3_h[m],           # Host 來源
+        NYD6 * NZ6 * sizeof(double),
+        cudaMemcpyHostToDevice
+    )
+\end{lstlisting}
+
+\paragraph{使用階段（interpolationHillISLBM.h:F3\_Intrpl7）}
+
+在 kernel 中執行插值：
+
+\begin{lstlisting}[language=C, basicstyle=\ttfamily\small]
+__device__ void F3_Intrpl7(...) {
+    int i = j * NZ6 + k;
+
+    F3_in = f4_old[ξ_indices[0]] * XiParaF3_d[0][i]
+          + f4_old[ξ_indices[1]] * XiParaF3_d[1][i]
+          + f4_old[ξ_indices[2]] * XiParaF3_d[2][i]
+          + f4_old[ξ_indices[3]] * XiParaF3_d[3][i]
+          + f4_old[ξ_indices[4]] * XiParaF3_d[4][i]
+          + f4_old[ξ_indices[5]] * XiParaF3_d[5][i]
+          + f4_old[ξ_indices[6]] * XiParaF3_d[6][i];
+}
+\end{lstlisting}
+
+\subsection{與其他方向的對比}
+
+\paragraph{F3 vs F5 索引意義差異}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\toprule
+項目 & F3 (Y-$\xi$ 2D) & F5 ($\xi$ 1D) \\
+\midrule
+速度向量 & $(0, +1, 0)$ & $(0, 0, +1)$ \\
+插值維度 & 2D & 1D \\
+\texttt{[m]} 意義 & Lagrange 基函數索引 & Lagrange 基函數索引 \\
+\texttt{[i]} 結構 & $j \times \text{NZ6} + k$ & $j \times \text{NZ6} + k$ \\
+係數計算複雜度 & 高（2D） & 低（1D） \\
+記憶體使用 & $7 \times \text{NYD6} \times \text{NZ6}$ & $7 \times \text{NYD6} \times \text{NZ6}$ \\
+\bottomrule
+\end{tabular}
+\caption{F3 與 F5 的索引結構對比}
+\end{table}
+
+\paragraph{所有 $\xi$ 相關方向的索引一致性}
+
+F3, F4, F5, F6, F15, F16, F17, F18 這 8 個方向的參數陣列，全部使用相同的索引結構：
+
+\begin{itemize}
+\item 第一層索引 \texttt{[m]}：基函數編號（0--6）
+\item 第二層索引 \texttt{[i]}：空間位置 $j \times \text{NZ6} + k$
+\end{itemize}
+
+這種一致性簡化了程式碼維護與除錯。
+
+\subsection{常見錯誤與除錯技巧}
+
+\paragraph{錯誤 1：索引順序混淆}
+
+\textbf{錯誤寫法：}
+\begin{lstlisting}[language=C]
+F3_in = XiParaF3_d[i][m] * f4_old[...]  // ✗ 錯誤！
+\end{lstlisting}
+
+\textbf{正確寫法：}
+\begin{lstlisting}[language=C]
+F3_in = XiParaF3_d[m][i] * f4_old[...]  // ✓ 正確
+\end{lstlisting}
+
+\paragraph{錯誤 2：索引範圍越界}
+
+檢查點：
+\begin{itemize}
+\item $m \in [0, 6]$：基函數索引
+\item $i \in [0, \text{NYD6} \times \text{NZ6} - 1] = [0, 2729]$：空間索引
+\item $j \in [0, 38]$, $k \in [0, 69]$
+\end{itemize}
+
+\paragraph{除錯技巧：列印特定格點的係數}
+\
+\begin{lstlisting}[language=C, basicstyle=\ttfamily\small]
+  // 在 Host 端檢查
+int j = 20, k = 35;
+int i = j * NZ6 + k;
+printf("Position (j=%d, k=%d), i=%d:\n", j, k, i);
+for (int m = 0; m < 7; m++) {
+    printf("  L_%d = %e\n", m+1, XiParaF3_h[m][i]);
+}
+
+// 驗證 Lagrange 性質：和為 1
+double sum = 0.0;
+for (int m = 0; m < 7; m++) {
+    sum += XiParaF3_h[m][i];
+}
+printf("  Sum = %e (should be ~1.0)\n", sum);
+\end{lstlisting}
+
+\subsection{數值特性與驗證}
+
+\paragraph{Lagrange 基函數的性質}
+
+對於任意格點 $(j, k)$，其對應的 7 個係數必須滿足：
+
+\begin{equation}
+\sum_{m=0}^{6} \texttt{XiParaF3\_d[m][i]} = 1.0, \quad i = j \times \text{NZ6} + k
+\end{equation}
+
+這可作為數值正確性的檢驗。
+
+\paragraph{對稱性檢查}
+
+由於 Periodic Hill 的對稱性，某些格點的係數應該呈現對稱模式。例如在 $y = L_y/2$ 處的格點。
+
+\subsection{總結}
+
+\texttt{XiParaF3\_d[m][i]} 的雙重索引系統：
+
+\begin{enumerate}
+\item \textbf{第一層 [m]}：數學意義 - 選擇 Lagrange 基函數
+\item \textbf{第二層 [i]}：空間意義 - 指定 Y-Z 平面上的格點位置
+\item \textbf{數值意義}：該格點、該基函數的插值係數
+\item \textbf{計算效率}：預先計算避免 kernel 內重複運算
+\item \textbf{記憶體優化}：連續佈局利於 GPU coalesced access
+\end{enumerate}
+
+這個設計體現了 ISLBM 方法的核心思想：將複雜的插值計算前置到初始化階段，換取執行階段的高效能。
+
+\end{document}
