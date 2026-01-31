@@ -80,7 +80,7 @@
   {0pt}{\bfseries}{：}{0.5em}{}
 %6 定理環境定義
 \theoremstyle{upright}
-\newtheorem{definition}{定義}[section]
+\newtheorem{definition}{Definition}[section]
 \newtheorem{theorem}{定理}[section]
 \newtheorem{lemma}{引理}[section]
 \newtheorem{corollary}{推論}[section]
@@ -173,7 +173,7 @@
 }
 %11 標題設定
 \setlength{\droptitle}{-1in} % 上移標題1in
-\title{24.evolution零碎筆記}
+\title{\text{4.Volumetric Lattice Boltzmann Models in General Curvature}}
 \author{Chen Peng Chung}
 \setcounter{section}{0}
 % 12调整 subsection 的间距
@@ -303,6 +303,61 @@
 \maketitle
 \tableofcontents
 \newpage
+\section{Momentum Loss of Distribution Function in Propagation}
+In general curvilinear coordinates, for macroscopic values i.e., $\rho , \rho\vec{u}$ exist the loss due to the curvature and uniform properties. And this paper shows the value below: 
+\begin{equation}\begin{aligned}\label{eq:NLBGK}
+  \delta N_{\alpha}(\vec{q} , t) \equiv N_{\alpha}(q  , t) - N_{\alpha}^{\star} (q-1 , t-1) 
+\end{aligned}\end{equation} 
+where q is the non-dimension position, and the origin form of it is $\vec{q} = (q_{1} , q_{2} , q_{3})$. The value $N^{\star}$ represents post-collision distribution function.
+We can review the Lattice Boltzman Equation-BGK (LBGK) and see the position of the value in the equation.
+\begin{equation}
+  N_{\alpha}(q+1, t+1) = N_{\alpha}(q , t) + \Omega_{\alpha} +  \delta N_{\alpha}(q,t)
+\end{equation}
+For general orthogonal curvilinear coordinate in three dimensions, we have the loss of the momentum and loss of the density is 0, so we have the relation: 
+\begin{equation}\begin{aligned}
+  &\sum_{\alpha_{0}}^{q-1} \delta N_{\alpha}(q , t) = \sum_{\alpha_{0}}^{q-1}N_{\alpha}(q  , t) - N_{\alpha}^{\star} (q-1 , t-1)\\[1.5ex]
+  &= \sum_{\alpha_{0}}^{q-1}  N_{\alpha}(q  , t) - \sum_{\alpha_{0}}^{q-1} N_{\alpha}^{\star} (q-1 , t-1)
+= 0 \end{aligned}
+\end{equation} 
+But for momentum loss, we have to take the physical meaning as "inertial force" at first. 
+The value in equation \eqref{eq:NLBGK} 
+is modified term in the process of the streaming step. The reason why we have to consider
+the loss is to achieve momentum conservation through adding the term. 
+\begin{definition}
+  \begin{equation}\label{eq:Theta}
+   \vec{\Theta}_{i}^{j} (\vec{q},t) = \left[\vec{g}_{i}(\vec{q} , t) - \vec{g}_{i}(\vec{q} - \vec{\tilde{c}_{i}} \Delta t , t)\right] \cdot \vec{g}^{j}
+  \end{equation}
+\end{definition}
+\noindent we call the value is "non-dimension change of curvature tangent vector". where $\vec{g}^{j}$ can be defined as below: 
+\begin{equation}\begin{aligned}
+   \vec{g}^{1} = \frac{\vec{g_{2}}\cross \vec{g}_{3}}{(\vec{g_{2}}\cross \vec{g_{3}}) \cdot \vec{g}_{1}} 
+\end{aligned}\end{equation}
+Substitute the vector in equation \eqref{eq:Theta}
+  \begin{equation}\label{eq:Theta}
+   \vec{\Theta}_{i}^{j} (\vec{q},t) = \left[\vec{g}_{i}(\vec{q} , t) - \vec{g}_{i}(\vec{q} - \vec{\tilde{c}_{i}} \Delta t , t)\right] \cdot \frac{\vec{g_{2}}\cross \vec{g}_{3}}{(\vec{g_{2}}\cross \vec{g_{3}}) \cdot \vec{g}_{1}}
+  \end{equation}
+\begin{definition}
+  \begin{equation}\begin{aligned}
+    &\vec{M_{Loss}} (q,t) \equiv
+     \sum_{\alpha = 1}^{q} N_{\alpha}(q,t)\vec{e_{\alpha}}(q,t) - N_{\alpha}^{\star}(q-1,t-1)\vec{e_{\alpha}}(q-1,t-1)\\[1.5ex]
+    &\vec{M_{Loss}} (q+1,t+1) \equiv
+     \sum_{\alpha = 1}^{q} N_{\alpha}(q+1,t+1)\vec{e_{\alpha}}(q+1,t+1) - N_{\alpha}^{\star}(q,t)\vec{e_{\alpha}}(q,t)\\[1.5ex]
+  \end{aligned}\end{equation}
+\end{definition}
+For curvilinear coordinate, the loss of momentum always exists in streaming step. The basic reason of the loss of macroscopic value is: 
+\begin{equation}
+  N_{\alpha} (\vec{q} , t) \neq N_{\alpha}^{\star}(\vec{q} - \vec{\tilde{c}_{\alpha}} \Delta t, t - 1)
+\end{equation}
+But this paper defines two values about inner and outer at the point $(q,t)$ as shown: 
+\begin{definition}
+  \begin{equation}\begin{aligned}
+    & \mathcal{J}(q) \vec{\chi}^{in}(q,t) \equiv
+     \sum_{\alpha = 1}^{q} N_{\alpha}(q,t)\left(\vec{e_{\alpha}}(q,t) - \vec{e_{\alpha}}(q-1,t-1) \right)\\[1.5ex]
+     & \mathcal{J}(q) \vec{\chi}^{out}(q,t) \equiv
+     \sum_{\alpha = 1}^{q} \left(\vec{e_{\alpha}}(q+1,t+1) -\vec{e_{\alpha}}(q,t)\right) N_{\alpha}^{\star}(q,t)\\[1.5ex]
+  \end{aligned}\end{equation}
+\end{definition}
+\noindent In this paper, the momentum loss and its definition can be separated into two directions about the point $(q,t)$ i.e., inner and outer. The difference from the true "momentum loss of the propagation" is: take post-collision distribution function at $(q-1,t-1)$: $(N_{\alpha})^{\star}(q-1,t-1)$; take the pre-collision function at $(q,t)$: $N_{\alpha}(q,t)$ for curvilinear normalized discrete particle velocity set: $\vec{\tilde{e}}_{\alpha}(q-1,t-1)$ and $\vec{\tilde{e}}_{\alpha}(q,t)$ 
 
 \end{document}
 
