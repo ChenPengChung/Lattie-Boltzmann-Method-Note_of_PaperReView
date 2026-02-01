@@ -1,7 +1,8 @@
 ﻿\documentclass[12pt]{article}
 \usepackage[a4paper,margin=2cm]{geometry} % 明確設定四邊
 \usepackage{fontspec} % 字體設定
-\usepackage{xeCJK}
+\usepackage[english]{babel} % English document language
+% Note: xeCJK and CJK font setup removed for English environment
 \usepackage{setspace} % 設定行距
 \linespread{1.2}
 \usepackage{titling} % 預設標題下移0.6in
@@ -77,28 +78,28 @@
 \newtheoremstyle{upright}
   {6pt}{6pt}  % 定理環境前後間距（增加）
   {\normalfont}% 使用正常字體，不使用斜體
-  {0pt}{\bfseries}{：}{0.5em}{}
+  {0pt}{\bfseries}{.}{0.5em}{}
 %6 定理環境定義
 \theoremstyle{upright}
 \newtheorem{definition}{Definition}[section]
-\newtheorem{theorem}{定理}[section]
-\newtheorem{lemma}{引理}[section]
-\newtheorem{corollary}{推論}[section]
-\newtheorem{example}{例子}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{example}{Example}[section]
 % 重新正確定義 remark 環境 - 確保完全靠左對齊
 \makeatletter
 \@ifundefined{c@remark}{}{\renewcommand{\theremark}{}}
 \newenvironment{remark}{%
   \par\vspace{0.0\baselineskip}%
-  \begingroup% 開始一個組以限制設置的範圍
-  \setlength{\parindent}{0pt}% 設置段落縮進為零
-  \setlength{\leftskip}{0pt}% 設置左邊距為零
-  \noindent\textbf{註記：}\\% 添加標題並強制換行
-  \ignorespaces% 忽略可能的空格
+  \begingroup
+  \setlength{\parindent}{0pt}%
+  \setlength{\leftskip}{0pt}%
+  \noindent\textbf{Remark:}\\
+  \ignorespaces
   \setlist[enumerate]{itemsep=0pt, parsep=0pt, topsep=0.0pt, leftmargin=1.5em}%
   \setlist[itemize]{itemsep=0pt, parsep=0pt, topsep=0.0pt, leftmargin=1.5em}%
 }{%
-  \endgroup% 結束組
+  \endgroup
   \par\vspace{0.5\baselineskip}
 }
 \makeatother
@@ -108,15 +109,16 @@
   十一\or 十二\or 十三\or 十四\or 十五\or 十六\or 十七\or 十八\or 十九\or 二十\fi
 }
 
-%8 重新定義章節編號格式
-\renewcommand{\thesection}{\chinese{\value{section}}}
-\renewcommand{\thesubsection}{\chinese{\value{section}}、\arabic{subsection}}
-\renewcommand{\theequation}{\chinese{\value{section}}.\arabic{equation}}
-\renewcommand{\thesubsubsection}{\chinese{\value{section}}、\arabic{subsection}.\arabic{subsubsection}}
-\renewcommand{\thefigure}{\chinese{\value{section}}.\arabic{figure}}
-\renewcommand{\thedefinition}{\thesection、\arabic{definition}}
-\renewcommand{\thetheorem}{\thesection、\arabic{theorem}}
-\renewcommand{\theexample}{\thesection、\arabic{example}}
+%8 重新定義章節編號格式 - 使用阿拉伯數字以符合英文文件與常見期刊格式
+% (原先使用中文數字表示，改回標準阿拉伯編號)
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+\renewcommand{\theequation}{\arabic{section}.\arabic{equation}}
+\renewcommand{\thefigure}{\arabic{section}.\arabic{figure}}
+\renewcommand{\thedefinition}{\thesection.\arabic{definition}}
+\renewcommand{\thetheorem}{\thesection.\arabic{theorem}}
+\renewcommand{\theexample}{\thesection.\arabic{example}}
 
 % 为不同级别的标题增加编号后的空格
 \setlength{\cftsecnumwidth}{2.5em}  % section 编号宽度
@@ -136,41 +138,6 @@
   \setmainfont{TeX Gyre Termes}%
 }
 
-%\setCJKmainfont[
-%    BoldFont={Kaiti TC Bold},
-%    ItalicFont={Kaiti TC},
-%    BoldItalicFont={Kaiti TC Bold}
-%]{Kaiti TC}
-%\setCJKmonofont{Kaiti TC}
-\IfFontExistsTF{DFKai-SB}{%
-  \setCJKmainfont[
-    BoldFont={DFKai-SB},
-    ItalicFont={DFKai-SB},
-    BoldItalicFont={DFKai-SB}
-  ]{DFKai-SB}%
-  % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
-  \setCJKmonofont{DFKai-SB}%
-}{%
-  \IfFontExistsTF{Kaiti TC}{%
-    \setCJKmainfont[
-      BoldFont={Kaiti TC Bold},
-      ItalicFont={Kaiti TC},
-      BoldItalicFont={Kaiti TC Bold}
-    ]{Kaiti TC}%
-    % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
-    \setCJKmonofont{Kaiti TC}%
-  }{%
-    \IfFontExistsTF{Songti TC}{%
-      \setCJKmainfont{Songti TC}%
-      % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
-      \setCJKmonofont{Songti TC}%
-    }{%
-      \setCJKmainfont{Heiti TC}%
-      % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
-      \setCJKmonofont{Heiti TC}%
-    }%
-  }%
-}
 %11 標題設定
 \setlength{\droptitle}{-1in} % 上移標題1in
 \title{\text{4.Volumetric Lattice Boltzmann Models in General Curvature}}
@@ -189,7 +156,7 @@
 \titlespacing*{\subsubsection}
 {0pt}                    % 左边距
 {0.0in}                 % 标题前间距
-{0.0em}                  % 标题后间距
+{0.0em}                  % 标题后間距
 %13.
 
 % ========== Monokai Light 配色方案（淺灰背景）==========
@@ -315,8 +282,8 @@ We can review the Lattice Boltzman Equation-BGK (LBGK) and see the position of t
 \end{equation}
 For general orthogonal curvilinear coordinate in three dimensions, we have the loss of the momentum and loss of the density is 0, so we have the relation: 
 \begin{equation}\begin{aligned}
-  &\sum_{\alpha_{0}}^{q-1} \delta N_{\alpha}(q , t) = \sum_{\alpha_{0}}^{q-1}N_{\alpha}(q  , t) - N_{\alpha}^{\star} (q-1 , t-1)\\[1.5ex]
-  &= \sum_{\alpha_{0}}^{q-1}  N_{\alpha}(q  , t) - \sum_{\alpha_{0}}^{q-1} N_{\alpha}^{\star} (q-1 , t-1)
+  &\sum_{\alpha=0}^{q-1} \delta N_{\alpha}(q , t) = \sum_{\alpha=0}^{q-1}N_{\alpha}(q  , t) - N_{\alpha}^{\star} (q-1 , t-1)\\[1.5ex]
+  &= \sum_{\alpha=0}^{q-1}  N_{\alpha}(q  , t) - \sum_{\alpha=0}^{q-1} N_{\alpha}^{\star} (q-1 , t-1)
 = 0 \end{aligned}
 \end{equation} 
 But for momentum loss, we have to take the physical meaning as "inertial force" at first. 
@@ -325,40 +292,82 @@ is modified term in the process of the streaming step. The reason why we have to
 the loss is to achieve momentum conservation through adding the term. 
 \begin{definition}
   \begin{equation}\label{eq:Theta}
-   \vec{\Theta}_{i}^{j} (\vec{q},t) = \left[\vec{g}_{i}(\vec{q} , t) - \vec{g}_{i}(\vec{q} - \vec{\tilde{c}_{i}} \Delta t , t)\right] \cdot \vec{g}^{j}
+   \vec{\Theta}_{i}^{j} (\vec{q},t) = \left[\vec{g}_{i}(\vec{q} , t) - \vec{g}_{i}(\vec{q} - \vec{\tilde{c}}_{i} \Delta t , t)\right] \cdot \vec{g}^{j}
   \end{equation}
 \end{definition}
-\noindent we call the value is "non-dimension change of curvature tangent vector". where $\vec{g}^{j}$ can be defined as below: 
+\noindent we call the value is "non-dimension change of curvature tangent vector", where $\vec{g}^{j}$ can be defined as below: 
 \begin{equation}\begin{aligned}
-   \vec{g}^{1} = \frac{\vec{g_{2}}\cross \vec{g}_{3}}{(\vec{g_{2}}\cross \vec{g_{3}}) \cdot \vec{g}_{1}} 
+   \vec{g}^{1} &= \frac{\vec{g}_{2}\times \vec{g}_{3}}{(\vec{g}_{2}\times \vec{g}_{3}) \cdot \vec{g}_{1}} 
 \end{aligned}\end{equation}
 Substitute the vector in equation \eqref{eq:Theta}
-  \begin{equation}\label{eq:Theta}
-   \vec{\Theta}_{i}^{j} (\vec{q},t) = \left[\vec{g}_{i}(\vec{q} , t) - \vec{g}_{i}(\vec{q} - \vec{\tilde{c}_{i}} \Delta t , t)\right] \cdot \frac{\vec{g_{2}}\cross \vec{g}_{3}}{(\vec{g_{2}}\cross \vec{g_{3}}) \cdot \vec{g}_{1}}
+  \begin{equation}
+   \vec{\Theta}_{i}^{j} (\vec{q},t) = \left[\vec{g}_{i}(\vec{q} , t) - \vec{g}_{i}(\vec{q} - \vec{\tilde{c}}_{i} \Delta t , t)\right] \cdot \frac{\vec{g}_{2}\times \vec{g}_{3}}{(\vec{g}_{2}\times \vec{g}_{3}) \cdot \vec{g}_{1}}
   \end{equation}
 \begin{definition}
   \begin{equation}\begin{aligned}
-    &\vec{M_{Loss}} (q,t) \equiv
-     \sum_{\alpha = 1}^{q} N_{\alpha}(q,t)\vec{e_{\alpha}}(q,t) - N_{\alpha}^{\star}(q-1,t-1)\vec{e_{\alpha}}(q-1,t-1)\\[1.5ex]
-    &\vec{M_{Loss}} (q+1,t+1) \equiv
-     \sum_{\alpha = 1}^{q} N_{\alpha}(q+1,t+1)\vec{e_{\alpha}}(q+1,t+1) - N_{\alpha}^{\star}(q,t)\vec{e_{\alpha}}(q,t)\\[1.5ex]
+    &\vec{M}_{\mathrm{Loss}} (q,t) \equiv
+     \sum_{\alpha = 1}^{q} \left[N_{\alpha}(q,t)\,\vec{e}_{\alpha}(q,t) - N_{\alpha}^{\star}(q-1,t-1)\,\vec{e}_{\alpha}(q-1,t-1)\right]\\[1.5ex]
+    &\vec{M}_{\mathrm{Loss}} (q+1,t+1) \equiv
+     \sum_{\alpha = 1}^{q} \left[N_{\alpha}(q+1,t+1)\,\vec{e}_{\alpha}(q+1,t+1) - N_{\alpha}^{\star}(q,t)\,\vec{e}_{\alpha}(q,t)\right]\\[1.5ex]
   \end{aligned}\end{equation}
 \end{definition}
-For curvilinear coordinate, the loss of momentum always exists in streaming step. The basic reason of the loss of macroscopic value is: 
+For curvilinear coordinates, the loss of momentum always exists in the streaming step. The basic reason of the loss of macroscopic value is: 
 \begin{equation}
-  N_{\alpha} (\vec{q} , t) \neq N_{\alpha}^{\star}(\vec{q} - \vec{\tilde{c}_{\alpha}} \Delta t, t - 1)
+  N_{\alpha} (\vec{q} , t) \neq N_{\alpha}^{\star}(\vec{q} - \vec{\tilde{c}}_{\alpha} \Delta t, t - 1)
 \end{equation}
 But this paper defines two values about inner and outer at the point $(q,t)$ as shown: 
 \begin{definition}
   \begin{equation}\begin{aligned}
-    & \mathcal{J}(q) \vec{\chi}^{in}(q,t) \equiv
-     \sum_{\alpha = 1}^{q} N_{\alpha}(q,t)\left(\vec{e_{\alpha}}(q,t) - \vec{e_{\alpha}}(q-1,t-1) \right)\\[1.5ex]
-     & \mathcal{J}(q) \vec{\chi}^{out}(q,t) \equiv
-     \sum_{\alpha = 1}^{q} \left(\vec{e_{\alpha}}(q+1,t+1) -\vec{e_{\alpha}}(q,t)\right) N_{\alpha}^{\star}(q,t)\\[1.5ex]
+    & \mathcal{J}(q) \,\vec{\chi}^{\mathrm{in}}(q,t) \equiv
+    -\sum_{\alpha = 1}^{q} N_{\alpha}(q,t)\left(\vec{e}_{\alpha}(q,t) - \vec{e}_{\alpha}(q-1,t-1) \right)\\[1.5ex]
+     & \mathcal{J}(q) \,\vec{\chi}^{\mathrm{out}}(q,t) \equiv
+    -\sum_{\alpha = 1}^{q} \left(\vec{e}_{\alpha}(q+1,t+1) -\vec{e}_{\alpha}(q,t)\right)\, N_{\alpha}^{\star}(q,t)\\[1.5ex]
   \end{aligned}\end{equation}
 \end{definition}
-\noindent In this paper, the momentum loss and its definition can be separated into two directions about the point $(q,t)$ i.e., inner and outer. The difference from the true "momentum loss of the propagation" is: take post-collision distribution function at $(q-1,t-1)$: $(N_{\alpha})^{\star}(q-1,t-1)$; take the pre-collision function at $(q,t)$: $N_{\alpha}(q,t)$ for curvilinear normalized discrete particle velocity set: $\vec{\tilde{e}}_{\alpha}(q-1,t-1)$ and $\vec{\tilde{e}}_{\alpha}(q,t)$ 
+\noindent where, for the discrete particle velocity set  
+\begin{equation}\begin{aligned}
+ \vec{\tilde{c}}_{\alpha}(q,t) = \vec{e}_{\alpha}(q,t) = \sum_{i = 1}^{3} (\vec{c}_{\alpha}\cdot \vec{g}_{i}) \frac{\Delta x}{\Delta t} = c_{\alpha}^{i} \,\vec{g}_{i} \,\frac{\Delta x}{\Delta t} 
+\end{aligned}\end{equation}
+\noindent In this paper, the momentum loss and its definition can be separated into two directions about the point $(q,t)$, i.e., inner and outer. The difference from the true "momentum loss of the propagation" is: take post-collision distribution function at $(q-1,t-1)$: $N_{\alpha}^{\star}(q-1,t-1)$; take the pre-collision function at $(q,t)$: $N_{\alpha}(q,t)$ for curvilinear normalized discrete particle velocity set: $\vec{\tilde{e}}_{\alpha}(q-1,t-1)$ and $\vec{\tilde{e}}_{\alpha}(q,t)$.
+The author take the constraint for momentum in the process of propagation as shown : 
+\begin{equation}\begin{aligned}
+\sum_{\alpha = 1}^{q} \vec{e}_{\alpha}(q,t)\,\delta N_{\alpha}(q,t) &= \sum_{\alpha = 1}^{q}  \vec{e}_{\alpha}(q ,t)\,N_{\alpha}(q,t)- \sum_{\alpha = 1}^{q}\vec{e}_{\alpha}(q ,t)\, N_{\alpha}^{\star}(q-1,t-1)\\[1.5ex]
+&= \mathcal{J} \cdot \frac{\vec{\chi}^{\mathrm{in}}(q,t)+ \vec{\chi}^{\mathrm{out}}(q,t)}{2} \\[1.5ex]
+\end{aligned}
+\end{equation}
+\begin{equation}\begin{aligned}
+&\sum_{\alpha = 1}^{q} \vec{e}_{\alpha}(q,t)\,\delta N_{\alpha}(q,t) = \\[1.5ex]
+&\mathcal{J} \cdot \frac{
+-\sum_{\alpha = 1}^{q} N_{\alpha}(q,t)\left(\vec{e}_{\alpha}(q,t)- \vec{e}_{\alpha}(q-1,t-1)\right)
+-\sum_{\alpha = 1}^{q} N_{\alpha}^{\star}(q,t) \left(\vec{e}_{\alpha}(q+1,t+1)- \vec{e}_{\alpha}(q,t)\right)
+}{2}
+\end{aligned}
+\end{equation}
+\begin{definition}
+  Velocity-space discretized force field -- specific case in curvilinear coordinates
+  \begin{equation}\label{eq:problem}
+    F^{i} (q , t) = \frac{\vec{\chi}^{\mathrm{in}}(q,t) + \vec{\chi}^{\mathrm{out}}(q,t)}{2} \cdot \vec{g}^{i}(q , t) 
+  \end{equation}
+\end{definition}
+\noindent 
+The macroscopic force is discretized in particle-velocity space, and this represents an inertial force produced in a curvilinear-coordinate computational domain.
 
+We now review the statement of the whole process. First, impose two constraints for conservation of density and momentum; then define the discrete inertial force.
+
+However, the following expression appears to treat a symbol as a "variable":
+\(\left(\sum_{\alpha = 0}^{q}\left(\vec{e}_{\alpha}(q,t) - \vec{e}_{\alpha}(q-1,t-1)\right)\cdot N_{\alpha}\right)\),
+which is not exactly the momentum loss. The author then uses the true constraint to define the inertial force and maps that constraint to a velocity-space discretized force field.
+
+The specific issues are:
+\begin{enumerate}
+  \item The definition of any force (including a velocity-discrete force field) should take a form like
+  \begin{equation}
+    F^{i}(q,t) = \frac{1}{\Delta t}\sum_{\alpha = 1}^{q} N_{\alpha}(q,t)\,\left(\vec{e}_{\alpha}(q,t) - \vec{e}_{\alpha}(q-1,t-1)\right)\cdot \hat{g}^{\,i}(q,t),
+  \end{equation}
+  where $\hat{g}^{\,i}=\dfrac{\vec{g}^{\,i}}{|\vec{g}^{\,i}|}$ is the unit vector in the $i$-th coordinate direction. This form uses a time difference (division by $\Delta t$) and projects onto the unit vector to obtain the component. The author's original expression omits the time scaling and the projection, which complicates interpretation.
+
+  \item The second issue concerns the use of $\vec{g}^{\,i}$ in equation \eqref{eq:problem}. If $\vec{g}^{\,i}$ is intended to extract a component, it should be the unit vector $\hat{g}^{\,i}$. Multiplying by the magnitude $|\vec{g}^{\,i}|$ changes the scaling and can remove the proper coordinate-transformation property of the discrete force field. If a Jacobian or metric factor is required, it should be introduced explicitly and justified.
+\end{enumerate}
 \end{document}
 
 
