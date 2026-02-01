@@ -310,9 +310,9 @@ We can review the Lattice Boltzman Equation-BGK (LBGK) and see the position of t
 \end{equation}
 For general orthogonal curvilinear coordinate in three dimensions, we have the loss of the momentum and loss of the density is 0, so we have the relation: 
 \begin{equation}\begin{aligned}
-  &\sum_{\alpha=0}^{q-1} \delta N_{\alpha}(\vec{q} , t) = \sum_{\alpha=0}^{q-1}N_{\alpha}(\vec{q} , t) - N_{\alpha}^{\star} (\vec{q} - \vec{e}_{\alpha} \delta t , t-1)\\[1.5ex]
-  &= \sum_{\alpha=0}^{q-1}  N_{\alpha}(\vec{q} , t) - \sum_{\alpha=0}^{q-1} N_{\alpha}^{\star} ( \vec{q} - \vec{e}_{\alpha} \delta t , t-1)
-= 0 \end{aligned}
+  \sum_{\alpha=0}^{q-1} \delta N_{\alpha}(\vec{q} , t) = \sum_{\alpha=0}^{q-1}N_{\alpha}(\vec{q} , t) - N_{\alpha}^{\star} (\vec{q} - \vec{e}_{\alpha} \delta t , t-1) = \sum_{\alpha=0}^{q-1}  N_{\alpha}(\vec{q} , t) - \sum_{\alpha=0}^{q-1} N_{\alpha}^{\star} ( \vec{q} - \vec{e}_{\alpha} \delta t , t-1)
+= 0 
+\end{aligned}
 \end{equation} 
 But for momentum loss, we have to take the physical meaning as "inertial force" at first. 
 The value in equation \eqref{eq:NLBGK} 
@@ -339,17 +339,19 @@ Substitute the vector in equation \eqref{eq:Theta}
      \sum_{\alpha = 1}^{q} \left[N_{\alpha}(\vec{q} + \vec{e}_{\alpha} \delta t ,t+1)\,\vec{e}_{\alpha}(\vec{q} + \vec{e}_{\alpha} \delta t ) - N_{\alpha}^{\star}(\vec{q},t)\,\vec{e}_{\alpha}(\vec{q})\right]\\[1.5ex]
   \end{aligned}\end{equation}
 \end{definition}
-\noindent For curvilinear coordinates, the loss of momentum always exists in the streaming step. The basic reason of the loss of macroscopic value is: 
+\noindent For curvilinear coordinates, the loss of momentum always exists in the streaming step.
+The basic reason of the loss of macroscopic value is: 
 \begin{equation}
   N_{\alpha} (\vec{q} , t) \neq N_{\alpha}^{\star}(\vec{q} - \vec{e}_{\alpha} \delta t , t - 1)
 \end{equation}
-But this paper defines two values about inner and outer at the point $(q,t)$ as shown: 
+The pre-streaming distribution function is different from the post-collision function, but the sum of distribution along the discrete velocity space is same for two function set. we can realize the fact that desity can't loss in streaming step at cuvelinear coordinate. 
+But this paper defines two values about inner and outer momentum loss at the point $(q,t)$ as shown, prepared for proving inertial force. 
 \begin{definition}
   \begin{equation}\begin{aligned}
     & \mathcal{J}(\vec{q} ) \,\vec{\chi}^{\mathrm{in}}(\vec{q} ,t) \equiv
-    -\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q},t)\cdot \left(\vec{e}_{\alpha}(\vec{q}) - \vec{e}_{\alpha}(\vec{q} - \vec{e}_{\alpha} \delta t ) \right)\\[1.5ex]
+    -\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q},t)\cdot \left(\vec{e}_{\alpha}(\vec{q}) - \vec{e}_{\alpha}(\vec{q} - \vec{e}_{\alpha} \delta t ) \right)\\
      & \mathcal{J}(\vec{q}) \,\vec{\chi}^{ \mathrm{out}}(\vec{q},t) \equiv
-    -\sum_{\alpha = 1}^{q} \left(\vec{e}_{\alpha}(\vec{q} + \vec{e}_{\alpha} \delta t ) -\vec{e}_{\alpha}(\vec{q})\right)\cdot N_{\alpha}^{\star}(\vec{q},t)\\[1.5ex]
+    -\sum_{\alpha = 1}^{q} \left(\vec{e}_{\alpha}(\vec{q} + \vec{e}_{\alpha} \delta t ) -\vec{e}_{\alpha}(\vec{q})\right)\cdot N_{\alpha}^{\star}(\vec{q},t)
   \end{aligned}\end{equation}
 \end{definition}
 \noindent where, for the discrete particle velocity set  
@@ -357,23 +359,20 @@ But this paper defines two values about inner and outer at the point $(q,t)$ as 
  \vec{\tilde{c}}_{\alpha}(\vec{q}) = \vec{e}_{\alpha}(\vec{q} ) = \sum_{i = 1}^{3} (\vec{c}_{\alpha}\cdot \vec{g}_{i}) \frac{\Delta x}{\Delta t} = c_{\alpha}^{i} \,\vec{g}_{i} \,\frac{\Delta x}{\Delta t} 
 \end{aligned}\end{equation}
 \noindent In this paper, the momentum loss and its definition can be separated into two directions about the point $(\vec{q},t)$, i.e., inner and outer.
-The difference from the true "momentum loss of the propagation" is: take post-collision distribution function at $(\vec{q} - \vec{e}_{\alpha} \delta t ,t-1)$: $N_{\alpha}^{\star}(\vec{q} - \vec{e}_{\alpha} \delta t ,t-1)$;
-take the pre-collision function at $(\vec{q},t)$: $N_{\alpha}(\vec{q},t)$ for curvilinear normalized discrete particle velocity set: 
+The difference from the true "momentum loss of the propagation" is: took post-collision distribution function at $(\vec{q} - \vec{e}_{\alpha} \delta t ,t-1)$: $N_{\alpha}^{\star}(\vec{q} - \vec{e}_{\alpha} \delta t ,t-1)$;
+took the pre-collision function at $(\vec{q},t)$: $N_{\alpha}(\vec{q},t)$ for curvilinear normalized discrete particle velocity set: 
 $\vec{\tilde{e}}_{\alpha}(\vec{q} - \vec{e}_{\alpha} \delta t ,t-1)$ and $\vec{\tilde{e}}_{\alpha}(\vec{q},t)$.
 The author take the constraint for momentum in the process of propagation as shown : 
 \begin{equation}\begin{aligned}
-\sum_{\alpha = 1}^{q} \vec{e}_{\alpha}(\vec{q},t)\,\delta N_{\alpha}(\vec{q} ) &= \sum_{\alpha = 1}^{q}  \vec{e}_{\alpha}(\vec{q} )\,N_{\alpha}(\vec{q})- \sum_{\alpha = 1}^{q}\vec{e}_{\alpha}(\vec{q})\, N_{\alpha}^{\star}(\vec{q} - \vec{e}_{\alpha} \delta t ,t-1)\\[1.5ex]
-&= \mathcal{J} \cdot \frac{\vec{\chi}^{\mathrm{in}}(\vec{q} ,t)+ \vec{\chi}^{\mathrm{out}}(\vec{q} ,t)}{2} \\[1.5ex]
-\end{aligned}
-\end{equation}
-\begin{equation}\begin{aligned}
-&\sum_{\alpha = 1}^{q} \vec{e}_{\alpha}(\vec{q} )\,\delta N_{\alpha}(\vec{q} ,t) = \\[1.5ex]
-&\mathcal{J} \cdot \frac{
+&\sum_{\alpha = 1}^{q} \vec{e}_{\alpha}(\vec{q},t)\,\delta N_{\alpha}(\vec{q} ) = \sum_{\alpha = 1}^{q}  \vec{e}_{\alpha}(\vec{q} )\,N_{\alpha}(\vec{q})- \sum_{\alpha = 1}^{q}\vec{e}_{\alpha}(\vec{q})\, N_{\alpha}^{\star}(\vec{q} - \vec{e}_{\alpha} \delta t ,t-1) = \mathcal{J} \cdot \frac{\vec{\chi}^{\mathrm{in}}(\vec{q} ,t)+ \vec{\chi}^{\mathrm{out}}(\vec{q} ,t)}{2} \\[1.5ex]
+& = \mathcal{J} \cdot \frac{
 -\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q})\left(\vec{e}_{\alpha}(\vec{q})- \vec{e}_{\alpha}(\vec{q} - \vec{e}_{\alpha} \delta t )\right)
 -\sum_{\alpha = 1}^{q} N_{\alpha}^{\star}(\vec{q} ,t) \left(\vec{e}_{\alpha}(\vec{q} + \vec{e}_{\alpha} \delta t )- \vec{e}_{\alpha}(\vec{q})\right)
 }{2}
 \end{aligned}
 \end{equation}
+
+
 \begin{definition}
   Velocity-space discretized force field -- specific case in curvilinear coordinates
   \begin{equation}\label{eq:problem}
@@ -382,9 +381,8 @@ The author take the constraint for momentum in the process of propagation as sho
 \end{definition}
 \noindent 
 The macroscopic force is discretized in particle-velocity space, and this represents an inertial force produced in a curvilinear-coordinate computational domain.
-
-We now review the statement of the whole process. First, impose two constraints for conservation of density and momentum; then define the discrete inertial force.
-
+We now review the statement of the whole process. 
+First, impose two "symbols" for  inner and outer momentum loss; then define the form of velocity space-discretized force field , and proved the inertial force using the mometum loss finally. 
 However, the following expression appears to treat a symbol as a "variable":
 $$\left(\sum_{\alpha = 1}^{q}\left(\vec{e}_{\alpha}(\vec{q} ) - \vec{e}_{\alpha}(\vec{q} - \vec{e}_{\alpha} \delta t )\right)\cdot N_{\alpha}(\vec{q} ,t)\right)$$
 which is not exactly the momentum loss. The author then uses the true constraint to define the inertial force and maps that constraint to a velocity-space discretized force field.
@@ -397,44 +395,36 @@ The specific issues are:
     &\mathcal{J} (\vec{q}) F^{i} (\vec{q} ,t) \equiv \frac{\text{Momentum Loss}}{ \Delta t} \cdot \vec{e}_{i} \frac{1}{|\vec{g}_{i}|}
   \end{aligned}\end{equation}
   where $\hat{g}_{\,i}=\dfrac{\vec{g}_{\,i}}{|\vec{g}_{\,i}|}$ is the unit vector in the $i$-th coordinate direction. This form uses a time difference (division by $\Delta t$) and projects onto the unit vector to obtain the component. The author's original expression omits the time scaling and the projection, which complicates interpretation.
-
+  I thought that he set the time step is 1. 
   \item The second issue concerns the use of $\vec{g}^{\,i}$ in equation \eqref{eq:problem}. If $\vec{g}^{\,i}$ is intended to extract a component, it should be the unit vector $\hat{g}^{\,i}$. Multiplying by the magnitude $|\vec{g}^{\,i}|$ changes the scaling and can remove the proper coordinate-transformation property of the discrete force field. If a Jacobian or metric factor is required, it should be introduced explicitly and justified.
 \end{enumerate}
-\begin{derivation}
-Proof of the equation.
-  \begin{equation}
-    \mathcal{J}(\vec{q})\, F^{\,i}(\vec{q},t) = -\frac{1}{2} \sum_{\alpha = 1}^{q} \Bigl[\; N_{\alpha}(\vec{q},t)\,\Delta\vec{e}_{\alpha}^{\,i}(\vec{q}) + N_{\alpha}^{\star}(\vec{q},t)\,\Delta\vec{e}_{\alpha}^{\,i}(\vec{q}+\vec{e}_{\alpha}\delta t)\;\Bigr] \;,
-  \end{equation}
-  where we write the change of the discrete velocity component as
-  \[\Delta\vec{e}_{\alpha}^{\,i}(\vec{q}) = \vec{e}_{\alpha}(\vec{q}) - \vec{e}_{\alpha}(\vec{q}-\vec{e}_{\alpha}\delta t)\,.\]
-
-The derivation follows from the momentum-loss identity
+\begin{derivation} prove of the equation
   \begin{equation}\begin{aligned}
-    &\sum_{\alpha=1}^{q} \vec{e}_{\alpha}(\vec{q})\,\delta N_{\alpha}(\vec{q},t)
-    = \mathcal{J}(\vec{q})\,\frac{\vec{\chi}^{\mathrm{in}}(\vec{q},t)+\vec{\chi}^{\mathrm{out}}(\vec{q},t)}{2}\\[4pt]
-    &\quad= -\frac{1}{2} \Bigl(\sum_{\alpha=1}^{q} N_{\alpha}(\vec{q},t)\,\Delta\vec{e}_{\alpha}(\vec{q}) + \sum_{\alpha=1}^{q} N_{\alpha}^{\star}(\vec{q},t)\,\Delta\vec{e}_{\alpha}(\vec{q}+\vec{e}_{\alpha}\delta t)\Bigr)\,.
+    \mathcal{J} (\vec{q} )  F^{\ i}(\vec{q} , t) = \frac{-1}{2} (\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q} ,t)\left(c_{\alpha}^{i} \Theta_{i}^{j} (\vec{q} - \vec{e}_{\alpha}\delta t , \vec{q})\right)
+    + \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(c_{\alpha}^{i} \Theta_{i}^{j} (\vec{q} + \vec{e}_{\alpha}\delta t , \vec{q} \right))
   \end{aligned}\end{equation}
-
-Projecting onto the $i$-th coordinate direction we obtain
+\noindent The principle of the derivation can apart into three things :
+  \begin{enumerate} 
+    \item $\sum_{\alpha=1}^{q}\vec{e}_{\alpha}(\vec{q})\ \delta N_{\alpha}(\vec{q},t)\equiv$ Momentum Loss of the Streaming Step 
+    \item $\sum_{\alpha=1}^{q}\vec{e}_{\alpha}(\vec{q})\ \delta N_{\alpha}(\vec{q},t)\equiv \mathcal{J} (\vec{q}) \cdot \frac{\vec{\chi}^{\ in } + \vec{\chi}^{\ out}}{2}$ (for Volumetric LBM)
+    \item Velocity space discretized force field $\mathcal{J} (\vec{q} ) F^{\ i}\equiv \frac{\text{Momentum Loss}}{\Delta t}\cdot \vec{e}_{j} \frac{1}{|\vec{g}_{j}|}$ \\
+  \end{enumerate}
   \begin{equation}\begin{aligned}
-    &\mathcal{J}(\vec{q})\,F^{\,i}(\vec{q},t)
-    = \left(\sum_{\alpha=1}^{q} \vec{e}_{\alpha}(\vec{q})\,\delta N_{\alpha}(\vec{q},t)\right)\cdot \hat{g}^{\,i}(\vec{q}) \\[4pt]
-    &= -\frac{1}{2} \Bigl(\sum_{\alpha=1}^{q} N_{\alpha}(\vec{q},t)\,\Delta\vec{e}_{\alpha}(\vec{q})\cdot\hat{g}^{\,i}(\vec{q}) \\
-    &\qquad\qquqquad + \sum_{\alpha=1}^{q} N_{\alpha}^{\star}(\vec{q},t)\,\Delta\vec{e}_{\alpha}(\vec{q}+\vec{e}_{\alpha}\delta t)\cdot\hat{g}^{\,i}(\vec{q})\Bigr)\,.
+    &\mathcal{J} (\vec{q}) F^{1} = \sum_{\alpha = 1}^{q}\vec{e}_{\alpha}(\vec{q}) \delta  N_{\alpha}(\vec{q} , t) \cdot \vec{g}^{\ 1} = \sum_{\alpha = 1}^{q}\vec{e}_{\alpha}(\vec{q}) \delta  N_{\alpha}(\vec{q} , t)  \cdot \frac{\vec{g_{2}} \cross \vec{g_{3}}}{(\vec{g_{2}} \cross \vec{g_{3}})\cdot \vec{g}_{1}}\\[1.5ex] 
+    &= \frac{-1}{2} \left(\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q} ,t)\left(\vec{e}_{\alpha}(\vec{q}) - \vec{e}_{\alpha}(\vec{q} - \vec{e}_{\alpha} \delta t ) \right) + \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(\vec{e}_{\alpha}(\vec{q} + \vec{e}_{\alpha} \delta t) - \vec{e}_{\alpha}(\vec{q}) \right)\right)\cdot \frac{\vec{g_{2}} \cross \vec{g_{3}}}{(\vec{g_{2}} \cross \vec{g_{3}})\cdot \vec{g}_{1}}\\[1.5ex] 
+    &= \sum_{\alpha = 1}^{q}\vec{e}_{\alpha}(\vec{q}) \delta  N_{\alpha}(\vec{q} , t) \cdot \vec{e}_{j} \frac{1}{|\vec{g}_{j}|}\\[1.5ex] 
+    &= \frac{-1}{2} \left(\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q} ,t)\left(\vec{e}_{\alpha}(\vec{q}) - \vec{e}_{\alpha}(\vec{q} - \vec{e}_{\alpha} \delta t ) \right)+ \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(\vec{e}_{\alpha}(\vec{q} + \vec{e}_{\alpha} \delta t ) - \vec{e}_{\alpha}(\vec{q}) \right)\right)\cdot \vec{e}_{j} \frac{1}{|\vec{g}_{j}|}\\[1.5ex] 
+    &= \frac{-1}{2} (\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q} ,t)\left(\vec{e}_{\alpha}(\vec{q})\cdot \vec{e}_{j} \frac{1}{|\vec{g}_{j}|}  - \vec{e}_{\alpha}(\vec{q} - \vec{e}_{\alpha} \delta t )\cdot \vec{e}_{j} \frac{1}{|\vec{g}_{j}|} \right)\\[1.5ex] 
+    &+ \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(\vec{e}_{\alpha}(\vec{q} + \vec{e}_{\alpha} \delta t )\cdot \vec{e}_{j} \frac{1}{|\vec{g}_{j}|}- \vec{e}_{\alpha}(\vec{q})\cdot \vec{e}_{j} \frac{1}{|\vec{g}_{j}|}\right))\\[1.5ex]
+    &= \frac{-1}{2}  \left(\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q} ,t)\left(c_{\alpha}^{j} \cdot \frac{|\vec{g}_{j}|(\vec{q}) - |\vec{g}_{j}|(\vec{q} - \vec{e}_{\alpha}\delta t))}{|\vec{g}_{j}|} \right)
+    + \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(c_{\alpha}^{j} \cdot \frac{|\vec{g}_{j}|(\vec{q} +  \vec{e}_{\alpha}\delta t) - |\vec{g}_{j}|(\vec{q} ))}{|\vec{g}_{j}|} \right)\right)\\[1.5ex]
+    &= \frac{-1}{2} \left(\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q} ,t)\left(c_{\alpha}^{j} \cdot \frac{{\color{red}|\vec{g}_{j}|(\vec{q}-\vec{e}_{\alpha}\delta t) - |\vec{g}_{j}|(\vec{q})}}{|\vec{g}_{j}|} \right)
+    + \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(c_{\alpha}^{j} \cdot \frac{|\vec{g}_{j}|(\vec{q} +  \vec{e}_{\alpha}\delta t) - |\vec{g}_{j}|(\vec{q} ))}{|\vec{g}_{j}|} \right)\right)\\[1.5ex]
+    &= \frac{-1}{2}  \left(\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q} ,t)\left(c_{\alpha}^{i} \Theta_{i}^{j} (\vec{q} - \vec{e}_{\alpha}\delta t , \vec{q})\right)
+    + \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(c_{\alpha}^{i} \Theta_{i}^{j} (\vec{q} + \vec{e}_{\alpha}\delta t , \vec{q} \right)\right)
   \end{aligned}\end{equation}
-
-Using the representation $\vec{e}_{\alpha}(\vec{q}) = c_{\alpha}^{j}(\vec{q})\,\vec{g}_{j}(\vec{q})$ and $\hat{g}^{\,i}=\vec{g}^{\,i}/|\vec{g}^{\,i}|$, the component form becomes
-  \begin{equation}\begin{aligned}
-    &\mathcal{J}(\vec{q})\,F^{\,i}(\vec{q},t)
-    = -\frac{1}{2} \sum_{\alpha=1}^{q} \Bigl[ N_{\alpha}(\vec{q},t)\,c_{\alpha}^{j}(\vec{q}-\vec{e}_{\alpha}\delta t)\,\Theta_{j}^{\,i}(\vec{q}-\vec{e}_{\alpha}\delta t,\vec{q}) \\
-    &\qquad\qquad\qquad + N_{\alpha}^{\star}(\vec{q},t)\,c_{\alpha}^{j}(\vec{q}+\vec{e}_{\alpha}\delta t)\,\Theta_{j}^{\,i}(\vec{q}+\vec{e}_{\alpha}\delta t,\vec{q}) \Bigr]\,,
-  \end{aligned}\end{equation}
-
-where we define the geometric change
-  \[\Theta_{j}^{\,i}(\vec{q}_a,\vec{q}_b) \equiv \frac{\vec{g}_{j}(\vec{q}_a)\cdot\vec{g}^{\,i}(\vec{q}_b) - \vec{g}_{j}(\vec{q}_b)\cdot\vec{g}^{\,i}(\vec{q}_b)}{|\vec{g}^{\,i}(\vec{q}_b)|}\,.
-
 \end{derivation}
-,
+
 
 \end{document}
 
