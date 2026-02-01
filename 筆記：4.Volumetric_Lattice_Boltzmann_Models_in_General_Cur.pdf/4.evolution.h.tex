@@ -295,8 +295,59 @@ so the rule is used for any 2n-1 orders poilynomials. And 1 dimension n orders G
   \omega(x) = \frac{1}{\sqrt{2 \pi}} e^{\frac{-x^{2}}{2}} \\[1.5ex]
   \omega(\vec{r}) = \frac{1}{\sqrt{2 \pi}} e^{\frac{-\vec{r}\cdot \vec{r}}{2}}
 \end{aligned}\end{equation}
-The variables $r_{i}$ is the roots of 1 dimension n orders Hermite polyhnomnial. A thing you have to realize is n orders Hernite polynomial have n roots i.e. the order of n order Hernite polynomial is equal to number of roots. 
-
+The variables $r_{i}$ is the roots of 1 dimension n orders Hermite polyhnomnial. A thing you have to realize is n orders Hernite polynomial have n roots i.e. the order of n order Hernite polynomial is equal to number of roots.
+\vspace{-2.5ex}
+\paragraph{3 dimensons n orders Hermite polynomials}
+\noindent The definition of 3 demension n orders Hernite polynomials is described as below : 
+\begin{equation}\begin{aligned}
+  \overleftrightarrow{H}^{(n)}(\vec{r}) \equiv (-1)^{n}  \frac{1}{\omega(\vec{r}) } \vec{\nabla}^{(n)} \omega(\vec{r})
+\end{aligned}\end{equation}
+\noindent the symbol $\vec{\nabla }$ gradient of weight function. n order Hermite polynomial is an n order tensor field. The order of tensor field is equal to number of gradient operators in Hermite formula. 
+For example  :  2 dimensions 2nd order Hermite polynomial : 
+\begin{equation}\begin{aligned}
+  \overleftrightarrow{H}^{(2)} (x,y) &= H^{(2)}_{xx} \vec{e}_{x}\vec{e}_{x} + H^{(2)}_{xy} \vec{e}_{x}\vec{e}_{y} + H^{(2)}_{yy} \vec{e}_{y}\vec{e}_{y} \\[1.5ex]
+  &= \left(x^{2}-1\right) \vec{e}_{x}\vec{e}_{x} + xy\ \vec{e}_{x}\vec{e}_{y} +\left(y^{2}-1\right)\vec{e}_{y}\vec{e}_{y} \\
+\end{aligned}\end{equation}
+For any $2n-1$ order polynomial, 1 dimension n order Gauss-Hermite  quadrature rule can solve integration which integration doman from $\ -\infty\ $to$\ \infty\ $ .
+\vspace{-2.5ex}
+\paragraph{Gauss-Hermite promted to high dimensions}
+\noindent Assume a volume integrtation for hole 3 dimensions space : 
+\begin{equation}
+  \int_{\Omega} d^{3} r \omega(\vec{r}) \mathrm{P}^{\mathrm{N}}(\vec{r}) = 
+  \int_{\Omega} d^{3} r  \omega(\vec{r})  \sum_{a+b+c \le N} x^{a} y^{b} z^{c} 
+\end{equation}
+Bacause the summiton have a limit number terms, so the integration can be putted into summition. 
+we have 
+\begin{equation}\begin{aligned}
+ \sum_{a+b+c \le N } \int_{\Omega}d^{3} r \omega(\vec{r} ) x^{a} y^{b} z^{c} 
+\end{aligned}\end{equation}
+\noindent Now we have to use the property of exponential function : 
+\begin{equation*}
+  \omega(\vec{r})= \omega(x)\omega(y)\omega(z)
+\end{equation*}
+\begin{equation}\begin{aligned}
+ \sum_{a+b+c \le N } \int_{\Omega}d^{3} r \omega(\vec{r} ) x^{a} y^{b} z^{c} 
+ = \sum_{a+b+c \le N } \int_{\Omega}dx \omega(x) x^{a} \int_{\Omega}dy \omega(y) y^{b} \int_{\Omega}dz \omega(z) z^{c} 
+\end{aligned}\end{equation}
+Using 1 dimension n orders Gauss-Hermite quadrature rule to each integration pointed to different direction.We have
+\begin{equation}\begin{aligned}
+\sum_{a+b+c \le N} \sum_{i = 1}^{n_a}\omega(x_{i}) x_{i}^{a} \sum_{i = 1}^{n_b} \omega(y_{i}) y_{i}^{b} \sum_{i = 1}^{n_c} \omega(z_{i}) z_{i}^{c} 
+\end{aligned}
+\end{equation}
+\noindent where $(2n_{a}-1) > a$, $(2n_{b}-1) > b$, $(2n_{c}-1) > c$. The detail as below: 
+\begin{equation}
+\begin{aligned}
+  \int_{\Omega}dx \omega(x) x^{a} = \sum_{i = 1}^{n_a}\omega(x_{i}) x_{i}^{a} \ \text{(1 dimension $n_a$ order G-H rule)}
+\end{aligned}
+\end{equation}
+\noindent where $x_{i}$ is the root of 1 dimension $n_a$ order Hermite function. Usually, for each 1 dimension Gauss-Hermite quadrature rule, we take the order as the order of integrated function i.e., take the max order among the polynomial terms, so we can take the summition to deal with the inrtegration above : 
+\begin{equation}\begin{aligned}
+ \sum_{a+b+c \le N } \int_{\Omega}d^{3} r \omega(\vec{r} ) x^{a} y^{b} z^{c} = \sum \sum_{i = 1}^{(N-1)/2} \omega(x_{i}) x_{i}^{a} \sum_{i = 1}^{(N-1)/2}\omega(y_{i}) y_{i}^{b} \sum_{i = 1}^{(N-1)/2}  \omega(z_{i}) z_{i}^{c} 
+\end{aligned}\end{equation}
+\noindent For example : calculate the integration $\int_{-\infty}^{\infty}dx \int_{-\infty}^{\infty}dy \omega(x,y) x^{2}y$
+\begin{equation*}\begin{aligned}
+  \int_{-\infty}^{\infty}dx \int_{-\infty}^{\infty}dy \omega(x,y) x^{2}y = \int_{-\infty}^{\infty}dx \int_{-\infty}^{\infty}dy \frac{1}{\sqrt{2\pi}} e^{\frac{-(x^{2}+y^{2})}{2}} x^{2}y = \left(w_{1}y_{1} + w_{2}y_{2}\right)\left(w_{1}x_{1}^{2} + w_{2}x_{2}^{2}\right) 
+\end{aligned}\end{equation*}
 
 \section{Momentum Loss of Distribution Function in Propagation}
 In general curvilinear coordinates, for macroscopic values i.e., $\rho , \rho\vec{u}$ exist the loss due to the curvature and uniform properties. And this paper shows the value below: 
@@ -424,8 +475,14 @@ The specific issues are:
     + \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(c_{\alpha}^{i} \Theta_{i}^{j} (\vec{q} + \vec{e}_{\alpha}\delta t , \vec{q} \right)\right)
   \end{aligned}\end{equation}
 \end{derivation}
-
-
+\subsection{Basic Equation for Curvilinear Coordinate}
+\begin{equation}\begin{aligned}
+\delta N_{\alpha}(\vec{q} , t) = w_{i}\left(\frac{c_{\alpha}^{i} F^{i}}{c_{s}^{2}} + \frac{c_{\alpha}^{i}c_{\alpha}^{j}-c_s^{2}\delta ^{i j }}{2c_{s}^{4}}\right)\\[1.5ex]
+\sum_{\alpha = 1}^{q} f^{eq}(\vec{q} , t) = \rho \\[1.5ex]
+\sum_{\alpha = 1}^{q} f^{eq}(\vec{q} , t) c_{\alpha}^{i} = \rho u^{i}\\[1.5ex]
+\sum_{\alpha = 1}^{q} f^{eq}(\vec{q} , t) c_{\alpha}^{i}c_{\alpha}^{j} = \rho c_s^{2} g^{ij} + \rho (u^{i} + \frac{1}{2}\frac{F^{i}}{\rho})(u^{j} + \frac{1}{2}\frac{F^{j}}{\rho})
+\end{aligned}
+\end{equation}
 \end{document}
 
 
