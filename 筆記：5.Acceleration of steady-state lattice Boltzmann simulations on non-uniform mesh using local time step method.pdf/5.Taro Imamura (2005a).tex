@@ -392,9 +392,12 @@ This is complexity for analiyzing the motion of particles. Let's define normaliz
 where the vector $\vec{e}_{\alpha}$ is the non-dimension discrete particle velocity set, and vector $\vec{g}_{i}$ is the tangent vector related to the curvature at the position. $\frac{\Delta x}{\Delta t}$ is the lattice speed, and its function in this definition is velocity dimension.
 so we rewrite the definition  to  another form below based on differential geometry.
 \begin{equation}\begin{aligned}
-  \vec{e}_{\alpha}^{i} = c_{\alpha}^{i}  \frac{\partial }{\partial }
+  \vec{e}_{\alpha}^{\ j} = c_{\alpha}^{i}  \frac{\partial \xi_{j}}{\partial x_{i}}
 \end{aligned}\end{equation}
-
+where $x$ represent the index of Cartesian coordinate and $\xi$ is the index of general curvilinear coordinate, and the differential represent the basis transform from Cartesian coordinate to curve coordinate. 
+Therefore, we can see the particle velocity distortion through the factor of the transform.
+\paragraph{Path integration of the particle velocity}
+The streaming step function 
 \subsection{Boundary Condition }
 \subsection{Algorithm}
 
