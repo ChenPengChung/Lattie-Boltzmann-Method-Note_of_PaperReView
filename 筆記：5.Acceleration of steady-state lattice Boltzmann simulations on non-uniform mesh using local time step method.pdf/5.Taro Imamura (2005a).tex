@@ -274,10 +274,9 @@
 \tableofcontents
 \newpage
 \section{General Interpolation LBM}
-This note will promote the Interpolation-supplement Lattice Boltzmann Method for using in curvilinear coordinate. However, The first stratgy is transform Cartesian coordinate to general curvilinear coordinate through comformal mapping.  
-Different from the preview paper, this method is extend $\textbf{ISLBM}$ ,and do not change the lattice system to curve motion. 
-Notice, because exist the transform based on transformation, so we still compute the curve path for pasrticle in computational domain. 
-like the picture below : 
+This note presents an extension of the Interpolation-Supplemented Lattice Boltzmann Method (ISLBM) for use in curvilinear coordinate systems. The first strategy is to transform the Cartesian coordinate system to a general curvilinear coordinate system through conformal mapping.
+Different from previous papers, this method extends \textbf{ISLBM} without changing the lattice system to accommodate curved motion.
+Note that because the transformation is based on coordinate mapping, we still compute the curved particle paths in the computational domain, as shown in the figure below:
 \begin{figure}[H]
   \centering 
   \begin{subfigure}{0.45\textwidth}
@@ -338,8 +337,8 @@ we can do some simple computation, and get the result below :
 \end{aligned}\end{equation}
 \noindent Furthermore, we can rewrite this as:
 \begin{equation}\begin{aligned}\label{eq:e6}
-  &-x_{\eta} h_{\xi} \vec{e_{\xi}} + x_{\xi}h_{\eta} \vec{e_{\eta}}  = \vec{e}_{y} \left(x_{\xi}y_{\eta} - x_{\eta}y_{\xi}\right) \\[1.5ex]
-  &y_{\eta} h_{\xi} \vec{e_{\xi}} - y_{\xi}h_{\eta} \vec{e_{\eta}}  = \vec{e}_{x} \left(x_{\xi}y_{\eta} - x_{\eta}y_{\xi}\right)\\[1.5ex]
+  -x_{\eta} h_{\xi} \vec{e_{\xi}} + x_{\xi}h_{\eta} \vec{e_{\eta}} &= \vec{e}_{y} \left(x_{\xi}y_{\eta} - x_{\eta}y_{\xi}\right) \\[1.5ex]
+  y_{\eta} h_{\xi} \vec{e_{\xi}} - y_{\xi}h_{\eta} \vec{e_{\eta}}  &= \vec{e}_{x} \left(x_{\xi}y_{\eta} - x_{\eta}y_{\xi}\right)\\[1.5ex]
 \end{aligned}\end{equation}
 Substitution the equation \eqref{eq:e6} into \eqref{eq:r5} 
 \begin{equation}
@@ -356,6 +355,28 @@ Substitution the equation \eqref{eq:e6} into \eqref{eq:r5}
 The equation above is Jacobian relation.
 
 \subsection{Transform for Lattice Boltzmann Equation}
+First, review the basic governing equation for standard lattice boltzman method i.e., lattice boltzmann equation in Cartesian coordinate with 3 dimension: 
+\begin{equation}\begin{aligned}
+ f_{i}(\vec{x} + \vec{c}_{i} \Delta t , t + 1 ) = f_{i}(\vec{x} , t) + \Omega(f_{i} (\vec{x} , t), f_{i}^{eq}(\rho , \vec{u}, t))\
+\end{aligned}\end{equation}
+where the symbol $\Omega$ is a coillision operator, so it can apart two types of forms.
+
+\begin{equation}\begin{aligned}
+    f_{i}(\vec{x} + \vec{c}_{i} \Delta t , t + 1 ) = f_{i}(\vec{x} , t) + \omega(f_{i} (\vec{x} , t), f_{i}^{eq}(\rho , \vec{u}, t)) 
+\end{aligned}\end{equation}
+If the collision operator is chosen as the BGK operator, we call the equation the \textbf{LBGK} equation. 
+On the other hand, we can allow each momentum component to have a different relaxation effect. 
+To achieve this, we introduce a basis transformation matrix that transforms the function from velocity space to momentum space. 
+This means that the streaming step and collision step are performed in separate spaces.
+Let's show the transform below : 
+\begin{equation}\begin{aligned}
+      \textbf{M} f_{i}(\vec{x} + \vec{c}_{i \Delta t , t + 1 }) &= \textbf{M}f_{i}(\vec{x} , t) + \textbf{S}\textbf{M}(f_{i} (\vec{x} , t ,  f_{i}^{eq}(\rho , \vec{u}, t)) \\[1.5ex]
+      &= \textbf{M}f_{i}(\vec{x} , t) + \textbf{S} \left(\vec{m}(\vec{x} , t) - \vec{m}^{eq}(\vec{x} , t ,  f_{i}^{eq}(\rho , \vec{u}, t))\right)
+\end{aligned}\end{equation}
+In this work, we first apply the LBGK equation and use coordinate mapping to modify the streaming process, thereby extending ISLBM to curvilinear coordinate systems. The limitation of this approach is that we have not yet extended the MRT operator to general coordinate systems, as we have not fully grasped the underlying mathematical theory and physical mechanisms.
+\subsubsection{Transform Collision Step}
+
+\subsubsection{Transform Straming Step }
 \subsection{Boundary Condition }
 \subsection{Algorithm}
 
