@@ -397,7 +397,58 @@ so we rewrite the definition  to  another form below based on differential geome
 where $x$ represent the index of Cartesian coordinate and $\xi$ is the index of general curvilinear coordinate, and the differential represent the basis transform from Cartesian coordinate to curve coordinate. 
 Therefore, we can see the particle velocity distortion through the factor of the transform.
 \paragraph{Path integration of the particle velocity}
-The streaming step function 
+The streaming step equation $$f_{\alpha}(\vec{x} , t) = f_{\alpha}^{\star}(\vec{x}-+ \vec{c}_{\alpha} \delta t, t)$$
+we can see the essential issue is compute the integration of the dis crete particle velocity to know the  position where is post streaming position and streaming length. The length of the streaming step is defined as  below : 
+\begin{equation}\begin{aligned}
+  \delta \vec{\xi}_{\alpha} = \int_{0}^{\Delta t} d \vec{\xi}_{\alpha} = \int_{0}^{\Delta t} \vec{e}_{\alpha} dt 
+\end{aligned}\end{equation}
+\noindent 1st explicit Euler method : 
+\begin{equation}\begin{aligned}
+  \delta \vec{\xi}_{\alpha} \approx \vec{e}_{\alpha} \Delta t \dots O(\Delta t)
+\end{aligned}\end{equation}
+\noindent 2nd order Runge-Kutta method : \\
+\noindent  using 2nd  Runge-Kutta method to solving the integration, then it is apart into two step : 
+\begin{equation}\begin{aligned}\label{eq:RK}
+  &\text{step 1 : } \Delta  \vec{\xi}_{\alpha}^{(1)} = \frac{1}{2} \Delta t \vec{e}_{\alpha} \\[1.5ex]
+  &\text{step 2 : } \Delta  \vec{\xi}_{\alpha} =  \Delta t \vec{e}_{\alpha} (\vec{\xi}  - \vec{\xi}_{\alpha}^{(1)})
+\end{aligned}\end{equation}
+The result of discrete integration \eqref{eq:RK} have 2nd order accuracy in time space. The figure show that the method of 2nd Runge-Kutta to treat integration.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{3.png}
+\caption{integration skill-2nd Runge-Kutta}
+\label{fig:RK}
+\end{figure} 
+\noindent In Interpolation-Supplemented LBM, the streaming step is implemented by pulling data backward from the pre-streaming position to the current grid node through interpolation. This approach ensures that information does not spread from grid nodes to non-physical locations. Therefore, when integrating the particle path, we integrate backward from $\vec{\xi}_{\alpha}$ to $\vec{\xi}_{\alpha}-\Delta \vec{\xi}_{\alpha}$, rather than forward from $\vec{\xi}_{\alpha}$ to $\vec{\xi}_{\alpha} + \Delta \vec{\xi}_{\alpha}$.
+\paragraph{Streaming step after transformation}
+When we get the result of the path integration of particle discrete velocity along the direction, we can rewrite the streaming step equation below : 
+The discrete process is little similar as the process of distribution for time-space discretizing. However, the term diecretized is different, one is time integration of distribution and the other is time integration of particle path. 
+In curvilinear coordinate , we have 
+\begin{equation}\begin{aligned}
+  f_{\alpha} (\vec{\xi}- , t ) = f_{\alpha}^{\star}(\vec{\xi}-\Delta \vec{\xi}_{\alpha} , t)
+\end{aligned}\end{equation}
+where$\Delta \vec{\xi}_{\alpha}$ the change of position have 2nd order accuracy in time space, and R.H.S term is post-collision function.
+\paragraph{Accuracy effect in time space for lattice bolrtzmann equation - BGK operator}
+\noindent LBGK in curvilinear coordinate can be rewrite below : 
+\begin{equation}\begin{aligned}\label{eq:4}
+  f_{\alpha} (\vec{\xi}  , t + 1) - f_{\alpha} (\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t ) = \omega (f_{\alpha}(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t ) - f_{\alpha}^{eq}(\rho , \vec{u} , t)) \dots (\text{curvilinear coordinate})
+\end{aligned}\end{equation}
+and we can define a material derivative for discrete-velocity Boltzmann equation 
+\begin{equation}\begin{aligned}
+   \mathcal{D}_{t} = \partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi_{\alpha}}
+\end{aligned}\end{equation}\
+we call above operator as "discrete-velocity material derivation".
+Using Taylor expansion on equation \eqref{eq:4}  
+\begin{equation}\begin{aligned}
+  &\left.\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi_{\alpha}}\right)f_{\alpha} \Delta t  + \frac{1}{2}\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi_{\alpha}}\right)^2f_{\alpha} \Delta t ^{2}\right |_{(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t )}= \omega (f_{\alpha}(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t ) - f_{\alpha}^{eq}(\rho , \vec{u} , t)) \\[1.5ex]
+\end{aligned}\end{equation}
+left hand side and right hand side are both divided by $\Delta t$, can reover N-S equation in differential form.
+\begin{equation}\begin{aligned}
+  &\left.\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi_{\alpha}}\right)f_{\alpha} + \frac{1}{2}\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi_{\alpha}}\right)^2f_{\alpha} \Delta t \right |_{(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t )} + O(\Delta t^{2})= \omega (f_{\alpha}(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t ) - f_{\alpha}^{eq}(\rho , \vec{u} , t)) \\[1.5ex]
+\end{aligned}\end{equation}
+The second term of the velocity-discrete Boltzmann equation corresponds to the shear stress field through Chapman-Enskog expansion. 
+If we use the explicit Euler method to discretize the particle path integration, the first term has only zeroth-order temporal accuracy, while the stress term has only first-order temporal accuracy. This is insufficient to recover the Navier-Stokes equation. 
+Therefore, we must use a method that provides higher-order temporal accuracy for the path integration, ensuring that the differential term of the velocity-discrete Boltzmann equation has at least second-order temporal accuracy.
 \subsection{Boundary Condition }
 \subsection{Algorithm}
 
