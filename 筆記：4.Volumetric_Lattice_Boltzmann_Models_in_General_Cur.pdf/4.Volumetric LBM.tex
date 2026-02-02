@@ -273,14 +273,14 @@
 \tableofcontents
 \newpage
 \section{Gauss-Hermit quadrature rule }
-This section would show the perocess the 1 dimension n orders Gauss-Hermite quadrature to 3 dimension n orders Gauss-Hermite quadratuere rule. 
-Below the equation is the basic quadrture rule for solving integration.
+This section shows the process of extending the 1-dimensional n-order Gauss-Hermite quadrature to the 3-dimensional n-order Gauss-Hermite quadrature rule. 
+The equation below is the basic quadrature rule for evaluating integrals.
 \begin{equation}\begin{aligned}
     \int_{-\infty}^{\infty} dr \omega(r) \mathrm{P}^{2n-1}(r )= \sum_{i = 1}^{n} w_{i}  \mathrm{P}^{2n-1}(r_{i})
 \end{aligned}\end{equation}
-Above is the one dimension n orders Gauss-Hermite quadrature rule, where the funtion $\mathrm{P}^{2n-1}$ is any 2n-1 order polynomials, 
-so the rule is used for any 2n-1 orders poilynomials. And 1 dimension n orders Gauss-Hermite quadrture rule
- can be promoted to any function which order is smaller than 2n-1. List below will show some unknown information to explain the equaition above.
+The equation above is the one-dimensional n-order Gauss-Hermite quadrature rule, where the function $\mathrm{P}^{2n-1}$ is any (2n-1)-order polynomial,
+so the rule applies to any (2n-1)-order polynomial. The one-dimensional n-order Gauss-Hermite quadrature rule
+ can be extended to any function whose order is smaller than 2n-1. The list below provides the information needed to explain the equation above.
 \begin{table}[H]
   \centering
   \begin{tabular}{|c|c|c|}
@@ -295,33 +295,33 @@ so the rule is used for any 2n-1 orders poilynomials. And 1 dimension n orders G
   \omega(x) = \frac{1}{\sqrt{2 \pi}} e^{\frac{-x^{2}}{2}} \\[1.5ex]
   \omega(\vec{r}) = \frac{1}{\sqrt{2 \pi}} e^{\frac{-\vec{r}\cdot \vec{r}}{2}}
 \end{aligned}\end{equation}
-The variables $r_{i}$ is the roots of 1 dimension n orders Hermite polyhnomnial. A thing you have to realize is n orders Hernite polynomial have n roots i.e. the order of n order Hernite polynomial is equal to number of roots.
+The variables $r_{i}$ are the roots of the one-dimensional n-order Hermite polynomial. Note that an n-order Hermite polynomial has n roots, i.e., the order is equal to the number of roots.
 \vspace{-2.5ex}
-\paragraph{3 dimensons n orders Hermite polynomials}
-\noindent The definition of 3 demension n orders Hernite polynomials is described as below : 
+\paragraph{3-dimensional n-order Hermite polynomials}
+\noindent The definition of the 3-dimensional n-order Hermite polynomials is given below:
 \begin{equation}\begin{aligned}
   \overleftrightarrow{H}^{(n)}(\vec{r}) \equiv (-1)^{n}  \frac{1}{\omega(\vec{r}) } \vec{\nabla}^{(n)} \omega(\vec{r})
 \end{aligned}\end{equation}
-\noindent the symbol $\vec{\nabla }$ gradient of weight function. n order Hermite polynomial is an n order tensor field. The order of tensor field is equal to number of gradient operators in Hermite formula. 
-For example  :  2 dimensions 2nd order Hermite polynomial : 
+\noindent The symbol $\vec{\nabla }$ denotes the gradient of the weight function. An n-order Hermite polynomial is an n-order tensor field. The order of the tensor field is equal to the number of gradient operators in the Hermite formula.
+For example, the 2-dimensional second-order Hermite polynomial:
 \begin{equation}\begin{aligned}
   \overleftrightarrow{H}^{(2)} (x,y) &= H^{(2)}_{xx} \vec{e}_{x}\vec{e}_{x} + H^{(2)}_{xy} \vec{e}_{x}\vec{e}_{y} + H^{(2)}_{yy} \vec{e}_{y}\vec{e}_{y} \\[1.5ex]
   &= \left(x^{2}-1\right) \vec{e}_{x}\vec{e}_{x} + xy\ \vec{e}_{x}\vec{e}_{y} +\left(y^{2}-1\right)\vec{e}_{y}\vec{e}_{y} \\
 \end{aligned}\end{equation}
-For any $2n-1$ order polynomial, 1 dimension n order Gauss-Hermite  quadrature rule can solve integration which integration doman from $\ -\infty\ $to$\ \infty\ $ .
+For any $(2n-1)$-order polynomial, the one-dimensional n-order Gauss-Hermite quadrature rule can evaluate the integral whose domain is $\ -\infty\ $to$\ \infty\ $.
 \vspace{-2.5ex}
-\paragraph{Gauss-Hermite promted to high dimensions}
-\noindent Assume a volume integrtation for hole 3 dimensions space : 
+\paragraph{Gauss-Hermite promoted to high dimensions}
+\noindent Consider a volume integration over the whole three-dimensional space:
 \begin{equation}
   \int_{\Omega} d^{3} r \omega(\vec{r}) \mathrm{P}^{\mathrm{N}}(\vec{r}) = 
   \int_{\Omega} d^{3} r  \omega(\vec{r})  \sum_{a+b+c \le N} x^{a} y^{b} z^{c} 
 \end{equation}
-Bacause the summiton have a limit number terms, so the integration can be putted into summition. 
-we have 
+Because the summation has a finite number of terms, the integration can be moved into the summation.
+We have 
 \begin{equation}\begin{aligned}
  \sum_{a+b+c \le N } \int_{\Omega}d^{3} r \omega(\vec{r} ) x^{a} y^{b} z^{c} 
 \end{aligned}\end{equation}
-\noindent Now we have to use the property of exponential function : 
+\noindent Now we use the property of the exponential function:
 \begin{equation*}
   \omega(\vec{r})= \omega(x)\omega(y)\omega(z)
 \end{equation*}
@@ -329,56 +329,56 @@ we have
  \sum_{a+b+c \le N } \int_{\Omega}d^{3} r \omega(\vec{r} ) x^{a} y^{b} z^{c} 
  = \sum_{a+b+c \le N } \int_{\Omega}dx \omega(x) x^{a} \int_{\Omega}dy \omega(y) y^{b} \int_{\Omega}dz \omega(z) z^{c} 
 \end{aligned}\end{equation}
-Using 1 dimension n orders Gauss-Hermite quadrature rule to each integration pointed to different direction.We have
+Using the one-dimensional n-order Gauss-Hermite quadrature rule for each integration along different directions, we have
 \begin{equation}\begin{aligned}
 \sum_{a+b+c \le N} \sum_{i = 1}^{n_a}\omega(x_{i}) x_{i}^{a} \sum_{i = 1}^{n_b} \omega(y_{i}) y_{i}^{b} \sum_{i = 1}^{n_c} \omega(z_{i}) z_{i}^{c} 
 \end{aligned}
 \end{equation}
-\noindent where $(2n_{a}-1) > a$, $(2n_{b}-1) > b$, $(2n_{c}-1) > c$. The detail as below: 
+\noindent where $(2n_{a}-1) > a$, $(2n_{b}-1) > b$, $(2n_{c}-1) > c$. The details are as follows:
 \begin{equation}
 \begin{aligned}
   \int_{\Omega}dx \omega(x) x^{a} = \sum_{i = 1}^{n_a}\omega(x_{i}) x_{i}^{a} \ \text{(1 dimension $n_a$ order G-H rule)}
 \end{aligned}
 \end{equation}
-\noindent where $x_{i}$ is the root of 1 dimension $n_a$ order Hermite function. Usually, for each 1 dimension Gauss-Hermite quadrature rule, we take the order as the order of integrated function i.e., take the max order among the polynomial terms, so we can take the summition to deal with the inrtegration above : 
+\noindent where $x_{i}$ is the root of the one-dimensional $n_a$-order Hermite function. Usually, for each one-dimensional Gauss-Hermite quadrature rule, we take the order to match the integrated function, i.e., the maximum order among the polynomial terms, so we can take the summation to handle the integration above:
 \begin{equation}\begin{aligned}
  \sum_{a+b+c \le N } \int_{\Omega}d^{3} r \omega(\vec{r} ) x^{a} y^{b} z^{c} = \sum \sum_{i = 1}^{(N-1)/2} \omega(x_{i}) x_{i}^{a} \sum_{i = 1}^{(N-1)/2}\omega(y_{i}) y_{i}^{b} \sum_{i = 1}^{(N-1)/2}  \omega(z_{i}) z_{i}^{c} 
 \end{aligned}\end{equation}
-\noindent For example : calculate the integration $\int_{-\infty}^{\infty}dx \int_{-\infty}^{\infty}dy \omega(x,y) x^{2}y$
+\noindent For example, calculate the integral $\int_{-\infty}^{\infty}dx \int_{-\infty}^{\infty}dy \omega(x,y) x^{2}y$
 \begin{equation*}\begin{aligned}
   \int_{-\infty}^{\infty}dx \int_{-\infty}^{\infty}dy \omega(x,y) x^{2}y = \int_{-\infty}^{\infty}dx \int_{-\infty}^{\infty}dy \frac{1}{\sqrt{2\pi}} e^{\frac{-(x^{2}+y^{2})}{2}} x^{2}y = \left(w_{1}y_{1} + w_{2}y_{2}\right)\left(w_{1}x_{1}^{2} + w_{2}x_{2}^{2}\right) 
 \end{aligned}\end{equation*}
 
 \section{Momentum Loss of Distribution Function in Propagation}
-In general curvilinear coordinates, for macroscopic values i.e., $\rho , \rho\vec{u}$ exist the loss due to the curvature and uniform properties. And this paper shows the value below: 
+In general curvilinear coordinates, macroscopic values (i.e., $\rho , \rho\vec{u}$) experience losses due to curvature and nonuniform properties. This paper shows the value below:
 \begin{equation}\begin{aligned}\label{eq:NLBGK}
   \delta N_{\alpha}(\vec{q} , t) \equiv N_{\alpha}(\vec{q} , t) - N_{\alpha}^{\star} (\vec{q} - \vec{e}_{\alpha}  \delta t, t-1) 
 \end{aligned}\end{equation} 
-where q is the non-dimension position, and the origin form of it is $\vec{q} = (q_{1} , q_{2} , q_{3})$. The value $N^{\star}$ represents post-collision distribution function.
-We can review the Lattice Boltzman Equation-BGK (LBGK) and see the position of the value in the equation.
+where q is the nondimensional position, and its original form is $\vec{q} = (q_{1} , q_{2} , q_{3})$. The value $N^{\star}$ represents post-collision distribution function.
+We can review the Lattice Boltzmann Equation-BGK (LBGK) and see where the term appears in the equation.
 \begin{equation}
   N_{\alpha}(\vec{q} + \vec{e}_{\alpha}\delta t, t+1) = N_{\alpha}(\vec{q} , t) + \Omega_{\alpha} +  \delta N_{\alpha}(\vec{q} ,t)
 \end{equation}
-For general orthogonal curvilinear coordinate in three dimensions, we have the loss of the momentum and loss of the density is 0, so we have the relation: 
+For general orthogonal curvilinear coordinates in three dimensions, the loss of momentum and the loss of density are 0, so we have the relation:
 \begin{equation}\begin{aligned}
   \sum_{\alpha=0}^{q-1} \delta N_{\alpha}(\vec{q} , t) = \sum_{\alpha=0}^{q-1}N_{\alpha}(\vec{q} , t) - N_{\alpha}^{\star} (\vec{q} - \vec{e}_{\alpha} \delta t , t-1) = \sum_{\alpha=0}^{q-1}  N_{\alpha}(\vec{q} , t) - \sum_{\alpha=0}^{q-1} N_{\alpha}^{\star} ( \vec{q} - \vec{e}_{\alpha} \delta t , t-1)
 = 0 
 \end{aligned}
 \end{equation} 
-But for momentum loss, we have to take the physical meaning as "inertial force" at first. 
+But for momentum loss, we first consider its physical meaning as an "inertial force."
 The value in equation \eqref{eq:NLBGK} 
-is modified term in the process of the streaming step. The reason why we have to consider
-the loss is to achieve momentum conservation through adding the term. 
+is a modified term in the process of the streaming step. The reason why we have to consider
+the loss is to achieve momentum conservation by adding this term.
 \begin{definition}
   \begin{equation}\label{eq:Theta}
    \vec{\Theta}_{i}^{j} (\vec{q} + \vec{e}_{\alpha} \delta t , \vec{q} ) = \left[\vec{g}_{i}(\vec{q} +\vec{e}_{\alpha} \delta t) - \vec{g}_{i}(\vec{q})\right] \cdot \vec{g}^{\ j} (\vec{q})
   \end{equation}
 \end{definition}
-\noindent we call the value is "non-dimension change of curvature tangent vector", where $\vec{g}^{j}$ can be defined as below: 
+\noindent We call this value the "nondimensional change of curvature tangent vector," where $\vec{g}^{j}$ can be defined as below:
 \begin{equation}\begin{aligned}
    \vec{g}^{1} &= \frac{\vec{g}_{2}\times \vec{g}_{3}}{(\vec{g}_{2}\times \vec{g}_{3}) \cdot \vec{g}_{1}} 
 \end{aligned}\end{equation}
-Substitute the vector in equation \eqref{eq:Theta}
+Substituting the vector into equation \eqref{eq:Theta}
   \begin{equation}
    \vec{\Theta}_{i}^{j} (\vec{q} + \vec{e}_{\alpha} \delta t , \vec{q} ) = \left[\vec{g}_{i}(\vec{q} +\vec{e}_{\alpha} \delta t) - \vec{g}_{i}(\vec{q})\right]  \cdot \frac{\vec{g}_{2}\times \vec{g}_{3}}{(\vec{g}_{2}\times \vec{g}_{3}) \cdot \vec{g}_{1}}
   \end{equation}
@@ -391,12 +391,12 @@ Substitute the vector in equation \eqref{eq:Theta}
   \end{aligned}\end{equation}
 \end{definition}
 \noindent For curvilinear coordinates, the loss of momentum always exists in the streaming step.
-The basic reason of the loss of macroscopic value is: 
+The basic reason for the loss of macroscopic value is:
 \begin{equation}
   N_{\alpha} (\vec{q} , t) \neq N_{\alpha}^{\star}(\vec{q} - \vec{e}_{\alpha} \delta t , t - 1)
 \end{equation}
-The pre-streaming distribution function is different from the post-collision function, but the sum of distribution along the discrete velocity space is same for two function set. we can realize the fact that desity can't loss in streaming step at cuvelinear coordinate. 
-But this paper defines two values about inner and outer momentum loss at the point $(q,t)$ as shown, prepared for proving inertial force. 
+The pre-streaming distribution function is different from the post-collision function, but the sum of distributions along the discrete velocity space is the same for the two function sets. We can see that density cannot be lost in the streaming step in curvilinear coordinates.
+But this paper defines two values for inner and outer momentum loss at the point $(q,t)$, as shown, to prepare for proving the inertial force.
 \begin{definition}
   \begin{equation}\begin{aligned}
     & \mathcal{J}(\vec{q} ) \,\vec{\chi}^{\mathrm{in}}(\vec{q} ,t) \equiv
@@ -405,15 +405,15 @@ But this paper defines two values about inner and outer momentum loss at the poi
     -\sum_{\alpha = 1}^{q} \left(\vec{e}_{\alpha}(\vec{q} + \vec{e}_{\alpha} \delta t ) -\vec{e}_{\alpha}(\vec{q})\right)\cdot N_{\alpha}^{\star}(\vec{q},t)
   \end{aligned}\end{equation}
 \end{definition}
-\noindent where, for the discrete particle velocity set  
+\noindent where for the discrete particle velocity set  
 \begin{equation}\begin{aligned}
  \vec{\tilde{c}}_{\alpha}(\vec{q}) = \vec{e}_{\alpha}(\vec{q} ) = \sum_{i = 1}^{3} (\vec{c}_{\alpha}\cdot \vec{g}_{i}) \frac{\Delta x}{\Delta t} = c_{\alpha}^{i} \,\vec{g}_{i} \,\frac{\Delta x}{\Delta t} 
 \end{aligned}\end{equation}
-\noindent In this paper, the momentum loss and its definition can be separated into two directions about the point $(\vec{q},t)$, i.e., inner and outer.
-The difference from the true "momentum loss of the propagation" is: took post-collision distribution function at $(\vec{q} - \vec{e}_{\alpha} \delta t ,t-1)$: $N_{\alpha}^{\star}(\vec{q} - \vec{e}_{\alpha} \delta t ,t-1)$;
-took the pre-collision function at $(\vec{q},t)$: $N_{\alpha}(\vec{q},t)$ for curvilinear normalized discrete particle velocity set: 
+\noindent In this paper, the momentum loss and its definition can be separated into two directions at the point $(\vec{q},t)$, i.e., inner and outer.
+The difference from the true "momentum loss of the propagation" is that it takes the post-collision distribution function at $(\vec{q} - \vec{e}_{\alpha} \delta t ,t-1)$: $N_{\alpha}^{\star}(\vec{q} - \vec{e}_{\alpha} \delta t ,t-1)$;
+and it takes the pre-collision function at $(\vec{q},t)$: $N_{\alpha}(\vec{q},t)$ for the curvilinear normalized discrete particle velocity set: 
 $\vec{\tilde{e}}_{\alpha}(\vec{q} - \vec{e}_{\alpha} \delta t ,t-1)$ and $\vec{\tilde{e}}_{\alpha}(\vec{q},t)$.
-The author take the constraint for momentum in the process of propagation as shown : 
+The author takes the constraint for momentum in the process of propagation as shown:
 \begin{equation}\begin{aligned}
 &\sum_{\alpha = 1}^{q} \vec{e}_{\alpha}(\vec{q},t)\,\delta N_{\alpha}(\vec{q} ) = \sum_{\alpha = 1}^{q}  \vec{e}_{\alpha}(\vec{q} )\,N_{\alpha}(\vec{q})- \sum_{\alpha = 1}^{q}\vec{e}_{\alpha}(\vec{q})\, N_{\alpha}^{\star}(\vec{q} - \vec{e}_{\alpha} \delta t ,t-1) = \mathcal{J} \cdot \frac{\vec{\chi}^{\mathrm{in}}(\vec{q} ,t)+ \vec{\chi}^{\mathrm{out}}(\vec{q} ,t)}{2} \\[1.5ex]
 & = \mathcal{J} \cdot \frac{
@@ -432,13 +432,12 @@ The author take the constraint for momentum in the process of propagation as sho
 \end{definition}
 \noindent 
 The macroscopic force is discretized in particle-velocity space, and this represents an inertial force produced in a curvilinear-coordinate computational domain.
-We now review the statement of the whole process. 
-First, impose two "symbols" for  inner and outer momentum loss; then define the form of velocity space-discretized force field , and proved the inertial force using the mometum loss finally. 
+We now review the statement of the whole process.
+First, we impose two "symbols" for inner and outer momentum loss; then define the form of the velocity space-discretized force field, and finally prove the inertial force using the momentum loss.
 However, the following expression appears to treat a symbol as a "variable":
 $$\left(\sum_{\alpha = 1}^{q}\left(\vec{e}_{\alpha}(\vec{q} ) - \vec{e}_{\alpha}(\vec{q} - \vec{e}_{\alpha} \delta t )\right)\cdot N_{\alpha}(\vec{q} ,t)\right)$$
 which is not exactly the momentum loss. The author then uses the true constraint to define the inertial force and maps that constraint to a velocity-space discretized force field.
-
-The specific issues are:
+\noindent The specific issues are:
 \begin{enumerate}
   \item The definition of any force (including a velocity-discrete force field) should take a form like
   \begin{equation}\begin{aligned}
@@ -449,12 +448,12 @@ The specific issues are:
   I thought that he set the time step is 1. 
   \item The second issue concerns the use of $\vec{g}^{\,i}$ in equation \eqref{eq:problem}. If $\vec{g}^{\,i}$ is intended to extract a component, it should be the unit vector $\hat{g}^{\,i}$. Multiplying by the magnitude $|\vec{g}^{\,i}|$ changes the scaling and can remove the proper coordinate-transformation property of the discrete force field. If a Jacobian or metric factor is required, it should be introduced explicitly and justified.
 \end{enumerate}
-\begin{derivation} prove of the equation
+\begin{derivation} Derivation of the equation
   \begin{equation}\begin{aligned}
     \mathcal{J} (\vec{q} )  F^{\ i}(\vec{q} , t) = \frac{-1}{2} (\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q} ,t)\left(c_{\alpha}^{i} \Theta_{i}^{j} (\vec{q} - \vec{e}_{\alpha}\delta t , \vec{q})\right)
     + \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(c_{\alpha}^{i} \Theta_{i}^{j} (\vec{q} + \vec{e}_{\alpha}\delta t , \vec{q} \right))
   \end{aligned}\end{equation}
-\noindent The principle of the derivation can apart into three things :
+\noindent The principle of the derivation can be separated into three parts:
   \begin{enumerate} 
     \item $\sum_{\alpha=1}^{q}\vec{e}_{\alpha}(\vec{q})\ \delta N_{\alpha}(\vec{q},t)\equiv$ Momentum Loss of the Streaming Step 
     \item $\sum_{\alpha=1}^{q}\vec{e}_{\alpha}(\vec{q})\ \delta N_{\alpha}(\vec{q},t)\equiv \mathcal{J} (\vec{q}) \cdot \frac{\vec{\chi}^{\ in } + \vec{\chi}^{\ out}}{2}$ (for Volumetric LBM)
@@ -471,16 +470,21 @@ The specific issues are:
     + \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(c_{\alpha}^{j} \cdot \frac{|\vec{g}_{j}|(\vec{q} +  \vec{e}_{\alpha}\delta t) - |\vec{g}_{j}|(\vec{q} ))}{|\vec{g}_{j}|} \right)\right)\\[1.5ex]
     &= \frac{-1}{2} \left(\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q} ,t)\left(c_{\alpha}^{j} \cdot \frac{{\color{red}|\vec{g}_{j}|(\vec{q}-\vec{e}_{\alpha}\delta t) - |\vec{g}_{j}|(\vec{q})}}{|\vec{g}_{j}|} \right)
     + \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(c_{\alpha}^{j} \cdot \frac{|\vec{g}_{j}|(\vec{q} +  \vec{e}_{\alpha}\delta t) - |\vec{g}_{j}|(\vec{q} ))}{|\vec{g}_{j}|} \right)\right)\\[1.5ex]
-    &= \frac{-1}{2}  \left(\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q} ,t)\left(c_{\alpha}^{i} \Theta_{i}^{j} (\vec{q} - \vec{e}_{\alpha}\delta t , \vec{q})\right)
+    \end{aligned}\end{equation}
+    \begin{equation}\begin{aligned}
+    = \frac{-1}{2}  \left(\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q} ,t)\left(c_{\alpha}^{i} \Theta_{i}^{j} (\vec{q} - \vec{e}_{\alpha}\delta t , \vec{q})\right)
     + \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(c_{\alpha}^{i} \Theta_{i}^{j} (\vec{q} + \vec{e}_{\alpha}\delta t , \vec{q} \right)\right)
-  \end{aligned}\end{equation}
+    \end{aligned}\end{equation}
 \end{derivation}
+
 \subsection{Basic Equation for Curvilinear Coordinate}
+ 
+\noindent These are basic formula for standard Latticve Boltzmann Method to achieve conservation, we can use them to recover Naver-Stokes Equation through Chapman Enskog expansion.
 \begin{equation}\begin{aligned}
-\delta N_{\alpha}(\vec{q} , t) = w_{i}\left(\frac{c_{\alpha}^{i} F^{i}}{c_{s}^{2}} + \frac{c_{\alpha}^{i}c_{\alpha}^{j}-c_s^{2}\delta ^{i j }}{2c_{s}^{4}}\right)\\[1.5ex]
-\sum_{\alpha = 1}^{q} f^{eq}(\vec{q} , t) = \rho \\[1.5ex]
-\sum_{\alpha = 1}^{q} f^{eq}(\vec{q} , t) c_{\alpha}^{i} = \rho u^{i}\\[1.5ex]
-\sum_{\alpha = 1}^{q} f^{eq}(\vec{q} , t) c_{\alpha}^{i}c_{\alpha}^{j} = \rho c_s^{2} g^{ij} + \rho (u^{i} + \frac{1}{2}\frac{F^{i}}{\rho})(u^{j} + \frac{1}{2}\frac{F^{j}}{\rho})
+&\delta N_{\alpha}(\vec{q} , t) = w_{i}\left(\frac{c_{\alpha}^{i} F^{i}}{c_{s}^{2}} + \frac{c_{\alpha}^{i}c_{\alpha}^{j}-c_s^{2}\delta ^{i j }}{2c_{s}^{4}}\right)\\[1.5ex]
+&\sum_{\alpha = 1}^{q} f^{eq}(\vec{q} , t) = \rho \\[1.5ex]
+&\sum_{\alpha = 1}^{q} f^{eq}(\vec{q} , t) c_{\alpha}^{i} = \rho u^{i}\\[1.5ex]
+&\sum_{\alpha = 1}^{q} f^{eq}(\vec{q} , t) c_{\alpha}^{i}c_{\alpha}^{j} = \rho c_s^{2} g^{ij} + \rho (u^{i} + \frac{1}{2}\frac{F^{i}}{\rho})(u^{j} + \frac{1}{2}\frac{F^{j}}{\rho})
 \end{aligned}
 \end{equation}
 \end{document}
