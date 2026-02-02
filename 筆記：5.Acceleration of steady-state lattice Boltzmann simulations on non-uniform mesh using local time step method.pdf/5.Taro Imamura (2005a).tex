@@ -17,6 +17,7 @@
 \usepackage{array} % 表格對齊控制
 \usepackage{caption}
 \usepackage{amsthm}
+\usepackage{subcaption}
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{multirow}
@@ -272,12 +273,92 @@
 \maketitle
 \tableofcontents
 \newpage
-\section{Gereral Interpolation LBM}
-This note wiil promote the Interpolation-supplement Lattice Boltzmann Method for using in curvilinear coordinate. However, The first stratgy is transform Cartesian coordinate to gerneral curvilinear coordinate through comformal mapping.  
+\section{General Interpolation LBM}
+This note will promote the Interpolation-supplement Lattice Boltzmann Method for using in curvilinear coordinate. However, The first stratgy is transform Cartesian coordinate to general curvilinear coordinate through comformal mapping.  
 Different from the preview paper, this method is extend $\textbf{ISLBM}$ ,and do not change the lattice system to curve motion. 
-Notice, because exist the tranform based on transformation, so we stil compute the curve path for pasrticle in computational domain. 
+Notice, because exist the transform based on transformation, so we still compute the curve path for pasrticle in computational domain. 
 like the picture below : 
- 
+\begin{figure}[H]
+  \centering 
+  \begin{subfigure}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{1.png}
+    \caption{curvilinear coordinate system for SLBM}
+    \label{fig:slbm_a}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{2.png}
+    \caption{General Interpolation LBM}
+    \label{fig:slbm_b}
+  \end{subfigure}
+  \caption{2 types of curvilinear coordinate system}
+  \label{fig:slbm_curvilinear}
+\end{figure}
+\section{Transformation}
+\subsection{Jacobian relation}
+This section woul give the proven of the Jacobian relation : 
+\begin{equation}
+\begin{bmatrix}
+  \xi_{x} & \xi_{y}\\
+  \eta_{x} & \eta_{y} 
+\end{bmatrix}
+= \frac{1}{\mathrm{J}}
+\begin{bmatrix}
+  y_{\eta} & -x_{\eta} \\
+  -y_{\xi} & x_{\xi} 
+\end{bmatrix}
+\end{equation}
+For general curvilinear coordinate in two dimensions, we have to define Lamé coefficient for analyzing:
+\begin{equation}\begin{aligned}
+\vec{dr}_{+1}|_{q_{2},q_{3}} (\vec{r}) &\equiv \vec{r}(q_{1} + \Delta q_{1} , q_{2} , q_{3}) - \vec{r}(q_{1} , q_{2} , q_{3})
+= \left.\frac{\partial \vec{r}}{\partial q_{1}}\right|_{q_{2},q_{3}} dq_{1} 
+= \frac{\left.\frac{\partial \vec{r}}{\partial q_{1}}\right|_{q_{2},q_{3}}}{|\left.\frac{\partial \vec{r}}{\partial q_{1}}\right|_{q_{2},q_{3}}|}|\left.\frac{\partial \vec{r}}{\partial q_{1}}\right|_{q_{2},q_{3}}| dq_{1}
+\end{aligned}\end{equation}
+From the expression above, we can define unit vector and coefficient for differential geometry.
+\begin{equation}
+\begin{aligned}
+h_{1} &\equiv \left|\frac{\partial \vec{r}}{\partial q_{1}}\right|_{q_{2},q_{3}} \\[1.5ex]
+\vec{e}_{1} &\equiv \frac{1}{h_{1}}\left.\frac{\partial \vec{r}}{\partial q_{1}}\right|_{q_{2},q_{3}}
+\end{aligned}
+\end{equation}
+where symbol $h_{1}$ is a Lamé coefficient for the coordinate component. 
+Let's take the definition to defferential of position vector about variable $(\xi , \eta)$.
+\begin{equation}\begin{aligned}\label{eq:r5} 
+  &\frac{\partial \vec{r}}{\partial \xi} = h_{\xi} \vec{e}_{\xi} = \vec{e}_{x} x_{\xi} + \vec{e}_{y} y_{\xi} \\[1.5ex]
+  &\frac{\partial \vec{r}}{\partial \eta} = h_{\eta} \vec{e}_{\eta}  = \vec{e}_{x} x_{\eta} + \vec{e}_{y} y_{\eta} \\[1.5ex]
+  &\frac{\partial \vec{r}}{\partial x} = \vec{e}_{x} = h_{\xi}\vec{e}_{\xi} \xi_{x} +  h_{\eta}\vec{e}_{\eta} \eta_{x} \\[1.5ex]
+  &\frac{\partial \vec{r}}{\partial y} = \vec{e}_{y} = h_{\xi}\vec{e}_{\xi} \xi_{y} +  h_{\eta}\vec{e}_{\eta} \eta_{y} \\[1.5ex]
+\end{aligned}\end{equation}
+we can do some simple computation, and get the result below : 
+\begin{equation}\begin{aligned}
+  &\frac{h_{\xi}}{x_{\xi}} \vec{e_{\xi}} - \frac{h_{\eta}}{x_{\eta}} \vec{e_{\eta}} = \vec{e}_{y} \left(\frac{y_{\xi}}{x_{\xi}} - \frac{y_{\eta}}{x_{\eta}}\right) = \vec{e}_{y} \frac{y_{\xi}x_{\eta} - y_{\eta}x_{\xi}}{x_{\eta}x_{\xi}} \\[1.5ex]
+  &\frac{h_{\xi}}{y_{\xi}} \vec{e_{\xi}} - \frac{h_{\eta}}{y_{\eta}} \vec{e_{\eta}} = \vec{e}_{x} \left(\frac{x_{\xi}}{y_{\xi}} - \frac{x_{\eta}}{y_{\eta}}\right) = \vec{e}_{x} \frac{x_{\xi}y_{\eta} - x_{\eta}y_{\xi}}{y_{\eta}y_{\xi}} \\[1.5ex]
+\end{aligned}\end{equation}
+\noindent Furthermore, we can rewrite this as:
+\begin{equation}\begin{aligned}\label{eq:e6}
+  &-x_{\eta} h_{\xi} \vec{e_{\xi}} + x_{\xi}h_{\eta} \vec{e_{\eta}}  = \vec{e}_{y} \left(x_{\xi}y_{\eta} - x_{\eta}y_{\xi}\right) \\[1.5ex]
+  &y_{\eta} h_{\xi} \vec{e_{\xi}} - y_{\xi}h_{\eta} \vec{e_{\eta}}  = \vec{e}_{x} \left(x_{\xi}y_{\eta} - x_{\eta}y_{\xi}\right)\\[1.5ex]
+\end{aligned}\end{equation}
+Substitution the equation \eqref{eq:e6} into \eqref{eq:r5} 
+\begin{equation}
+\begin{bmatrix}
+  \xi_{x} & \xi_{y}\\
+  \eta_{x} & \eta_{y} 
+\end{bmatrix}
+= \frac{1}{\left(x_{\xi}y_{\eta} - x_{\eta}y_{\xi}\right)}
+\begin{bmatrix}
+  y_{\eta} & -x_{\eta} \\
+  -y_{\xi} & x_{\xi} 
+\end{bmatrix}
+\end{equation}
+The equation above is Jacobian relation.
+
+\subsection{Transform for Lattice Boltzmann Equation}
+\subsection{Boundary Condition }
+\subsection{Algorithm}
+
 \end{document}
 
 

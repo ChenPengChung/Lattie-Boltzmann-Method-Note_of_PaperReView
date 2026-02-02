@@ -14,14 +14,53 @@
     "latex-workshop.latex.recipes": [
         {
             "name": "XeLaTeX",
-            "tools": ["xelatex"]
+            "tools": [
+                "xelatex"
+            ]
         },
         {
             "name": "XeLaTeX x2",
-            "tools": ["xelatex", "xelatex"]
+            "tools": [
+                "xelatex",
+                "xelatex"
+            ]
         }
     ],
     "latex-workshop.latex.autoBuild.run": "onSave",
     "latex-workshop.latex.recipe.default": "XeLaTeX",
-    "latex-workshop.latex.outDir": "%DIR%"
+    "latex-workshop.latex.outDir": "%DIR%",
+
+    // ========== Code Spell Checker 拼字檢查設定 ==========
+    "cSpell.enabled": true,
+    "cSpell.language": "en",
+    "cSpell.enabledLanguageIds": [
+        "latex",
+        "tex"
+    ],
+    // 儲存時自動修正拼字錯誤（需要 Code Spell Checker 外掛支援）
+    "cSpell.autoFormatConfigFile": true,
+
+    // ========== 針對 .tex 檔案的編輯器設定 ==========
+    "[latex]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit"
+        }
+    },
+    "[tex]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit"
+        }
+    },
+
+    // ========== 執行腳本任務設定 ==========
+    "emeraldwalk.runonsave": {
+        "commands": [
+            {
+                "match": "\\.tex$",
+                "cmd": "/Volumes/Seagate/Lattie-Boltzmann-Method-Note_of_PaperReView/scripts/spellfix_tex.sh"
+            }
+        ]
+    }
 }

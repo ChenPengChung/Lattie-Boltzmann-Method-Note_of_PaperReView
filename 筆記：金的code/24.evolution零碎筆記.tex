@@ -508,7 +508,7 @@ void GenerateMesh_Z(){...//省略
  
 \noindent {\color{red}對於指標變數 double* y\_h 的宣告，為什麼單單只在 主程式：main.cu 中宣告，而卻在 initialization.h 直接使用到y\_h[i] ? (未將指標變數映射到某一個特定記憶體)}
 \\ \noindent 我的問題是：如果今天宣告一個矩陣 A ，只要一宣告，則 A 自動作為一個指標行記憶，且映射到Ａ矩陣第一個元素的初始存放位址。
-\begin{lstlisting}[language=C++, caption={problem disussion}, label={lst:problem-discussion}]
+\begin{lstlisting}[language=C++, caption={problem discussion}, label={lst:problem-discussion}]
 double A[10] ; //宣告一個尺寸10的矩陣
 double B = A ; 
 //則 B 為 A矩陣 第一個元素的初始存放位址
