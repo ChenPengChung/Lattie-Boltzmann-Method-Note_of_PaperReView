@@ -1,0 +1,29 @@
+{
+  "name": "AI + LaTeX + C++ Full Stack Codespace",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "postCreateCommand": "bash -lc 'chmod +x .devcontainer/setup.sh && .devcontainer/setup.sh'",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "James-Yu.latex-workshop",
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools",
+        "twxs.cmake",
+        "llvm-vs-code-extensions.vscode-clangd",
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "BrandonKirbyson.vscode-animations",
+        "usernamehw.errorlens",
+        "PKief.material-icon-theme",
+        "eamodio.gitlens"
+      ],
+      "settings": {
+        "latex-workshop.latex.recipe.default": "latexmk",
+        "latex-workshop.latex.autoBuild.run": "onSave",
+        "C_Cpp.default.cppStandard": "c++17",
+        "cmake.configureOnOpen": true,
+        "animations.enabled": true
+      }
+    }
+  }
+}

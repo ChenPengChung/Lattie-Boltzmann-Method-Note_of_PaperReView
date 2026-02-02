@@ -1,0 +1,1093 @@
+﻿\documentclass[12pt]{article}
+\usepackage[a4paper,margin=2cm]{geometry} % 明確設定四邊
+\usepackage{fontspec} % 字體設定
+\usepackage{xeCJK}
+\usepackage{setspace} % 設定行距
+\linespread{1.2}
+\usepackage{titling} % 預設標題下移0.6in
+\usepackage{enumitem}
+\usepackage{amsmath} % 數學方程式
+\usepackage{graphicx} %圖片
+\usepackage{float} % 在導言區，讓圖片強制插在原地
+\usepackage{xcolor} %字體加入顏色
+\usepackage{listings}
+\usepackage{physics} % 物理符號
+\usepackage{wrapfig} % 文字環繞圖
+\usepackage{array} % 表格對齊控制
+\usepackage{caption}
+\usepackage{amsthm}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{etoolbox}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{hyperref}
+\usepackage{makecell}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  citecolor=blue,
+  linktoc=all
+}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+\tcbset{
+  highlightblock/.style={
+    enhanced,
+    breakable,
+    colback=gray!8,
+    colframe=gray!60,
+    boxrule=0.4pt,
+    arc=0pt,
+    boxsep=0pt,
+    left=4pt,
+    right=4pt,
+    top=4pt,
+    bottom=4pt,
+    before skip=0pt,
+    after skip=0pt
+  }
+}
+\usepackage{longtable}
+
+%1 註記行距設定
+\setlist[itemize]{itemsep=1.2pt, parsep=0pt, topsep=1pt}
+\setlist[enumerate]{itemsep=1.2pt, parsep=0pt, topsep=1pt}
+%2 圖表標題設定
+\captionsetup{
+    labelfont={footnotesize,bf},    % 標籤：小字體+粗體
+    skip=10pt                        % 標題與圖表的間距
+}
+%3 表格間距設定
+\setlength{\tabcolsep}{8pt} % 列間距（增加）
+\renewcommand{\arraystretch}{1.4} % 行間距（增加）
+%4 腳註設定
+\usepackage[bottom,hang]{footmisc} % 腳註置於頁面底部，懸掛縮排
+\setlength{\footnotesep}{10pt} % 腳註之間的間距（增加）
+\setlength{\skip\footins}{12pt plus 5pt minus 2pt} % 正文與腳註之間的間距（增加）
+\setlength{\footnotemargin}{1.5em} % 腳註標號與文字的間距（增加）
+\renewcommand{\footnoterule}{\vspace*{-3pt}\hrule width 0.4\columnwidth height 0.4pt\vspace*{3pt}} % 腳註分隔線
+%5 使用直立字體的定理樣式
+\newtheoremstyle{upright}
+  {6pt}{6pt}  % 定理環境前後間距（增加）
+  {\normalfont}% 使用正常字體，不使用斜體
+  {0pt}{\bfseries}{：}{0.5em}{}
+%6 定理環境定義
+\theoremstyle{upright}
+\newtheorem{definition}{定義}[section]
+\newtheorem{theorem}{定理}[section]
+\newtheorem{lemma}{引理}[section]
+\newtheorem{corollary}{推論}[section]
+\newtheorem{example}{例子}[section]
+% 重新正確定義 remark 環境 - 確保完全靠左對齊
+\makeatletter
+\@ifundefined{c@remark}{}{\renewcommand{\theremark}{}}
+\newenvironment{remark}{%
+  \par\vspace{0.0\baselineskip}%
+  \begingroup% 開始一個組以限制設置的範圍
+  \setlength{\parindent}{0pt}% 設置段落縮進為零
+  \setlength{\leftskip}{0pt}% 設置左邊距為零
+  \noindent\textbf{註記：}\\% 添加標題並強制換行
+  \ignorespaces% 忽略可能的空格
+  \setlist[enumerate]{itemsep=0pt, parsep=0pt, topsep=0.0pt, leftmargin=1.5em}%
+  \setlist[itemize]{itemsep=0pt, parsep=0pt, topsep=0.0pt, leftmargin=1.5em}%
+}{%
+  \endgroup% 結束組
+  \par\vspace{0.5\baselineskip}
+}
+\makeatother
+%7 手動定義中文數字（不含標點符號）
+\newcommand{\chinese}[1]{%
+  \ifcase#1 零\or 一\or 二\or 三\or 四\or 五\or 六\or 七\or 八\or 九\or 十\or
+  十一\or 十二\or 十三\or 十四\or 十五\or 十六\or 十七\or 十八\or 十九\or 二十\fi
+}
+
+%8 重新定義章節編號格式
+\renewcommand{\thesection}{\chinese{\value{section}}}
+\renewcommand{\thesubsection}{\chinese{\value{section}}、\arabic{subsection}}
+\renewcommand{\theequation}{\chinese{\value{section}}.\arabic{equation}}
+\renewcommand{\thesubsubsection}{\chinese{\value{section}}、\arabic{subsection}.\arabic{subsubsection}}
+\renewcommand{\thefigure}{\chinese{\value{section}}.\arabic{figure}}
+\renewcommand{\thedefinition}{\thesection、\arabic{definition}}
+\renewcommand{\thetheorem}{\thesection、\arabic{theorem}}
+\renewcommand{\theexample}{\thesection、\arabic{example}}
+
+% 为不同级别的标题增加编号后的空格
+\setlength{\cftsecnumwidth}{2.5em}  % section 编号宽度
+\setlength{\cftsubsecnumwidth}{3.5em}  % subsection 编号宽度
+\setlength{\cftsubsubsecnumwidth}{4.5em}  % subsubsection 编号宽度
+
+% 添加点线（可选）
+\renewcommand{\cftsubsubsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsubsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+%9 讓方程式計數器在每個section重置
+\counterwithin{equation}{section}
+%10 字體設定 - 優化以減少警告
+\IfFontExistsTF{Times New Roman}{%
+  \setmainfont{Times New Roman}%
+}{%
+  \setmainfont{TeX Gyre Termes}%
+}
+
+%\setCJKmainfont[
+%    BoldFont={Kaiti TC Bold},
+%    ItalicFont={Kaiti TC},
+%    BoldItalicFont={Kaiti TC Bold}
+%]{Kaiti TC}
+%\setCJKmonofont{Kaiti TC}
+\IfFontExistsTF{DFKai-SB}{%
+  \setCJKmainfont[
+    BoldFont={DFKai-SB},
+    ItalicFont={DFKai-SB},
+    BoldItalicFont={DFKai-SB}
+  ]{DFKai-SB}%
+  % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+  \setCJKmonofont{DFKai-SB}%
+}{%
+  \IfFontExistsTF{Kaiti TC}{%
+    \setCJKmainfont[
+      BoldFont={Kaiti TC Bold},
+      ItalicFont={Kaiti TC},
+      BoldItalicFont={Kaiti TC Bold}
+    ]{Kaiti TC}%
+    % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+    \setCJKmonofont{Kaiti TC}%
+  }{%
+    \IfFontExistsTF{Songti TC}{%
+      \setCJKmainfont{Songti TC}%
+      % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+      \setCJKmonofont{Songti TC}%
+    }{%
+      \setCJKmainfont{Heiti TC}%
+      % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+      \setCJKmonofont{Heiti TC}%
+    }%
+  }%
+}
+%11 標題設定
+\setlength{\droptitle}{-1in} % 上移標題1in
+\title{24.evolution零碎筆記}
+\author{Chen Peng Chung}
+\setcounter{section}{0}
+% 12调整 subsection 的间距
+\titlespacing*{\section}
+{0pt}                    % 左边距
+{0.0in}                 % 标题前间距
+{0.0em}                  % 标题后间距
+\titlespacing*{\subsection}
+{0pt}                    % 左边距
+{-0.05in}                % 标题前间距
+{0.0em}                  % 标题后间距
+% 调整 subsubsection 的间距  
+\titlespacing*{\subsubsection}
+{0pt}                    % 左边距
+{0.0in}                 % 标题前间距
+{0.0em}                  % 标题后间距
+%13.
+
+% ========== Monokai Light 配色方案（淺灰背景）==========
+\definecolor{monokailight-bg}{RGB}{240,240,240}      % 淺灰背景 #F0F0F0
+\definecolor{monokailight-fg}{RGB}{39,40,34}         % 深色文字 #272822
+\definecolor{monokailight-comment}{RGB}{117,113,94}  % 註解 #75715E
+\definecolor{monokailight-string}{RGB}{152,118,24}   % 字串 #987618
+\definecolor{monokailight-keyword}{RGB}{244,0,95}    % 關鍵字 #F4005F
+\definecolor{monokailight-function}{RGB}{121,162,0}  % 函數 #79A200
+\definecolor{monokailight-number}{RGB}{137,89,168}   % 數字 #8959A8
+\definecolor{monokailight-type}{RGB}{0,129,152}      % 型別 #008198
+\definecolor{monokailight-operator}{RGB}{244,0,95}   % 運算符 #F4005F
+\definecolor{monokailight-border}{RGB}{210,210,210}  % 邊框 #D2D2D2
+
+% ========== CUDA 語言定義 ==========
+\lstdefinelanguage{CUDA}{
+    language=C++,
+    morekeywords={__global__, __device__, __host__, __shared__, 
+                  __constant__, __syncthreads, dim3, cudaMalloc,
+                  cudaMemcpy, cudaFree, cudaMemcpyHostToDevice,
+                  cudaMemcpyDeviceToHost, cudaDeviceSynchronize},
+    % 型別關鍵字
+    morekeywords=[2]{double, float, int, char, void, size_t,
+                     uint, uint2, uint3, uint4,
+                     int2, int3, int4,
+                     float2, float3, float4,
+                     double2, double3, double4},
+    % CUDA 內建變數
+    morekeywords=[3]{blockIdx, threadIdx, blockDim, gridDim,
+                     warpSize},
+    sensitive=true
+}
+
+% ========== Monokai Light 樣式 ==========
+\lstdefinestyle{monokailight}{
+    language=CUDA,
+    backgroundcolor=\color{monokailight-bg},
+    basicstyle=\color{monokailight-fg}\ttfamily\footnotesize,
+    commentstyle=\color{monokailight-comment}\itshape,
+    keywordstyle=\color{monokailight-keyword}\bfseries,
+    keywordstyle=[2]\color{monokailight-type}\bfseries,      % 型別
+    keywordstyle=[3]\color{monokailight-function}\bfseries,  % CUDA 變數
+    stringstyle=\color{monokailight-string},
+    numberstyle=\tiny\color{monokailight-comment},
+    % 數字顏色
+    literate=
+        {0}{{{\color{monokailight-number}0}}}1
+        {1}{{{\color{monokailight-number}1}}}1
+        {2}{{{\color{monokailight-number}2}}}1
+        {3}{{{\color{monokailight-number}3}}}1
+        {4}{{{\color{monokailight-number}4}}}1
+        {5}{{{\color{monokailight-number}5}}}1
+        {6}{{{\color{monokailight-number}6}}}1
+        {7}{{{\color{monokailight-number}7}}}1
+        {8}{{{\color{monokailight-number}8}}}1
+        {9}{{{\color{monokailight-number}9}}}1,
+    % 版面設定
+    breaklines=true,
+    breakatwhitespace=false,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    % 框線設定
+    frame=single,
+    rulecolor=\color{monokailight-border},
+    framerule=0.8pt,
+    % 其他設定
+    columns=flexible,
+    escapeinside={(*@}{@*)},
+    xleftmargin=2em,
+    xrightmargin=0.5em,
+    framexleftmargin=1.5em
+}
+
+% ========== 設為預設樣式 ==========
+\lstset{style=monokailight}
+%14.
+% ========== 表格樣式設定 ==========
+\setlength{\arrayrulewidth}{0.5pt}  % 表格線條粗細
+\renewcommand{\arraystretch}{1.3}   % 行高
+%15listing 設定:
+\lstset{
+  language=C++,
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny,
+  stepnumber=1,
+  numbersep=8pt,
+%
+  keepspaces=true,      % ★保留空白
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+%
+  tabsize=2,            % ★tab 視為 2 個空白（可改 4）
+  breaklines=true,
+  breakatwhitespace=false,
+%
+  frame=single,
+  captionpos=b
+}
+
+
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+\section{函數式匯總}
+\noindent 本檔案一共包含下列函數，及其估能與意義羅列如下：
+\begin{table}[H]
+  \centering
+\begin{tabular}{|c|c|}
+  \hline
+  函數名稱 & 功能說明 \\
+  \hline
+  \scriptsize ModifydRho\_F378 & ($f_{3},f_{7},f_{8}$與$f_{4},f_{9},f_{10}$)正y方向動量修正(平面部分)  \\
+  \hline
+  \scriptsize ModifydRho\_F4910 & ($f_{4},f_{9},f_{10}$與$f_{3},f_{7},f_{8}$)負y方向動量修正(平面部分)  \\
+  \hline
+  \scriptsize ModifydRho\_F15 & ($f_{15}$與$f_{18}$)正y方向動量修正(立體部分)  \\
+  \hline
+  \scriptsize ModifydRho\_F16 & ($f_{16}$與$f_{17}$)負y方向動量修正(立體部分)  \\
+  \hline
+  \scriptsize dRhoglobal & 該點上的密度$\rho$變化 \\
+  \hline
+  \scriptsize stream\_collide\_Buffer & \footnotesize buffer layer 提供「邊界外的必要資料」，邊界點則用它完成 LBM 的 streaming/BC/collision。 \\
+  \hline
+  \scriptsize stream\_collide & \footnotesize 執行LBM演算法的核心(1.遷移步2.計算宏觀參數3.碰撞步4.更新賦值)\\
+  \hline
+  \scriptsize periodicUD & 建立Up-Down的週期性邊界條件 \\
+  \hline
+  \scriptsize periodicSW & 建立Stream-Wise方向的週期性邊界條件 \\
+  \hline
+  \scriptsize periodicNML & 建立NormaL(SpanWise)方向的週期性邊界條件 \\
+  \hline
+  \scriptsize ccumulateUbulk & 計算主流方向速度場在截面上的空間平均$U_{average}$ \\
+  \hline 
+  \scriptsize Launch\_CollisionStreaming & \scriptsize 整個LBM的主控程序，調用函數式:
+  stream\_collide\_Buffer, 
+  AccumulateUbulk, 
+  stream\_collide, 
+  periodicSW %//流動方向的週期性邊界條件
+  \\
+  \hline 
+  \scriptsize Launch\_ModifyForcingTerm & 利用郭老師的外力格式引入Force Term \\ 
+  \hline
+\end{tabular}
+\end{table}
+
+
+\newpage
+
+\section{函數式: ModifydRho\_F378 程式碼說明}
+\vspace{1.5ex}
+\begin{lstlisting}[language = C , caption = {ModifydRho\_F378} , label = {ModifydRho:F378}]
+__device__ double ModifydRho_F378(double F3_in,double F7_in,double F8_in,double f4_old,double f9_old,double f10_old){
+  double drho = F3_in + F7_in + F8_in - f4_old - f9_old - f10_old ;
+  return drho ; 
+}
+\end{lstlisting}
+\noindent 意義:以$\vec{e_{y}}$為外法向量的壁面的質量流率(mass flow rate) : (可以把壁面面積當成1)來理解 $\texttt{F3\_in + F7\_in + F8\_in - f4\_old - f9\_old - f10\_old; }$\\
+此函數上式在哪裡被用到:
+\begin{lstlisting}[language = C , caption = {stream\_collid\_378} , label = {stream:collid:378}]
+//F0_in = F0_in + Modify_dRhoF378(F3_in,F7_in,F8_in,f4_old[index],f9_old[index],f10_old[index])
+\end{lstlisting}%label裡面不可以用底線
+
+\section{函數式 : ModifydRho\_F4910程式碼說明}
+\vspace{1.5ex}
+\begin{lstlisting}[language=C,caption={ModifydRho\_F4910},label={ModifydRho:F4910}]
+__device__ double ModifydRho_F4910(double F4_in,double F9_in,double F10_in,double f3_old,double f7_old,double f8_old){
+    double drho = F4_in+F9_in+F10_in-f3_old-f7_old-f8_old ;
+    return drho ;
+}
+\end{lstlisting}
+\noindent 意義:以$-\vec{e_{y}}$方向
+為外法向量的壁面的單位質量流率。\\
+當壁面面積為1時，\texttt{F4\_in+F9\_in+F10\_in-f3\_old-f7\_old-f8\_old}
+作為朝$-\vec{e_{y}}$方向之動量，也可以視為穿過壁面之單位質量流率
+。\\
+此函數上式在哪裡被用到:
+\begin{lstlisting}[language=C,caption={stream\_collid\_491},label={stream:collid:491}]
+    //F0_in=F0_in+ModifydRho_F4910(F4_in,sF9_in,F10_in,f3_old[index],f7_old[index],f8_old[index])
+\end{lstlisting}
+\section{函數式 : ModifydRho\_F15程式碼說明}
+\vspace{1.5ex}
+\begin{lstlisting}[language=C , caption = {ModifydRho\_F15} , label = {ModifydRho:F15}]
+__device__ double ModifydRho_F15(double F15_in,double f18_old){
+  double drho = F15_in - f18_old ; 
+  return drho ; 
+}
+\end{lstlisting}
+\noindent 此程式碼為驗證yz方向是否質量守恆，為質量守恆與否的判據。如果是壁面half-way bounce back條件，則在此函數的計算下，$\texttt{dRho = 0}$。\\
+\noindent 此程式碼會用在哪裡?
+\begin{lstlisting}[language=C , caption={stream\_collid\_501} , label = {stream:collid:501}]
+  //F0_in=F0_in+ModifydRho_F15(F15_in,f18_old[index]) ; 
+\end{lstlisting}
+\section{函數式 : ModifydRho\_F16程式碼說明}
+\begin{lstlisting}[language=C,caption={ModifydRho\_F16},label={ModifydRho:F16}]
+  __device__ double ModifydRho_F16(double F16_in ,double f17_old){
+    double drho = F16_in - f17_old ;
+    return drho ;
+  }
+\end{lstlisting}
+\noindent 此程式碼為驗證(-y)z方向是否質量守恆，為質量守恆的判據。如果在邊界上採用half-way bounce back condition，則用此函數進行量測時，$\texttt{drho = 0}$\\
+\noindent 此程式碼用在哪裡?
+\begin{lstlisting}[language=C,caption={stream\_collid\_516},label={stream:collid:516}]
+  //F0_in=F0_in+ModifydRho_F16(F16_in,f17_old[index]);
+\end{lstlisting}
+\section{函數式 : dRhoglobal程式碼說明}
+{\footnotesize
+  \begin{lstlisting}[language=C,caption={dRhoglobal},label={dRhoglobal}]
+  __device__ double dRhoglobal(
+  double F1_in,double F2_in,double F3_in,double F4_in,double F5_in,
+  double F6_in,double F7_in,double F8_in,double F9_in,double F10_in,
+  double F11_in,double F12_in,double F13_in,double F14_in,double F15_in,
+  double F16_in,double F17_in,double F18_in,
+  double f1_old,double f2_old,double f3_old,double f4_old,double f5_old,
+  double f6_old,double f7_old,double f8_old,double f9_old,double f10_old,
+  double f11_old,double f12_old,double f13_old,double f14_old,double f15_old,
+  double f16_old,double f17_old,double f18_old){double globaldrho = 
+  (F1_in- f1_old)+(F2_in- f2_old)+(F3_in- f3_old)+(F4_in- f4_old)+(F5_in- f5_old)
+  +(F6_in- f6_old)+(F7_in- f7_old)+(F8_in- f8_old)+(F9_in- f9_old)+(F10_in- f10_old)
+  +(F11_in- f11_old)+(F12_in- f12_old)+(F13_in- f13_old)+(F14_in- f14_old)+(F15_in- f15_old)
+  +(F16_in- f16_old)+(F17_in- f17_old)+(F18_in- f18_old) ; 
+  return globaldrho ; 
+  }
+  \end{lstlisting}
+}
+\noindent 此程式碼為單一格子點的質量守恆計算，
+其中，求和$\texttt{F1\_in+F2\_in.....}$為空間點的密度新值。
+求和$\texttt{f1\_old+f2\_old.....}$為空間點的密度舊值。
+則此程式碼為時間前後密度變化之判斷，猜測可以用在全場之後的加總，判斷邊界條件使否合理之判據。
+
+% ========================================
+\section{函數式 : stream\_collide 程式碼說明}
+% ========================================
+本文件專為提供的 \texttt{stream\_collide} CUDA 核心撰寫，
+逐一說明每個變數的角色與用途，並概述計算流程。
+該核心完成 Lattice Boltzmann Method (LBM) 中的 
+\emph{streaming} 與 \emph{collision}，
+採用 D3Q19 速度模型(partical velocity model)
+並包含多鬆弛時間矩陣(MRT)與
+無滑移邊界條件的插值反彈格式(Interpolation Bounce-Back Method)處理。
+
+\subsection{函數內部宣告之變數}
+\begin{table}[htbp]
+\begingroup\fontsize{8}{9.5}\selectfont
+\centering
+\caption{Stream-Collide 變數符號對照表}
+\makebox[\linewidth][c]{\begin{tabular}{ccccccccccc}
+\toprule
+\multicolumn{3}{c}{\textbf{變數符號}} & \multirow{2}{*}{\textbf{編號}} & \multicolumn{7}{c}{\textbf{索引}} \\
+\cmidrule(lr){5-11}
+& & & & \textbf{0} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} \\
+\midrule
+
+\multirow{8}{*}{Xi} & \multirow{8}{*}{F} & & 3 & XiF3\_0 & XiF3\_1 & XiF3\_2 & XiF3\_3 & XiF3\_4 & XiF3\_5 & XiF3\_6 \\
+& & & 4 & XiF4\_0 & XiF4\_1 & XiF4\_2 & XiF4\_3 & XiF4\_4 & XiF4\_5 & XiF4\_6 \\
+& & & 5 & XiF5\_0 & XiF5\_1 & XiF5\_2 & XiF5\_3 & XiF5\_4 & XiF5\_5 & XiF5\_6 \\
+& & & 6 & XiF6\_0 & XiF6\_1 & XiF6\_2 & XiF6\_3 & XiF6\_4 & XiF6\_5 & XiF6\_6 \\
+& & & 15 & XiF15\_0 & XiF15\_1 & XiF15\_2 & XiF15\_3 & XiF15\_4 & XiF15\_5 & XiF15\_6 \\
+& & & 16 & XiF16\_0 & XiF16\_1 & XiF16\_2 & XiF16\_3 & XiF16\_4 & XiF16\_5 & XiF16\_6 \\
+& & & 17 & XiF17\_0 & XiF17\_1 & XiF17\_2 & XiF17\_3 & XiF17\_4 & XiF17\_5 & XiF17\_6 \\
+& & & 18 & XiF18\_0 & XiF18\_1 & XiF18\_2 & XiF18\_3 & XiF18\_4 & XiF18\_5 & XiF18\_6 \\
+\midrule
+
+\multirow{4}{*}{XBFL} & \multirow{4}{*}{f} & & 37 & XBFLf37\_0 & XBFLf37\_1 & XBFLf37\_2 & XBFLf37\_3 & XBFLf37\_4 & XBFLf37\_5 & XBFLf37\_6 \\
+& & & 38 & XBFLf38\_0 & XBFLf38\_1 & XBFLf38\_2 & XBFLf38\_3 & XBFLf38\_4 & XBFLf38\_5 & XBFLf38\_6 \\
+& & & 49 & XBFLf49\_0 & XBFLf49\_1 & XBFLf49\_2 & XBFLf49\_3 & XBFLf49\_4 & XBFLf49\_5 & XBFLf49\_6 \\
+& & & 410 & XBFLf410\_0 & XBFLf410\_1 & XBFLf410\_2 & XBFLf410\_3 & XBFLf410\_4 & XBFLf410\_5 & XBFLf410\_6 \\
+\midrule
+
+\multirow{4}{*}{XiBFL} & \multirow{4}{*}{f} & & 3 & XiBFLf3\_0 & XiBFLf3\_1 & XiBFLf3\_2 & XiBFLf3\_3 & XiBFLf3\_4 & XiBFLf3\_5 & XiBFLf3\_6 \\
+& & & 4 & XiBFLf4\_0 & XiBFLf4\_1 & XiBFLf4\_2 & XiBFLf4\_3 & XiBFLf4\_4 & XiBFLf4\_5 & XiBFLf4\_6 \\
+& & & 15 & XiBFLf15\_0 & XiBFLf15\_1 & XiBFLf15\_2 & XiBFLf15\_3 & XiBFLf15\_4 & XiBFLf15\_5 & XiBFLf15\_6 \\
+& & & 16 & XiBFLf16\_0 & XiBFLf16\_1 & XiBFLf16\_2 & XiBFLf16\_3 & XiBFLf16\_4 & XiBFLf16\_5 & XiBFLf16\_6 \\
+\midrule
+
+\multirow{4}{*}{YBFL} & \multirow{4}{*}{f} & & 3 & YBFLf3\_0 & YBFLf3\_1 & YBFLf3\_2 & YBFLf3\_3 & YBFLf3\_4 & YBFLf3\_5 & YBFLf3\_6 \\
+& & & 4 & YBFLf4\_0 & YBFLf4\_1 & YBFLf4\_2 & YBFLf4\_3 & YBFLf4\_4 & YBFLf4\_5 & YBFLf4\_6 \\
+& & & 15 & YBFLf15\_0 & YBFLf15\_1 & YBFLf15\_2 & YBFLf15\_3 & YBFLf15\_4 & YBFLf15\_5 & YBFLf15\_6 \\
+& & & 16 & YBFLf16\_0 & YBFLf16\_1 & YBFLf16\_2 & YBFLf16\_3 & YBFLf16\_4 & YBFLf16\_5 & YBFLf16\_6 \\
+\bottomrule
+\end{tabular}}
+\endgroup
+\end{table}
+
+\subsection{線程(Thread), 區塊(Block), 與網格(Grid)索引}
+\vspace{1.5ex}
+%\lstinputlisting[                                                                                                                                                             
+%    firstline=371,                                                                                                                                                              
+%    lastline=373,                                                                                                                                                               
+%    caption={Kernel index computation},                                                                                                                                         
+%    label={lst:kernel-index}                                                                                                                                                    
+%]{evolution(可註解).h}
+\begin{lstlisting}[language = C , caption={Kernel index computation}, label={lst:kernel-index}]
+const int i = blockIdx.x*blockDim.x + threadIdx.x;
+const int j = blockIdx.y*blockDim.y + threadIdx.y;
+const int k = blockIdx.z*blockDim.z + threadIdx.z;
+\end{lstlisting}
+\noindent 如程式碼~\nameref{lst:kernel-index} 所示，有3個變數在GPU中特別重要，分別是 : 
+blockIdx, threadIdx, blockDim。
+\begin{itemize}
+  \item Grid : 由同一個kernel所產生的線程(thread)集合，或稱線程網格，特性是"對應同一個Grid的所有thread共享記憶體"。 
+  \item Block : Grid的組成單元，一個Block包含一組線程。特色是，"對應同一個BLock的所有thread同步，且共享記憶體"。
+  \item 變數名稱 : blockIdx : block(線程塊)在Grid(線程網格)中之索引編號；
+  threadIdx : Thread(線程)在Block(線程塊)中的索引編號。
+\end{itemize}
+\begin{figure}[H]
+      \centering
+      \includegraphics[width=0.5\linewidth]{1.png}
+      \caption{threads, block, grid, 觀念}
+      \caption*{Source: \href{https://blog.csdn.net/u012229282/article/details/79972014}{https://blog.csdn.net/u012229282/article/details/79972014}}
+\end{figure}
+\noindent 所以$\texttt{blockDim}$是每一個block的大小或者維度，由內部所塞滿的$\texttt{threads}$
+所決定。而$\texttt{blockIdx}$是block相對於grid的索引編號。同理，$\texttt{threadIdx}$是thread相對於block的索引編號
+。所以針對符號 $\texttt{i,j,k}$有如下解釋:
+\vspace{1.5ex}
+\begin{enumerate}
+  \item $\texttt{i}$\ :\ $\texttt{thread}$在一個 $\texttt{Grid}$中的x方向"固定"索引編號。
+  \item $\texttt{j}$\ :\ $\texttt{thread}$在一個 $\texttt{Grid}$中的y方向"固定"索引編號。
+  \item $\texttt{k}$\ :\ $\texttt{thread}$在一個 $\texttt{Grid}$中的z方向"固定"索引編號。
+\end{enumerate}
+\vspace{1.5ex}
+\noindent 如上述可以知道，對於$\texttt{i,j,k}$，是固定的threads索引編號，對應物理空間的計算網格，一個thread對應到一個真實物理空間計算點，因此，採用$\texttt{const int}$來宣告htreads的全局索引，一個物理空間算點只由一個thread來執行。
+因此:
+\begin{center}
+  定義了$\texttt{i,j,k}$ 作為索引編號，固定，是為了穩穩對應物理空間計算網格。
+\end{center}
+\begin{center}
+\begin{tabular}{|c|c|}
+  \hline
+  概念 & 說明 \\
+  \hline
+  Threads 索引編號 & 在GPU端上執行程式碼的工作單元(工號)\\
+  \hline
+  物理網格點索引編號 & 流體區域的空間排序$\texttt{(x,y,z)}$ \\
+  \hline
+  $\texttt{(i,j,k)}$的定義目的 & 建立threads $\leftrightarrow$ 物理網格點的穩定對應 \\
+  \hline
+  如果 i$\texttt{(i,j,k)}$ 不固定 & 讀寫不同物理間計算點，計算錯誤。 \\
+  \hline
+\end{tabular}
+\end{center}
+\subsection{規範要處理的物理計算點}
+\vspace{1.5ex}
+\begin{lstlisting}[language=C, caption={evolution.h369},label={evolution.h369}]
+if( i <= 2 || i >= NX6-3 || j <= 6 || j >= NYD6-7 || k <= 2 || k >= NZ6-3 ) return;
+\end{lstlisting}
+\noindent 限制物理間計算點之範圍，避免Halo層被誤用於計算。其中，y方向缺少的計算點 $\texttt{j = [3,6] , [NYD6-7,NYD6-4]}$
+則交由 $\texttt{stream\_collid\_Buffer}$ 處理。\\
+\noindent 需要注意的是 : Kernel內的判斷式並不會影響Halo層的使用，我指的是X方向做邊界點附近的插值行為時，仍然會用到buffer lasyers的分佈函數，換言之，做\emph{span-wise}方向的週期性邊界條件時，仍然取用規範之外的threads所算的值。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\linewidth]{16(不會阻擋Halo).png}
+  \caption{不會阻擋Halo層的讀取}
+\end{figure}
+\subsection{物理網格之座標設定}
+\noindent 此程式碼為降維索引編號，為三維座雕轉換唯一維度索引編號。
+\begin{lstlisting}[language=C, caption={evolution.h365-367},label={evolution.h365-367}]
+const int index = j*NX6*NZ6 + k*NX6 + i; 
+      int idx;
+      int idx_xi = j*NZ6 + k;//用xi來代替變換後的格點座標 
+const int nface = NX6*NZ6;
+const int nline = NX6;
+\end{lstlisting}
+\noindent 說明:
+\begin{enumerate}
+  \item $\texttt{const int index = j*NX6*NZ6 + k*NX6 + i; }$ : 為物理網格之索引編號，將三維空間座標 $\texttt{(i,j,k)}$ 由x方向(\emph{span-wise})從0開始編號，再往z方向(\emph{normal})編號，最後往y方向(\emph{stream-wise})編號，形成唯一維度索引編號$\texttt{index}$。 
+  \item $\texttt{nline}$ :在同一個x軸上構成的網格連線
+  \item $\texttt{nface}$ :在同一個x-z平面上構成的網格平面
+  \item $\texttt{Idx\_xi}$ : 為某一塊 y-xi平面上的網格系統，先將z軸之非均勻網格映射為均勻網格，形成xi軸。
+  \texttt{Idx\_xi}為 y-xi平面網格系統之一維網格編號。注意:xi 軸與z軸共用一套編號系統，因為xi軸與z軸一對一對應。
+\end{enumerate}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\linewidth]{13.png}
+  \caption{程式碼中座標編號可視化 : \texttt{nline,nface,index}}
+\end{figure}
+
+\subsection{碰撞後一般態分佈函數}
+\vspace{1.5ex}
+\begin{lstlisting}[language = C , caption = {evolution.h378} , label = {evolution.h378}]
+double F0_in,F1_in,F2_in,F3_in,F4_in,F5_in,F6_in,F7_in,F8_in,F9_in,F10_in
+double F11_in,F12_in,F13_in,F14_in,F15_in,F16_in,F17_in,F18_in ;
+\end{lstlisting}
+\noindent $\texttt{F0-18\_in}$ 是 (k(A非物理空間計算點) 的 (碰撞後一般態分佈函數)) 。
+\subsection{MRT Variable}
+\subsection{$\texttt{xi\_h[NZ6*NYD6]}$\ ：buffer layer}
+\vspace{1.5ex}
+\begin{lstlisting}[language = C , caption = {evolution.h387} , label = {evolution.h387}]
+int cell_z = k-3 ; 
+if(k<=6) cell_z = 3 ;//強制採用固定點做內插
+if(k>=NZ6-7) cell_z = NZ6-10 ; //強制採用定點做內插
+\end{lstlisting}
+在後續使用$\xi$方向之內插時，會用到變量 $\texttt{k\_c}$，此時，會以如上定義的cell\_z作為內插成員的起始點，往右列出7個位置作為內插點。
+如下定義與實際使用概況:
+\begin{lstlisting}[
+    language=C,
+    caption={進行七點內插公式的定義與使用},
+    label={進行七點內插公式的定義與使用},]
+//定義 : 
+#define F4_Intrpl7(f,Fi,j,k,i_c,j_c,k_c,i,j,idx_xi,y_0,y_1,....xi_0,xi_1,...)
+//使用 : 
+F4_Intrpl7(f4_old ,i,j,k ,(i-3),(j-3),cell_z ,i,j,idx_xi
+,Y2_0,Y2_1,Y2_2,Y2_3,Y2_4,Y2_5,Y2_6
+,XiF4_0,XiF4_1,XiF4_2,XiF4_3,XiF4_4,XiF4_5,XiF4_6
+)//一共24個自變數要填入
+\end{lstlisting}
+
+\begin{enumerate}
+  \item $\texttt{xi\_h}$ : (不含山丘)離散化無因次化z座標$\texttt{xi\_h}$ 的陣列尺寸為$\texttt{NZ6}$．實際寫入範圍為$\texttt{xi\_h[3:NZ6-4]}$\\
+  $\texttt{xi\_h}$配置記憶體：
+  \begin{lstlisting}
+nBytes = NZ6 * sizeof(double);
+CHECK_CUDA( cudaMallocHost( (void**)&xi_h, nBytes ) );
+CHECK_CUDA( cudaMalloc( &xi_d, nBytes ) );\end{lstlisting}
+  評述：離散化無因次化座標$\texttt{xi\_h}$ 有設置buffer layer，但是沒有寫進東西，後續可以避免越界，但是有用到buffer layer者沒有意義，因為沒有寫入。
+ 
+  \begin{table}[H]
+    \centering
+    \caption{xi\_h 區域分類}
+    \begin{tabular}{|c|c|c|}
+      \hline
+      \textbf{區域} & \textbf{範圍} & \textbf{說明} \\
+      \hline
+      k = buffer & $\texttt{k=[0,2]} \texttt{or} \texttt{[NZ6-3,NZ6-1]}$ & 沒有寫入值\ |\ 沒有做使用 \\
+      \hline
+      k = interrior & $\texttt{k=[3,NZ6-4]}$ & 有寫入值\ |\ 有做使用 \\
+      \hline
+    \end{tabular}
+  \end{table}
+  $\texttt{xi\_h}$寫入值：
+\begin{lstlisting}
+for( int k = bfr; k < NZ6-bfr; k++ ){
+  xi_h[k] = tanhFunction( LXi, minSize, a, (k-3), (NZ6-7) ) - minSize/2.0;
+}\end{lstlisting}
+$\texttt{xi\_h[0,1,2]}$、$\texttt{xi\_h[NZ6-3,2,1]}$沒有被寫入 buffer layer的值。\\
+$\texttt{xi\_h}$使用情況：
+\begin{lstlisting}[label={lst:GetXiParameter}]
+void GetXiParameter(
+    double *XiPara_h[7],    double pos_z,       double pos_y,
+    double *Pos_xi,         int IdxToStore,     int k  ) //IdxToStore = now ; k = start 
+{...//其中的Pos_xi = xi_h
+if( k >= 3 && k <= 6 ){
+        GetParameter_6th( XiPara_h, pos_xi, Pos_xi, IdxToStore, 3 );
+    } else if ( k >= NZ6-7 && k <= NZ6-4 ) {
+        GetParameter_6th( XiPara_h, pos_xi, Pos_xi, IdxToStore, NZ6-10 );
+    } else {
+        GetParameter_6th( XiPara_h, pos_xi, Pos_xi, IdxToStore, k-3 );
+    }}//XiParaF3_d被特殊寫入導致k=3,4,5以及k=NZ6-4,-5,-6有被寫入有被使用\end{lstlisting}
+  $\texttt{xi\_h[0,1,2]}$、$\texttt{xi\_h[NZ6-3,2,1]}$沒有被使用。
+  \item $\texttt{XiParaF3\_d}$：分三個區域分類
+  作為Z方向預配置連乘權重一維連續記憶體(分配到各個位置點為二維連續記憶體)尺寸大小為Z$\texttt{NZ6*j+NYD6}$。\\
+$\texttt{XiParaF3\_d}$配置記憶體：
+\begin{lstlisting}
+nBytes = NYD6 * NZ6 * sizeof(double);
+....
+for( int i = 0; i < 7; i++ ){
+  CHECK_CUDA( cudaMallocHost( (void**)&XiParaF3_h[i], nBytes ) );
+....
+  CHECK_CUDA( cudaMalloc( &XiParaF3_d[i], nBytes ) );....
+}\end{lstlisting}
+ 
+  \begin{table}[H]
+    \centering
+    \caption{XiParaF3\_d 區域分類}
+    \begin{tabular}{|c|c|c|}
+      \hline
+      \textbf{區域} & \textbf{範圍} & \textbf{說明} \\
+      \hline
+      k = buffer & $\texttt{k=[0,2]} \texttt{or} \texttt{[NZ6-3,NZ6-1]}$ & 沒有寫入值\ |\ 沒有做使用 \\
+      \hline
+      k = boundary layer & $\texttt{k=[3,5]} \texttt{or} \texttt{[NZ6-6,NZ6-4]}$ & 有特殊寫入值\ |\ 有做使用 \\
+      \hline
+      k = interrior & $\texttt{k=[6,NZ6-7]}$ & 有寫入值\ |\ 有做使用 \\
+      \hline
+    \end{tabular}
+  \end{table}
+  $\texttt{XiParaF3\_d}$寫入值($\texttt{xi\_h}$使用情況2)：$\texttt{GetXiParameter}$定義寫在\ref{lst:GetXiParameter}
+  \begin{lstlisting}[label={lst:GetIntrplParameter_Xi}]
+void GetIntrplParameter_Xi() {
+for(int j = 3 ; j <= NYD6-4 ; j++){
+  for(int k = 3 ; k <= NZ6-4 ; k++){
+    GetXiParameter(XiParaF3_d,z_h[NZ6*j+k],y_h[j]-minSize,xi_h,NZ6*j+k,k)
+  }}}\end{lstlisting}
+  \item $\texttt{F3\_Intrpl7}$： 
+  $\texttt{XiParaF3\_d}$使用情況：
+  \begin{lstlisting}[label={lst:F3:Intrpl7}]
+int cell_z = k-3;
+if( k <= 6 ) cell_z = 3;
+if( k >= NZ6-7 ) cell_z = NZ6-10;//....
+F3_Intrpl7(..cell_z, .., idx_xi, .., XiF3_0, XiF3_1, XiF3_2, ..);
+//在Launch_CollisionStreaming中簽套為
+F3_Intrpl7(..cell_z, .., idx_xi, .., XiParaF3_d[0], XiParaF3_d[1], XiParaF3_d[2], ..);\end{lstlisting}
+所以說，在$\texttt{k = 3,4,5以及k = NZ6-6,-5,-4}$，都沒有被使用到該點相應的元素。
+\end{enumerate}
+
+\subsection{Matrix}
+\subsection{下邊界條件與上邊界條件(Up and Down Direction)}
+\vspace{1.5ex}
+\begin{lstlisting}
+if( k == 3 ){//physical boundary//下邊界邊界條件
+  F5_in  = f6_old[index]; //上 = 下 
+  F11_in = f14_old[index];//正x上 = 負x下 
+  F12_in = f13_old[index];//負x上 = 正x下 
+  F15_in = f18_old[index];//正y上 = 負y下 
+  F16_in = f17_old[index];//負y上 = 正y下 
+}
+if( k == NZ6-4 ){//physical boundary //上邊界條件
+  F6_in  = f5_old[index]; //下 = 上 
+  F13_in = f12_old[index];//正x下 = 負x上 
+  F14_in = f11_old[index];//負x下 = 正x上 
+  F17_in = f16_old[index];//正y下 = 負y上 
+  F18_in = f15_old[index];//負y下 = 正y上 
+}
+\end{lstlisting}
+\noindent 下邊界條件(Down direction B.C. )與上邊界條件(Up direction B.C. )為採用：Link-wise 計算點佈局 的 平面無滑移邊界條件 的 Half-way Bounce Back 格式 。
+公式為：
+\begin{table}[h]
+\centering
+\caption{邊界處理方法比較}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{節點佈局} & \textbf{宏觀邊界條件} & \textbf{LBM邊界處理格式} \\
+\midrule
+\multirow{4}{*}{\makecell[l]{\textbf{Link-wise}\\\textbf{boundary}}}
+& \multirow{2}{*}{\makecell[l]{Non-slip Boundary Condition\\at Straight Wall}}
+& Full Way Bounce Back Method \\
+\cmidrule(l){3-3}
+& & Half Way Bounce Back Method \\
+\addlinespace[0.3em]
+\cmidrule(lr){2-3}
+& \makecell[l]{Non-slip Boundary Condition\\at Curvilinear Wall}
+& Interpolation Bounce Back Method \\
+\addlinespace[0.3em]
+\cmidrule(lr){2-3}
+& Velocity Open Boundary Condition &  Half Way Bounce Back Method\\
+\addlinespace[0.3em]
+\cmidrule(lr){2-3}
+& Pressure Open Boundary Condition &  Anti Half Way Bounce Back Method\\
+\addlinespace[0.5em]
+\midrule
+\multirow{4}{*}{\makecell[l]{\textbf{Wet-node}\\\textbf{boundary}}}
+& \multirow{3}{*}{Non-slip Boundary Condition}
+& Equilibrium Scheme \\
+\cmidrule(l){3-3}
+& & Non-equilibrium Bounce Back Scheme \\
+\cmidrule(l){3-3}
+& & Non-equilibrium Extrapolation Scheme \\
+\addlinespace[0.3em]
+\cmidrule(lr){2-3}
+& Velocity Open Boundary Condition &  --\\
+\addlinespace[0.3em]
+\cmidrule(lr){2-3}
+& Pressure Open Boundary Condition &  --\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Half-way Bounce Back Method 的一般表達式為：
+\begin{equation}
+  f_{\hat i}^{Post-streaming}(\vec{r_b}, t+\Delta t) = f_{i}^{\star}(\vec{r_b},t) + 2 w_i \rho_w \frac{\vec{e}_i \cdot \vec{u}_w}{c_s^2}
+\end{equation}
+從學長的(馮)論文可以知道，有關於上邊界與下邊界(山丘部分略為複雜)，由於宏觀條件均為"平面無滑移條件"，因此均採用 Half-way Bounce Back Method 來處理。\\
+
+\subsection{曲面邊界條件的處理 : Interpolation Bounce Back Method}
+\noindent 在處理邊界條件時，有幾個要點需要注意，最後一步更新的對象必然為Boundary node 的一般態分佈函數，以及邊界條件的處理應該視為遷移步的一種特例，對於Half-way Bounce Back 以及 Interpolation Bounce Back Method 而言。
+\subsubsection{Bouzidi 插值反彈法的物理意義}
+
+Bouzidi 等人提出的插值反彈格式 (Interpolation Bounce-Back Scheme) 用於處理曲面邊界上的無滑移條件。其核心思想是根據壁面交點位置 $q$ 的不同，採用不同階數的插值公式：
+
+\begin{itemize}
+    \item 當 $q > 0.5$ 時：壁面交點靠近流體節點，採用\textbf{線性插值，很遠的時候}
+    \item 當 $q < 0.5$ 時：壁面交點靠近固體內部，採用\textbf{二次插值，很近的時候}（需 Lagrange 7點內插）
+\end{itemize}
+
+\noindent 其中，$q$ 定義為流體節點到壁面交點的無量綱距離。對於無滑移邊界條件，Bouzidi 格式的一般形式為：
+
+\begin{equation}
+f_{\hat{i}}(\vec{x}_f, t+\Delta t) =
+\begin{cases}
+\dfrac{1}{2q} f_i(\vec{x}_f, t) + \dfrac{2q-1}{2q} f_{\hat{i}}(\vec{x}_f, t) & q > 0.5 \text{ (線性)} \\[1.5ex]
+\text{Lagrange 7-point interpolation} & q < 0.5 \text{ (高階)}
+\end{cases}
+\end{equation}
+
+\noindent 其中，$f_i$ 為入射方向分佈函數，$f_{\hat{i}}$ 為反射方向分佈函數。
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1.2]
+        % 座標軸
+        \draw[->,thick] (-0.5,0) -- (5,0) node[right] {$x$};
+        \draw[->,thick] (0,-0.5) -- (0,3) node[above] {$y$};
+
+        % 壁面
+        \draw[thick, blue] plot[smooth, tension=0.7] coordinates {(0.5,1.2) (1.5,1.5) (2.5,1.3) (3.5,1.6) (4.5,1.4)};
+        \node[blue] at (5,1.5) {壁面};
+
+        % Case 1: q > 0.5
+        \begin{scope}[shift={(1,0)}]
+            \fill (0,0) circle (2pt) node[below] {$x_f$};
+            \fill (0,1.5) circle (1.5pt) node[above right,font=\small] {壁面交點};
+            \draw[dashed] (0,0) -- (0,1.5);
+            \draw[<->,red,thick] (0.2,0) -- (0.2,1.5) node[midway,right,font=\small] {$q$};
+            \fill (0,3) circle (1pt) node[above,font=\small] {$x_f - \vec{e}_i$};
+            \node[font=\small,text width=2cm] at (0,-0.8) {$q > 0.5$\\線性插值};
+        \end{scope}
+
+        % Case 2: q < 0.5
+        \begin{scope}[shift={(3.5,0)}]
+            \fill (0,0) circle (2pt) node[below] {$x_f$};
+            \fill (0,0.6) circle (1.5pt) node[above right,font=\small] {壁面交點};
+            \draw[dashed] (0,0) -- (0,0.6);
+            \draw[<->,red,thick] (0.2,0) -- (0.2,0.6) node[midway,right,font=\small] {$q$};
+            \fill (0,2.5) circle (1pt) node[above,font=\small] {$x_f - \vec{e}_i$};
+            \node[font=\small,text width=2.5cm] at (0,-0.8) {$q < 0.5$\\Lagrange 7點};
+        \end{scope}
+    \end{tikzpicture}
+    \caption{Bouzidi 插值反彈法示意圖：根據 $q$ 值選擇不同插值策略}
+\end{figure}
+
+\subsubsection{程式碼實現}
+
+以下程式碼實現了針對 D3Q19 速度模型中不同方向的 Bouzidi 插值反彈法。為提高可讀性，對重複部分予以省略：
+\begin{lstlisting}[language=C, caption = {evolution.h168-223: Bouzidi 插值反彈法實現（簡化版）}, label={evolution.h168-223}, basicstyle=\ttfamily\scriptsize]
+//BFL Linear - 處理 boundary fitted layer 的線性插值
+if( k == 3 || k == 4 ) {
+    idx_xi = (k-3)*NYD6+j;
+
+    // ========== 第一組：處理 F3, F7, F8 (正 y 方向平面) ==========
+    if ( BFLReqF3_d[(k-3)*NYD6+j] == 1 ) {
+        if(Q3_d[(k-3)*NYD6+j] > 0.5) {  // 線性插值
+            F3_in = (1/(2*Q3_d[(k-3)*NYD6+j]))*f4_old[index] +
+                    ((2*Q3_d[(k-3)*NYD6+j]-1)/(2*Q3_d[(k-3)*NYD6+j]))*f3_old[index];
+            F7_in = (1/(2*Q3_d[(k-3)*NYD6+j]))*f10_old[index] +
+                    ((2*Q3_d[(k-3)*NYD6+j]-1)/(2*Q3_d[(k-3)*NYD6+j]))*f7_old[index];
+            F8_in = (1/(2*Q3_d[(k-3)*NYD6+j]))*f9_old[index] +
+                    ((2*Q3_d[(k-3)*NYD6+j]-1)/(2*Q3_d[(k-3)*NYD6+j]))*f8_old[index];
+        }
+        if(Q3_d[(k-3)*NYD6+j] < 0.5) {  // Lagrange 7點插值
+            Y_XI_Intrpl7(f4_old, F3_in, i,j,k, (i-3),(j-3),3, i,j, idx_xi,
+                         YBFLf3_0, ..., YBFLf3_6, XiBFLf3_0, ..., XiBFLf3_6);
+            X_Y_XI_Intrpl7(f10_old, F7_in, i,j,k, (i-3),(j-3),3, i,j, idx_xi,
+                           XBFLf37_0,...,XBFLf37_6, YBFLf3_0,...,YBFLf3_6,
+                           XiBFLf3_0,...,XiBFLf3_6);
+            X_Y_XI_Intrpl7(f9_old, F8_in, ...);  // 結構同上，參數省略
+        }
+        //F0_in = F0_in + ModifydRho_F378(...);  // 密度修正（已註解）
+    }
+
+    // ========== 第二組：處理 F4, F9, F10 (負 y 方向平面) ==========
+    if ( BFLReqF4_d[(k-3)*NYD6+j] == 1 ) {
+        if(Q4_d[(k-3)*NYD6+j] > 0.5) {  // 線性插值（公式同第一組）
+            F4_in  = (1/(2*Q4_d[(k-3)*NYD6+j]))*f3_old[index] +
+                     ((2*Q4_d[(k-3)*NYD6+j]-1)/(2*Q4_d[(k-3)*NYD6+j]))*f4_old[index];
+            F9_in  = (1/(2*Q4_d[(k-3)*NYD6+j]))*f8_old[index] +
+                     ((2*Q4_d[(k-3)*NYD6+j]-1)/(2*Q4_d[(k-3)*NYD6+j]))*f9_old[index];
+            F10_in = (1/(2*Q4_d[(k-3)*NYD6+j]))*f7_old[index] +
+                     ((2*Q4_d[(k-3)*NYD6+j]-1)/(2*Q4_d[(k-3)*NYD6+j]))*f10_old[index];
+        }
+        if(Q4_d[(k-3)*NYD6+j] < 0.5) {  // Lagrange 7點插值（結構同第一組）
+            Y_XI_Intrpl7(f3_old, F4_in, ...);    // 參數結構與第一組相同
+            X_Y_XI_Intrpl7(f8_old, F9_in, ...);  // 僅分佈函數編號不同
+            X_Y_XI_Intrpl7(f7_old, F10_in, ...);
+        }
+        //F0_in = F0_in + ModifydRho_F4910(...);  // 密度修正（已註解）
+    }
+
+    // ========== 第三組：處理 F15 (正 y 方向立體) ==========
+    if ( BFLReqF15_d[(k-3)*NYD6+j] == 1 ) {
+        if(Q15_d[(k-3)*NYD6+j] > 0.5) {  // 線性插值
+            F15_in = (1/(2*Q15_d[(k-3)*NYD6+j]))*f18_old[index] +
+                     ((2*Q15_d[(k-3)*NYD6+j]-1)/(2*Q15_d[(k-3)*NYD6+j]))*f15_old[index];
+        }
+        if(Q15_d[(k-3)*NYD6+j] < 0.5) {  // Lagrange 7點插值
+            Y_XI_Intrpl7(f18_old, F15_in, i,j,k, (i-3),(j-3),3, i,j, idx_xi,
+                         YBFLf15_0,...,YBFLf15_6, XiBFLf15_0,...,XiBFLf15_6);
+        }
+        //F0_in = F0_in + ModifydRho_F15(...);  // 密度修正（已註解）
+    }
+
+    // ========== 第四組：處理 F16 (負 y 方向立體) ==========
+    if ( BFLReqF16_d[(k-3)*NYD6+j] == 1 ) {
+        if(Q16_d[(k-3)*NYD6+j] > 0.5) {  // 線性插值（結構同第三組）
+            F16_in = (1/(2*Q16_d[(k-3)*NYD6+j]))*f17_old[index] +
+                     ((2*Q16_d[(k-3)*NYD6+j]-1)/(2*Q16_d[(k-3)*NYD6+j]))*f16_old[index];
+        }
+        if(Q16_d[(k-3)*NYD6+j] < 0.5) {  // Lagrange 7點插值
+            Y_XI_Intrpl7(f17_old, F16_in, i,j,k, (i-3),(j-3),3, i,j, idx_xi,
+                         YBFLf16_0,...,YBFLf16_6, XiBFLf16_0,...,XiBFLf16_6);
+        }
+        //F0_in = F0_in + ModifydRho_F16(...);  // 密度修正（已註解）
+    }
+}
+\end{lstlisting}
+
+
+
+\subsubsection{程式碼結構解析}
+
+上述程式碼處理了四組分佈函數的壁面邊界條件，分別對應 D3Q19 模型中不同的速度方向：
+
+\begin{table}[H]
+\centering
+\caption{D3Q19 壁面處理方向對照表}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+\textbf{處理組別} & \textbf{入射方向} & \textbf{反射方向} & \textbf{物理意義} \\
+\midrule
+第一組 & $f_4, f_{10}, f_9$ & $F_3, F_7, F_8$ & 正 $y$ 方向（平面） \\
+第二組 & $f_3, f_8, f_7$ & $F_4, F_9, F_{10}$ & 負 $y$ 方向（平面） \\
+第三組 & $f_{18}$ & $F_{15}$ & 正 $y$ 方向（立體） \\
+第四組 & $f_{17}$ & $F_{16}$ & 負 $y$ 方向（立體） \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{關鍵變數說明：}
+\begin{itemize}
+    \item \texttt{BFLReqF3\_d[]} 等：標記該節點是否需要壁面處理（1 = 需要，0 = 不需要）
+    \item \texttt{Q3\_d[]}, \texttt{Q4\_d[]} 等：儲存無量綱壁面距離 $q$ 值
+    \item \texttt{idx\_xi}：壁面座標索引，用於提取 $\xi$ 方向的網格資訊
+\end{itemize}
+
+\noindent\textbf{兩種插值方案比較：}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{特性} & \textbf{線性插值 ($q>0.5$)} & \textbf{Lagrange 7點插值 ($q<0.5$)} \\
+\midrule
+計算複雜度 & 低 & 高 \\
+精度 & 一階 & 六階 \\
+所需節點數 & 2個 & $7^3 = 343$ 個（三維） \\
+適用情況 & 壁面靠近流體節點 & 壁面靠近固體內部 \\
+程式碼函數 & 直接計算 & \texttt{Y\_XI\_Intrpl7}, \texttt{X\_Y\_XI\_Intrpl7} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{為何需要高階插值？}
+
+當 $q < 0.5$ 時，壁面交點非常靠近固體內部，此時若使用線性插值會導致：
+\begin{enumerate}
+    \item 數值不穩定（分母 $2q$ 過小）
+    \item 精度損失（外推而非內插）
+    \item 無法準確捕捉曲面幾何
+\end{enumerate}
+
+因此採用 Lagrange 七點內插，利用鄰近 $7\times7\times7$ 個節點的資訊，提供高精度的分佈函數值。
+\subsection{補充}
+\noindent $\texttt{f\_old}$為上一個時間步所更新的碰撞後插值後一般態分佈函數\\
+\noindent $\texttt{f\_new}$為本時間步所更新的碰撞後插值後一般態分佈函數
+
+\section{函數式: periodicSW 程式碼說明}
+
+\vspace{1.5ex}
+\noindent 摘要:主流方向(Stream-wise direction)的週期性邊界條件。
+\noindent 從主程式碼可以發現，只有在x方向(stream-wise direction)設置使用週期性邊界條件，在一般教科書中，
+對於distribution function 的週期性邊界條件的實現方式如下:
+\begin{lstlisting}[language=C, caption={evolution.h671-715}, label={evolution.h671-715}]
+__global__ void periodicSW(
+    double *f0_new, ..., double *f18_new,  // 19個distribution functions
+    double *u, double *v, double *w, double *rho_d)
+{
+    int buffer = 3;  // 緩衝層厚度
+    
+    // ============ 第一部分: 左邊界處理 ============
+    // 將右側內部節點複製到左側邊界緩衝區
+    idx_buffer = j*NZ6*NX6 + k*NX6 + i;           // 左邊界位置 (i=0,1,2)
+    idx = idx_buffer + (NX6-2*buffer-1);          // 對應的右側內部節點
+    //上式證明(NX6-2*buffer-1)為物理周長計算點數量
+    f0_new[idx_buffer] = f0_new[idx];   // 複製所有19個distribution
+    f1_new[idx_buffer] = f1_new[idx];
+    ...
+    f18_new[idx_buffer] = f18_new[idx];
+    
+    u[idx_buffer] = u[idx];             // 複製巨觀變量
+    v[idx_buffer] = v[idx];
+    w[idx_buffer] = w[idx];
+    rho_d[idx_buffer] = rho_d[idx];
+    
+    // ============ 第二部分: 右邊界處理 ============
+    // 將左側內部節點複製到右側邊界緩衝區
+    idx_buffer = j*NX6*NZ6 + k*NX6 + (NX6-1-i);   // 右邊界位置
+    idx = idx_buffer - (NX6-2*buffer-1);          // 對應的左側內部節點
+    
+    f0_new[idx_buffer] = f0_new[idx];   // 複製所有19個distribution
+    ...
+    f18_new[idx_buffer] = f18_new[idx];
+}
+\end{lstlisting}
+
+\noindent 
+所以一句話描述週期性邊條件:
+複製另一側內點的值作為buffer層的值，且兩者相距一個物理週期，且兩者在同一個times step上，如此，則為實現
+週期性邊界條件。需要注意的是:
+\begin{lstlisting}[language=C, caption={evolution.h688}, label={evolution.h688}]
+f0_new[idx_buffer] = f0_new[idx]; //f0_new為碰撞遷移步(periodicSW(...))後得到，且這個複製行為發生在periodicSW 之後。
+\end{lstlisting}
+問題 : {\color{red}為甚麼複製後的buffer層的值，與另一端內點的數個值在同一個time step上。}
+這個問題可以分成兩句話來解答:
+\begin{itemize}
+ \item {\color{red}$\texttt{f0\_new[idx]}$}(等式右側) : 另一端內側點數個值，是在Collision step(碰撞步)與Streaming step(遷移步)後得到的值，time step = n+1。
+ \item {\color{red}$\texttt{f0\_new[idx\_buffer] = f0\_new[idx];}$}: 是在函數式 $\texttt{stream\_collide}$ 之後執行，所以這句程式碼只是空間上的週期性連接，兩者的time step在同一個時間上: n+1。
+\end{itemize}
+\noindent
+問題 : 
+\noindent {\color{red}
+他認定最右側三層作為右側buffer，那問題是:為甚麼多一層，跳過，從頭到尾s根本用不到那一層?}
+\noindent 回答: 這裡沒有「多一層沒用到」，而是週期端點重複 + 7點內插所需的ghost層。
+具體可分成以下幾點說明:
+\begin{itemize}
+ \item 變數定義中 \texttt{NX=32}, \texttt{NX6=NX+7}，而內部計算區間由 \texttt{if( i <= 2 || i >= NX6-3 ) return;} 決定，故內點為 $i=3\sim NX6-4$（此例即 $3\sim35$）。
+ \item 右側buffer實際為 $i=NX6-3\sim NX6-1$（即 36, 37, 38），由 \texttt{periodicSW} 複製內點填入；因此最外層 38 不是跳過，而是被填值。
+ \item 38 會被內點使用: 7點內插會讀到 $i+3$；當 $i=35$ 時就需要讀到 $38$。
+ \item 內點數出現 33 是因為週期端點重複：$x=0$ 與 $x=LX$ 為同一物理位置，因此獨立物理點仍是 $NX=32$。
+\end{itemize}
+
+\begin{lstlisting}[language=C, caption={variables.h + evolution.h (內點範圍)}, label={code:nx6_guard}]
+#define NX  32
+#define NX6 (NX+7)
+...
+if( i <= 2 || i >= NX6-3 ) return; // 內點 i=3..NX6-4 (=3..35)
+\end{lstlisting}
+
+\begin{lstlisting}[language=C, caption={interpolationHillISLBM.h13-15}, label={interpolationHillISLBM.h13-15}]
+idx = j*nface + k*nline + i_c;
+F1_in = Intrpl7( f[idx],   x_0[idx_x],
+                 f[idx+1], x_1[idx_x],
+                 f[idx+2], x_2[idx_x],
+                 f[idx+3], x_3[idx_x],
+                 f[idx+4], x_4[idx_x],
+                 f[idx+5], x_5[idx_x],
+                 f[idx+6], x_6[idx_x] );
+// 當 i=35 時, i_c=32 -> 讀到 32..38
+\end{lstlisting}
+
+\begin{lstlisting}[language=C, caption={initialization.h55-63 (GenerateMesh\_X)}, label={initialization.h55-63-GenerateMeshX}]
+if( Uniform_In_Xdir ){
+	dx = LX / (double)(NX6-2*bfr-1);//x方向實際格子大小
+	for( int i = 0; i < NX6; i++ ){
+		x_h[i]  = dx*((double)(i-bfr));//實際每一個格點的位置
+	}
+	} else {
+    printf("Mesh needs to be uniform in periodic hill problem, exit...\n");
+    exit(0);
+}
+\end{lstlisting}
+\begin{lstlisting}[language=C, caption={evolution.h700}, label={evolution.h700}]
+idx_buffer = j*NX6*NZ6 + k*NX6 + (NX6-1-i);
+//右側 ghost: i=0,1,2 -> idx_buffer=38,37,36
+//對應左側內點: idx=5,4,3
+//i=35 為內點，會在 stream_collide 中被計算
+\end{lstlisting}
+\noindent \texttt{index:35} 存在在計算物理點的視角中，為"端點重複"之意義，換言之，在x方向上，參與碰撞與遷移的計算點為一段週期$+$下一段週期的第一個點。
+所以設置\texttt{index:35} 只是為了在端點Lagrange內插的時候必須用到下一段周期的第一格點
+\noindent {\color{blue}週期性邊界條件periodic boundary condition:}
+\noindent 週期性邊條件由以下兩點實現:其一為buffer層的賦予，其二為壁面來向第一段Stream-Collision交由另一端邊界計算點(等效下一段值周期第一個算點)來呈現。
+\begin{itemize}
+\item buffer 層的值由另一端物理空間計算點的值給定:
+\begin{lstlisting}[language=C, caption={left buffer layer and right buffer layer}]
+f_new[0] = f_new[32] ; //左側buffer layer第一個計算點的值由一端計算點32 的函數值來決定
+f_new[1] = f_new[33] ; 
+f_new[2] = f_new[34] ; 
+f_new[36] = f_new[4] ; //注意這邊:右側buffer layer第一個算點的值由左側物理空間第二個計算點4的值給定
+f_new[37] = f_new[5] ;
+f_new[38] = f_new[6] ;
+\end{lstlisting}
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{11.png}
+  \caption{periodic condition setting}
+  \label{fig:11}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{12.png}
+  \caption{collision-streaming step is copied to the other point}
+  \label{fig:12}
+\end{minipage}
+\end{figure}
+\end{document}
+
+
+

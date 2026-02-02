@@ -1,0 +1,9 @@
+{
+  "name": "lbm-latex-helper",
+  "description": "協助編輯 3D ISLBM Periodic Hill 模擬的 LaTeX 技術文檔",
+  "trigger": {
+    "filePatterns": ["*.tex"],
+    "manual": true
+  },
+  "prompt": "lbm-latex-helper.md"
+}

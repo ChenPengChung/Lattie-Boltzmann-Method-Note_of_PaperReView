@@ -1,0 +1,602 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper,margin=2cm]{geometry} % 明確設定四邊
+\usepackage{fontspec} % 字體設定
+\usepackage{xeCJK}
+\usepackage{setspace} % 設定行距
+\linespread{1.2}
+\usepackage{titling} % 預設標題下移0.6in
+\usepackage{enumitem}
+\usepackage{amsmath} % 數學方程式
+\usepackage{graphicx} %圖片
+\usepackage{float} % 在導言區，讓圖片強制插在原地
+\usepackage{xcolor} %字體加入顏色
+\usepackage{listings}
+\usepackage{physics} % 物理符號
+\usepackage{wrapfig} % 文字環繞圖
+\usepackage{array} % 表格對齊控制
+\usepackage{caption}
+\usepackage{amsthm}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{etoolbox}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{hyperref}
+\usepackage{makecell}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  citecolor=blue,
+  linktoc=all
+}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+\tcbset{
+  highlightblock/.style={
+    enhanced,
+    breakable,
+    colback=gray!8,
+    colframe=gray!60,
+    boxrule=0.4pt,
+    arc=0pt,
+    boxsep=0pt,
+    left=4pt,
+    right=4pt,
+    top=4pt,
+    bottom=4pt,
+    before skip=0pt,
+    after skip=0pt
+  }
+}
+\usepackage{longtable}
+
+%1 註記行距設定
+\setlist[itemize]{itemsep=1.2pt, parsep=0pt, topsep=1pt}
+\setlist[enumerate]{itemsep=1.2pt, parsep=0pt, topsep=1pt}
+%2 圖表標題設定
+\captionsetup{
+    labelfont={footnotesize,bf},    % 標籤：小字體+粗體
+    skip=10pt                        % 標題與圖表的間距
+}
+%3 表格間距設定
+\setlength{\tabcolsep}{8pt} % 列間距（增加）
+\renewcommand{\arraystretch}{1.4} % 行間距（增加）
+%4 腳註設定
+\usepackage[bottom,hang]{footmisc} % 腳註置於頁面底部，懸掛縮排
+\setlength{\footnotesep}{10pt} % 腳註之間的間距（增加）
+\setlength{\skip\footins}{12pt plus 5pt minus 2pt} % 正文與腳註之間的間距（增加）
+\setlength{\footnotemargin}{1.5em} % 腳註標號與文字的間距（增加）
+\renewcommand{\footnoterule}{\vspace*{-3pt}\hrule width 0.4\columnwidth height 0.4pt\vspace*{3pt}} % 腳註分隔線
+%5 使用直立字體的定理樣式
+\newtheoremstyle{upright}
+  {6pt}{6pt}  % 定理環境前後間距（增加）
+  {\normalfont}% 使用正常字體，不使用斜體
+  {0pt}{\bfseries}{：}{0.5em}{}
+%6 定理環境定義
+\theoremstyle{upright}
+\newtheorem{definition}{定義}[section]
+\newtheorem{theorem}{定理}[section]
+\newtheorem{lemma}{引理}[section]
+\newtheorem{corollary}{推論}[section]
+\newtheorem{example}{例子}[section]
+% 重新正確定義 remark 環境 - 確保完全靠左對齊
+\makeatletter
+\@ifundefined{c@remark}{}{\renewcommand{\theremark}{}}
+\newenvironment{remark}{%
+  \par\vspace{0.0\baselineskip}%
+  \begingroup% 開始一個組以限制設置的範圍
+  \setlength{\parindent}{0pt}% 設置段落縮進為零
+  \setlength{\leftskip}{0pt}% 設置左邊距為零
+  \noindent\textbf{註記：}\\% 添加標題並強制換行
+  \ignorespaces% 忽略可能的空格
+  \setlist[enumerate]{itemsep=0pt, parsep=0pt, topsep=0.0pt, leftmargin=1.5em}%
+  \setlist[itemize]{itemsep=0pt, parsep=0pt, topsep=0.0pt, leftmargin=1.5em}%
+}{%
+  \endgroup% 結束組
+  \par\vspace{0.5\baselineskip}
+}
+\makeatother
+%7 手動定義中文數字（不含標點符號）
+\newcommand{\chinese}[1]{%
+  \ifcase#1 零\or 一\or 二\or 三\or 四\or 五\or 六\or 七\or 八\or 九\or 十\or
+  十一\or 十二\or 十三\or 十四\or 十五\or 十六\or 十七\or 十八\or 十九\or 二十\fi
+}
+
+%8 重新定義章節編號格式
+\renewcommand{\thesection}{\chinese{\value{section}}}
+\renewcommand{\thesubsection}{\chinese{\value{section}}、\arabic{subsection}}
+\renewcommand{\theequation}{\chinese{\value{section}}.\arabic{equation}}
+\renewcommand{\thesubsubsection}{\chinese{\value{section}}、\arabic{subsection}.\arabic{subsubsection}}
+\renewcommand{\thefigure}{\chinese{\value{section}}.\arabic{figure}}
+\renewcommand{\thedefinition}{\thesection、\arabic{definition}}
+\renewcommand{\thetheorem}{\thesection、\arabic{theorem}}
+\renewcommand{\theexample}{\thesection、\arabic{example}}
+
+% 为不同级别的标题增加编号后的空格
+\setlength{\cftsecnumwidth}{2.5em}  % section 编号宽度
+\setlength{\cftsubsecnumwidth}{3.5em}  % subsection 编号宽度
+\setlength{\cftsubsubsecnumwidth}{4.5em}  % subsubsection 编号宽度
+
+% 添加点线（可选）
+\renewcommand{\cftsubsubsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsubsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+%9 讓方程式計數器在每個section重置
+\counterwithin{equation}{section}
+%10 字體設定 - 優化以減少警告
+\IfFontExistsTF{Times New Roman}{%
+  \setmainfont{Times New Roman}%
+}{%
+  \setmainfont{TeX Gyre Termes}%
+}
+
+%\setCJKmainfont[
+%    BoldFont={Kaiti TC Bold},
+%    ItalicFont={Kaiti TC},
+%    BoldItalicFont={Kaiti TC Bold}
+%]{Kaiti TC}
+%\setCJKmonofont{Kaiti TC}
+\IfFontExistsTF{DFKai-SB}{%
+  \setCJKmainfont[
+    BoldFont={DFKai-SB},
+    ItalicFont={DFKai-SB},
+    BoldItalicFont={DFKai-SB}
+  ]{DFKai-SB}%
+  % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+  \setCJKmonofont{DFKai-SB}%
+}{%
+  \IfFontExistsTF{Kaiti TC}{%
+    \setCJKmainfont[
+      BoldFont={Kaiti TC Bold},
+      ItalicFont={Kaiti TC},
+      BoldItalicFont={Kaiti TC Bold}
+    ]{Kaiti TC}%
+    % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+    \setCJKmonofont{Kaiti TC}%
+  }{%
+    \IfFontExistsTF{Songti TC}{%
+      \setCJKmainfont{Songti TC}%
+      % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+      \setCJKmonofont{Songti TC}%
+    }{%
+      \setCJKmainfont{Heiti TC}%
+      % 為 xeCJK 明確指定等寬字型以消除 \CJKttdefault 警告
+      \setCJKmonofont{Heiti TC}%
+    }%
+  }%
+}
+%11 標題設定
+\setlength{\droptitle}{-1in} % 上移標題1in
+\title{24.evolution零碎筆記}
+\author{Chen Peng Chung}
+\setcounter{section}{0}
+% 12调整 subsection 的间距
+\titlespacing*{\section}
+{0pt}                    % 左边距
+{0.0in}                 % 标题前间距
+{0.0em}                  % 标题后间距
+\titlespacing*{\subsection}
+{0pt}                    % 左边距
+{-0.05in}                % 标题前间距
+{0.0em}                  % 标题后间距
+% 调整 subsubsection 的间距  
+\titlespacing*{\subsubsection}
+{0pt}                    % 左边距
+{0.0in}                 % 标题前间距
+{0.0em}                  % 标题后间距
+%13.
+
+% ========== Monokai Light 配色方案（淺灰背景）==========
+\definecolor{monokailight-bg}{RGB}{240,240,240}      % 淺灰背景 #F0F0F0
+\definecolor{monokailight-fg}{RGB}{39,40,34}         % 深色文字 #272822
+\definecolor{monokailight-comment}{RGB}{117,113,94}  % 註解 #75715E
+\definecolor{monokailight-string}{RGB}{152,118,24}   % 字串 #987618
+\definecolor{monokailight-keyword}{RGB}{244,0,95}    % 關鍵字 #F4005F
+\definecolor{monokailight-function}{RGB}{121,162,0}  % 函數 #79A200
+\definecolor{monokailight-number}{RGB}{137,89,168}   % 數字 #8959A8
+\definecolor{monokailight-type}{RGB}{0,129,152}      % 型別 #008198
+\definecolor{monokailight-operator}{RGB}{244,0,95}   % 運算符 #F4005F
+\definecolor{monokailight-border}{RGB}{210,210,210}  % 邊框 #D2D2D2
+
+% ========== CUDA 語言定義 ==========
+\lstdefinelanguage{CUDA}{
+    language=C++,
+    morekeywords={__global__, __device__, __host__, __shared__, 
+                  __constant__, __syncthreads, dim3, cudaMalloc,
+                  cudaMemcpy, cudaFree, cudaMemcpyHostToDevice,
+                  cudaMemcpyDeviceToHost, cudaDeviceSynchronize},
+    % 型別關鍵字
+    morekeywords=[2]{double, float, int, char, void, size_t,
+                     uint, uint2, uint3, uint4,
+                     int2, int3, int4,
+                     float2, float3, float4,
+                     double2, double3, double4},
+    % CUDA 內建變數
+    morekeywords=[3]{blockIdx, threadIdx, blockDim, gridDim,
+                     warpSize},
+    sensitive=true
+}
+
+% ========== Monokai Light 樣式 ==========
+\lstdefinestyle{monokailight}{
+    language=CUDA,
+    backgroundcolor=\color{monokailight-bg},
+    basicstyle=\color{monokailight-fg}\ttfamily\footnotesize,
+    commentstyle=\color{monokailight-comment}\itshape,
+    keywordstyle=\color{monokailight-keyword}\bfseries,
+    keywordstyle=[2]\color{monokailight-type}\bfseries,      % 型別
+    keywordstyle=[3]\color{monokailight-function}\bfseries,  % CUDA 變數
+    stringstyle=\color{monokailight-string},
+    numberstyle=\tiny\color{monokailight-comment},
+    % 數字顏色
+    literate=
+        {0}{{{\color{monokailight-number}0}}}1
+        {1}{{{\color{monokailight-number}1}}}1
+        {2}{{{\color{monokailight-number}2}}}1
+        {3}{{{\color{monokailight-number}3}}}1
+        {4}{{{\color{monokailight-number}4}}}1
+        {5}{{{\color{monokailight-number}5}}}1
+        {6}{{{\color{monokailight-number}6}}}1
+        {7}{{{\color{monokailight-number}7}}}1
+        {8}{{{\color{monokailight-number}8}}}1
+        {9}{{{\color{monokailight-number}9}}}1,
+    % 版面設定
+    breaklines=true,
+    breakatwhitespace=false,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    % 框線設定
+    frame=single,
+    rulecolor=\color{monokailight-border},
+    framerule=0.8pt,
+    % 其他設定
+    columns=flexible,
+    escapeinside={(*@}{@*)},
+    xleftmargin=2em,
+    xrightmargin=0.5em,
+    framexleftmargin=1.5em
+}
+
+% ========== 設為預設樣式 ==========
+\lstset{style=monokailight}
+%14.
+% ========== 表格樣式設定 ==========
+\setlength{\arrayrulewidth}{0.5pt}  % 表格線條粗細
+\renewcommand{\arraystretch}{1.3}   % 行高
+%15listing 設定:
+\lstset{
+  language=C++,
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny,
+  stepnumber=1,
+  numbersep=8pt,
+%
+  keepspaces=true,      % ★保留空白
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+%
+  tabsize=2,            % ★tab 視為 2 個空白（可改 4）
+  breaklines=true,
+  breakatwhitespace=false,
+%
+  frame=single,
+  captionpos=b
+}
+
+
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+以下為其他程式碼的補充。
+補充:
+\begin{lstlisting}[language=C, caption={variables.h10-19}, label={variables.h10-19}]                                                                                                    
+#define  NX   32     //x方向物理空間網格數：32
+#define  NY   128    //y方向物理空間網格數：128
+#define  NZ   64     //z方向物理空間網格數：64
+
+#define  jp   4      //GPU的使用數量：4
+
+#define  NX6 (NX+7)  
+//(1)x方向物理空間節點數：NX(Link-wise)(2)x方向總節點數：NX+7(定義采用前3後4)
+#define  NYD6 (NY/jp+7)//還不知道為什麼
+#define  NY6 (NY+7)  
+//(1)y方向物理空間節點數：NY(Link-wise)(2)y方向總節點數：NY+7(定義采用前3後4)
+#define  NZ6 (NZ+6)  //(?)我覺得他寫錯了，應該是NZ+7                                                                                                                                                                   
+\end{lstlisting}
+\noindent 在Link-wise節點佈局中，物理空間變的儲存點個數 = 物理空間之網格數 
+
+\noindent {\color{red}為什麽總節點數相較於物理間總節點數多6個單位?} \\
+因為本程式碼為用到Lagrange 6階空間精度內插公式:                                                                                                                                                                 
+\begin{equation*}                                                                                                                                                             
+  f(x)=\sum_{i=0}^{6}f(x_{i})\prod_{\substack{j=0 \\ j\neq i}}^{6}\frac{x-x_{j}}{x_{i}-x_{j}}                                                                                 
+\end{equation*}                                                                                                                                                                
+來取值執行collision step前的分佈函數，在三維空間中，上述之內插公式則需要7*7*7個鄰近空間點(stencil)的函數值來決定:\\
+\noindent 以下將列出三維空間7點Lagrange內插公式：\\
+\noindent\begin{tcolorbox}[highlightblock]
+Let $(x_{\hat{i}}, y_{\hat{j}}, z_{\hat{k}})$ denote a reference grid point.
+Define the normalized offsets
+\[
+\delta x = \frac{x - x_{\hat{i}}}{\Delta x}, \quad
+\delta y = \frac{y - y_{\hat{j}}}{\Delta y}, \quad
+\delta z = \frac{z - z_{\hat{k}}}{\Delta z},
+\]
+where $\delta x, \delta y, \delta z \in 
+{R}$.
+
+The three-dimensional 7-point Lagrange interpolation in tensor-product form is written as
+\begin{equation}
+\label{eq:3d_lagrange_tensor}
+f\!\left(
+x_{\hat{i}} + \delta x \Delta x,\,
+y_{\hat{j}} + \delta y \Delta y,\,
+z_{\hat{k}} + \delta z \Delta z
+\right)
+=
+\sum_{i=-3}^{3}
+\sum_{j=-3}^{3}
+\sum_{k=-3}^{3}
+f_{\hat{i}+i,\;\hat{j}+j,\;\hat{k}+k}\,
+\ell_i(\delta x)\,
+\ell_j(\delta y)\,
+\ell_k(\delta z),
+\end{equation}
+where the one-dimensional Lagrange basis functions are defined as
+\begin{align}
+\ell_i(\delta x) &= \prod_{\substack{m=-3 \\ m \neq i}}^{3}
+\frac{\delta x - m}{i - m}, \\[6pt]
+\ell_j(\delta y) &= \prod_{\substack{n=-3 \\ n \neq j}}^{3}
+\frac{\delta y - n}{j - n}, \\[6pt]
+\ell_k(\delta z) &= \prod_{\substack{q=-3 \\ q \neq k}}^{3}
+\frac{\delta z - q}{k - q}.
+\end{align}
+\end{tcolorbox}
+\vspace{1.5em}
+\noindent 所以一邊之邊界點最多需要向外插值三個點的值來完成Lagrange七點內插。
+而對於完整的一維空間內插設置，則需要多設置六個節點，這六層向外使用的節點層稱為buffer layers。
+\begin{equation}
+\label{eq:3d_lagrange_tensor_modified}
+f\!\left(
+x_{\hat{i}} + \delta x \Delta x,\,
+y_{\hat{j}} + \delta y \Delta y,\,
+z_{\hat{k}} + \delta z \Delta z
+\right)
+=
+\sum_{i=-3}^{3}
+\sum_{j=-3}^{3}
+\sum_{k=-3}^{3}
+f_{\hat{i}+i,\;\hat{j}+j,\;\hat{k}+k}\,
+\ell_i(\delta x)\,
+\ell_j(\delta y)\,
+\ell_k(\delta z),
+\end{equation}
+
+\noindent 因此，在每一個方向上，都需要多新增3層budder layers來提供插值所需的鄰近點值。
+故總節點數 = 物理空間節點數 + 6 (3層buffer layers)。又因為週期性邊條件在Stream-Wise以及Span-Wise方向，需要複製壁面來向的撞遷移過程，
+所以在維持相同碰撞 pattern 的條件下，多設立一層作為實現週期性邊條件的技巧。
+\newpage
+\noindent 
+{\color{red}Lagrange 七點內插公式在Latticeb Boltzmann Method 中的應用:}
+
+\noindent Interpolation-Based Lattice Boltzmann Method : \\
+\noindent 所以，插值，是插誰? 插【非均勻網格節點的遷移前空間點的碰撞前分佈函數】，如圖說明:
+\noindent 12/29 更新: 插值 : 【(R(T(A物理空間計算點)的(遷移前空間點))的(碰撞後分佈函數))】所以整體碰撞演算法為: 插值>碰撞>遷移。先透過插值的方式得到不存在的分佈函數，再碰撞更新半步長的時間步，最後遷移得到往格中心點實際存在的碰撞遷移後分佈函數。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\linewidth]{5.png}
+    \caption{Schematic illustration of the interpolation-based Lattice Boltzmann method (LBM).}
+    \caption*{Source: Y.-H. Chiu, \textit{Simulations of turbulent Poiseuille duct flow with the lattice Boltzmann method on non-uniform meshes}, 2025.}
+\end{figure}
+\noindent 所以插值晶格波茲曼法依據如下方程式執行:
+\begin{equation}
+  \label{eq:precollision_non-grid}
+f_{\text{遷移前空間點(非網格節點)}}^{pre-collision(time = n)}
+=
+\sum_{i=-3}^{3}
+\sum_{j=-3}^{3}
+\sum_{k=-3}^{3}
+f_{\hat{i}+i,\;\hat{j}+j,\;\hat{k}+k}\,
+\ell_i(\delta x)\,
+\ell_j(\delta y)\,
+\ell_k(\delta z),
+\end{equation}
+其中，$f_{\text{遷移前空間點(非網格節點)}}^{pre-collision(time = n)}$為(D(S(A非均勻往個節點)的(遷移前空間點))的(碰撞前分佈函數))
+\begin{equation}
+  f_{\text{遷移前空間點(非網格節點)}}^{\star}
+=
+f_{\text{遷移前空間點(非網格節點)}}^{pre-collision} \\[1.5ex]
+- \Omega(f^{eq}(\vec{r},t), f(\vec{r},t))
+\end{equation}
+\noindent 其中，$\Omega(f^{eq}(\vec{r},t), f(\vec{r},t))$為碰撞算子(Collision Operator)，且上述方程式稱為LBM之碰撞步(collision step)。
+\begin{equation}
+  f_{\text{遷移後空間點(網格節點)}}^{n+1} = f_{\text{遷移前空間點(非網格節點)}}^{\star} \\[1.5ex]
+\end{equation}
+\noindent 上式則稱為LBM之遷移步(Streaming Step)。
+
+\vspace{1.0ex}
+\noindent {\color{blue}以下為程式碼補充:} 
+\noindent {\color{blue}補充一:}
+
+\begin{lstlisting}[language=C, caption={interpolationHillISLBM.h9-11}, label={interpolationHillISLBM.h9-11}]                                                                                                    
+#define F0_Intrpl7(f, i, j, k)      \
+    idx = j*nface + k*nline + i;    \
+    F0_in = ( f[idx] );                                                                                                                                                                      
+\end{lstlisting}  
+\noindent  在程式碼規則中，\#define 稱為"宏定義"，宏定義內部的變數 idx不需要特別宣告，只需要在使用到此宏定義的函數或者變數的區域內加以宣告即可。
+"宏定義"為對特定變數的擬合器，如上片段程式碼 \ref{interpolationHillISLBM.h9-11} 所示，"F0\_Intrpl7"作為一個定義式，只要在其他函數中，一講出"F0\_Intrpl7"，編譯器就會自動將其替換成定義式內的內容: 
+F0\_in = ( f[idx] ) : 
+
+\begin{table}[H]
+\centering
+\caption{巨集定義與分佈函數變數之對應關係}
+\centering
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{宏定義} & \textbf{對應變數} \\
+\midrule
+\texttt{\#define F0\_Intrpl7}  & $\texttt{F0\_Intrpl7} \Leftrightarrow \texttt{F0\_in}$ \\
+\texttt{\#define F1\_Intrpl7}  & $\texttt{F1\_Intrpl7} \Leftrightarrow \texttt{F1\_in}$ \\
+\texttt{\#define F2\_Intrpl7}  & $\texttt{F2\_Intrpl7} \Leftrightarrow \texttt{F2\_in}$ \\
+\texttt{\#define F3\_Intrpl7}  & $\texttt{F3\_Intrpl7} \Leftrightarrow \texttt{F3\_in}$ \\
+\texttt{\#define F4\_Intrpl7}  & $\texttt{F4\_Intrpl7} \Leftrightarrow \texttt{F4\_in}$ \\
+\texttt{\#define F5\_Intrpl7}  & $\texttt{F5\_Intrpl7} \Leftrightarrow \texttt{F5\_in}$ \\
+\texttt{\#define F6\_Intrpl7}  & $\texttt{F6\_Intrpl7} \Leftrightarrow \texttt{F6\_in}$ \\
+\texttt{\#define F7\_Intrpl7}  & $\texttt{F7\_Intrpl7} \Leftrightarrow \texttt{F7\_in}$ \\
+\multicolumn{2}{c}{$\vdots$} \\
+\texttt{\#define F18\_Intrpl7} & $\texttt{F18\_Intrpl7} \Leftrightarrow \texttt{F18\_in}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent {\color{blue}補充二：}
+\noindent {\color{red}討論：Z方向的網格劃分與非均勻設定 : NZ6 = NZ + 6 }\\
+\noindent 在 hyperbolic tangent function 中，z方向採用如下函數做非均勻網格劃分:
+\[
+y_j = \frac{h}{a} \tanh\!\left( \frac{\xi_j}{2} \ln \frac{1+a}{1-a} \right)
+\]
+\noindent 其中，$\xi_j$為正規化座標，$\xi_j \in [-1,+1]$
+當 $j=0$ 時，$\xi_j = -1$；當 $j=N$ 時，$\xi_j = 1$，所以分母的N為切割之網格數而非切割後的節點數。
+程式碼在 {\color{blue} initializationTool.h4-7} 中有定義這個非均勻網格化分之函數:
+
+\begin{lstlisting}[language=C, caption={initializationTool.h4-7}, label={initializationTool.h4-7}]                                                                                                  
+#define tanhFunction( L, LatticeSize, a, j, N )     \
+(           \
+    L/2.0 + LatticeSize/2.0 + ((L/2.0)/a)*tanh((-1.0+2.0*(double)(j)/(double)(N))/2.0*log((1.0+a)/(1.0-a)))     \
+)
+\end{lstlisting}
+\noindent 而在 {\color{blue} initialization.h} 的函數式 {\color{blue} GenerateMesh\_Z()} 中，做了如下定義來分割z方向的非均勻網格：
+
+\begin{lstlisting}[language=C, caption={initialization.h153-162}, label={initialization.h153-162}]                                                                                                  
+void GenerateMesh_Z(){...//省略
+    double a = GetNonuniParameter();//用以取得最合適之非均勻網格劃分參數
+    for( int j = 0; j < NYD6; j++ ){//範圍：遍歷y方向之總節點數
+        double total = LZ - HillFunction( y_h[j] ) - minSize; 
+        //LZ為含山坡之總高度 ; 
+
+        for( int k = bfr; k < NZ6-bfr; k++ ){
+          z_h[j*NZ6+k] = tanhFunction(total,minSize,a,(k-3),(NZ6-7)) + 
+                         HillFunction(y_h[j]);
+        }
+        z_h[j*NZ6+2] = HillFunction( y_h[j] );
+        z_h[j*NZ6+(NZ6-3)] = (double)LZ;
+    }
+    for( int k = bfr; k < NZ6-bfr; k++ ){
+      xi_h[k] = tanhFunction( LXi, minSize, a, (k-3), (NZ6-7) ) - minSize/2.0;
+    } 
+    ....//省略
+}
+\end{lstlisting}
+從上述程式碼可以發現，Z方向切割後的網格數量"NZ6-6"，進一步推得，Z方向之節點數應為"NZ6-6"。
+所以如果NZ被定義為物理空間切割之網格數(計算點在Link-Wise systerm中作為網格中心點)，則NZ+6就是總(包含buffer)之計算點數。
+
+\noindent {\color{blue}補充三：y\_h[i] 在哪裡被宣告？為什麼可以直接使用該矩陣？}
+ 
+\noindent {\color{red}對於指標變數 double* y\_h 的宣告，為什麼單單只在 主程式：main.cu 中宣告，而卻在 initialization.h 直接使用到y\_h[i] ? (未將指標變數映射到某一個特定記憶體)}
+\\ \noindent 我的問題是：如果今天宣告一個矩陣 A ，只要一宣告，則 A 自動作為一個指標行記憶，且映射到Ａ矩陣第一個元素的初始存放位址。
+\begin{lstlisting}[language=C++, caption={problem disussion}, label={lst:problem-discussion}]
+double A[10] ; //宣告一個尺寸10的矩陣
+double B = A ; 
+//則 B 為 A矩陣 第一個元素的初始存放位址
+\end{lstlisting}
+但是如果單單宣告一個指標變數 double* y\_h ，則y\_h 作為一個指標變數，還沒有分配記憶體的位址(映射到某一個記憶體)，並不能直接使用矩陣元素 y\_h[i]，且利用指標運算子(*) : *(y\_h + i) 來表示相應矩陣 y\_h 第i個元素(y\_h[i]) \\
+\begin{lstlisting}[language=C++, caption={main.cu35}, label={main.cu35}]
+double *x_h, *y_h, *z_h, *xi_h ; //宣告y_h作為一個指標變數，尚未映射到任何記憶體
+\end{lstlisting}
+\begin{lstlisting}[language=C++, caption={memory.h78-80}, label={memory.h78-80}]
+nBytes = NYD6 * sizeof(double);
+AllocateHostArray(  nBytes, 4,  &y_h, &Ydep_h[0], &Ydep_h[1], &Ydep_h[2]);
+AllocateDeviceArray(nBytes, 4,  &y_d, &Ydep_d[0], &Ydep_d[1], &Ydep_d[2]);
+\end{lstlisting}
+\begin{lstlisting}[language=C++, caption={memory.h4-14}, label={memory.h4-14}]
+void AllocateHostArray(const size_t nBytes, const int num_arrays, ...) {
+ va_list args;
+ //筆記：va_list, va_start, va_arg, va_end 為C/C++中處理可變參數函數的標準宏。
+ //va_list : 可變參數列表型記憶體
+ // nBytes 為固定參數 。
+ //va_start(可變參數列表型記憶體, 不可變參數型記憶體)：將“不可變參數型記憶體的後一個參數位址”映射到“可變參數列表型記憶體”
+ va_start( args, num_arrays );//定義可變參數
+ for( int i = 0; i < num_arrays; i++ ) {
+  double **tmp = va_arg(args, double**);//挑出型別為 double** 的記憶體
+	CHECK_CUDA( cudaMallocHost( (void**)tmp, nBytes) );
+  //對可變參數列表的所有記憶體都分配 nBytes 大小的記憶體空間
+ }
+ va_end( args );
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=C++, caption={AllocateHostArray的模板}, label={lst:AllocateHostArray-template}]
+#include <cstdarg>
+#include <iostream>
+// 计算任意数量整数的总和
+int sum(int count, ...) {  // ... 表示可变参数
+
+  va_list args;          // 声明参数列表
+  va_start(args, count); // 初始化,count是最后一个固定参数
+
+  int total = 0;
+  for(int i = 0; i < count; i++) {
+    total += va_arg(args, int);  // 取出下一个 int 类型参数
+  }
+
+  va_end(args);  // 清理
+  return total;
+}
+
+int main() {
+  std::cout << sum(3, 10, 20, 30) << std::endl;  // 输出: 60
+  std::cout << sum(5, 1, 2, 3, 4, 5) << std::endl;  // 输出: 15
+}
+\end{lstlisting}
+其中，$\texttt{AllocateHostArray}$ 稱為映射記憶體函數 , 兩件事情可以回答為什麼 double* y\_h 可以映射為 尺寸大小為「$\texttt{NYD6 * sizeof(double)}$」的矩陣：y\_h[$\texttt{NYD6 * sizesaof(double)}$] 的第零個元素。
+\begin{itemize}
+    \item \texttt{AllocateHostArray} 內部呼叫
+  \texttt{cudaMallocHost}：
+
+    \begin{enumerate}
+      \item 第一次迴圈 ($i=0$)：
+        \begin{lstlisting}
+tmp = va_arg(args, double**)  // tmp 得到 &y_h
+cudaMallocHost((void**)&y_h, NYD6*sizeof(double))\end{lstlisting}
+        $\Rightarrow$ 分配記憶體nBytes 給 \texttt{y\_h}
+        \item 第二次迴圈 ($i=1$)：
+        \begin{lstlisting}
+tmp = va_arg(args, double**)  // tmp 得到 &Ydep_h[0]
+cudaMallocHost((void**)&Ydep_h[0], NYD6*sizeof(double))\end{lstlisting}
+        $\Rightarrow$ 分配記憶體nBytes 給 \texttt{Ydep\_h[0]}
+      \item 第三次迴圈 ($i=2$)：\\
+        tmp 得到 \texttt{\&Ydep\_h[1]}，分配記憶體 nBytes 給 \texttt{Ydep\_h[1]}
+      \item 第四次迴圈 ($i=3$)：\\
+        tmp 得到 \texttt{\&Ydep\_h[2]}，分配記憶體 nBytes 給 \texttt{Ydep\_h[2]}
+    \end{enumerate}
+  \end{itemize}
+
+\noindent 所以 cudaMallocHost實現了 以指標變數為名稱的矩陣存在，
+我只要有了一個特定指標變數，透過函數:\texttt{cudaMallocHost}
+將此指標變數已指定記憶體大小映射為相對應名稱的矩陣。
+下面再給更詳細的說明關於函數: \texttt{cudaMallocHost} 的功能:
+\begin{lstlisting}[language=C, caption={cudaMallocHost function}, label={lst:cudaMallocHost-function}]
+double *y_h;  // 只是一個指標變數名稱
+
+cudaMallocHost((void **)&y_h, 3*sizeof(double));
+// 分配記憶體後，y_h 就可以當作陣列使用了！
+
+y_h[0], y_h[1], y_h[2]  // 像陣列一樣存取
+\end{lstlisting}
+
+\noindent {\color{blue}補充結束}
+\end{document}
