@@ -383,6 +383,17 @@ we can say "position information only have position variable located at the grid
     f_{i}^{\star}(\vec{\xi} , t) = f_{i}(\vec{\xi} , t) + \omega(f_{i} (\vec{\xi} , t) - f_{i}^{eq}(\rho , \vec{u}, t)) 
 \end{aligned}\end{equation}
 \subsubsection{Transform Streaming Step }
+\paragraph{Definition of normalized discrete velocity set}
+In general curvilinear coordinate, the variation of position vector or velocity or any physical variable related length dimension need to condsider transform factor for basis transformation. 
+This is complexity for analiyzing the motion of particles. Let's define normalized discrete velocity set. 
+\begin{equation}\begin{aligned}
+  \vec{e}_{\alpha} = \underbrace{c_{\alpha}^{i}}_{\text{non-dimension}} \ \underbrace{\vec{g}_{i}(\vec{\xi})}_{\text{curvature tangent vector}}  \ \underbrace{\frac{\Delta x}{\Delta t}} _{\text{(lattice speed )}\approx 1} 
+\end{aligned}\end{equation}
+where the vector $\vec{e}_{\alpha}$ is the non-dimension discrete particle velocity set, and vector $\vec{g}_{i}$ is the tangent vector related to the curvature at the position. $\frac{\Delta x}{\Delta t}$ is the lattice speed, and its function in this definition is velocity dimension.
+so we rewrite the definition  to  another form below based on differential geometry.
+\begin{equation}\begin{aligned}
+  \vec{e}_{\alpha}^{i} = c_{\alpha}^{i}  \frac{\partial }{\partial }
+\end{aligned}\end{equation}
 
 \subsection{Boundary Condition }
 \subsection{Algorithm}
