@@ -369,7 +369,7 @@ To achieve this, we introduce a basis transformation matrix that transforms the 
 This means that the streaming step and collision step are performed in separate spaces.
 Let's show the transform below: 
 \begin{equation}\begin{aligned}\label{eq:2}
-      \textbf{M} \vec{f}(\vec{x} + \vec{c}_{i \Delta t , t + 1 }) &= \textbf{M}\vec{f}(\vec{x} , t) + \textbf{S}\textbf{M}(\vec{f} (\vec{x} , t ,  \vec{f}^{eq}(\rho , \vec{u}, t)) \\[1.5ex]
+      \textbf{M} \vec{f}(\vec{x} + \vec{c}_{i} \Delta t , t + 1 ) &= \textbf{M}\vec{f}(\vec{x} , t) + \textbf{S}\textbf{M}(\vec{f} (\vec{x} , t) -  \vec{f}^{eq}(\rho , \vec{u}, t)) \\[1.5ex]
       &= \textbf{M}\vec{f}(\vec{x} , t) + \textbf{S} \left(\vec{m}(\vec{x} , t) - \vec{m}^{eq}(\vec{x} , t ,  f_{i}^{eq}(\rho , \vec{u}, t))\right)
 \end{aligned}\end{equation}
 In this work, we first apply the LBGK equation and use coordinate mapping to modify the streaming process, thereby extending ISLBM to curvilinear coordinate systems. The limitation of this approach is that we have not yet extended the MRT operator to general coordinate systems, as we have not fully grasped the underlying mathematical theory and physical mechanisms.
@@ -553,9 +553,37 @@ Using macroscopic conservation law (include mass conservation and momentum conse
 \end{aligned}\end{equation}
 \noindent For equilibilirium distribution function, the first scale time variable derivation have : 
 \begin{equation}\begin{aligned}
-   &\partial_{t}^{(1)} f_{\alpha}^{eq} = \\[1.5ex]
-   &\vec{\nabla}^{(1)}f_{\alpha}^{eq}  = \\[1.5ex]
-
+   &\partial_{t}^{(1)} f_{\alpha}^{eq} =  f_{\alpha}^{eq} \left(\frac{e_{\alpha}^{i} - u_{i}}{c_{s}^{2}} (-u_{\beta}\frac{\partial^{(1)}}{\partial x_{\beta}} u_{i} - \frac{1}{\rho} \frac{\partial ^{(1)}}{\partial x_{i}} p)
+   + \frac{-1}{\rho}\frac{\partial^{(1)}}{\partial x_{\beta}}\rho u_{\beta}\right)\\[1.5ex]
+   &\vec{\nabla}^{(1)}f_{\alpha}^{eq}  =  f_{\alpha}^{eq} \left(\frac{e_{\alpha}^{i} - u_{i}}{c_{s}^{2}} (\vec{\nabla}^{(1)} u_{i})+ \frac{1}{\rho} \vec{\nabla}^{(1)} \rho\right)\\[1.5ex]
+   &e_{\alpha}^{\gamma}\frac{\partial ^{(1)}}{\partial x_{\gamma}}f_{\alpha}^{eq} = e_{\alpha}^{\gamma} f_{\alpha}^{eq} \left(\frac{e_{\alpha}^{i} - u_{i}}{c_{s}^{2}} (\frac{\partial ^{(1)}}{\partial x_{\gamma}} u_{i})+ \frac{1}{\rho} \frac{\partial ^{(1)}}{\partial x_{\gamma}} \rho\right)\\[1.5ex]
+  \end{aligned}\end{equation}
+\noindent Finially, we can get the $\textbf{the first scale non-equibilirium distribution function}$
+\begin{equation}\begin{aligned}
+ f_{\alpha}^{(1)} = \omega \delta t \left( A \cdot [-u_{\beta}\frac{\partial^{(1)}}{\partial x_{\beta}} u_{i} \underbrace{- \frac{1}{\rho} \frac{\partial ^{(1)}}{\partial x_{i}} p}_{ignore}  + e_{\alpha}^{\gamma} \frac{\partial^{(1)}}{\partial x_{\gamma}}u_{i}]+ \underbrace{B\cdot [-\frac{\partial^{(1)}\rho u_{\beta}}{\partial x_{\beta}} + e_{\alpha}^{\gamma}\frac{\partial^{(1)}\rho}{\partial x_{\gamma}}]}_{ignore} \right)f_{\alpha}^{eq}
+\end{aligned}\end{equation}
+where 
+\begin{equation}\begin{aligned}
+  &A = \frac{e_{\alpha}^{i} - u_{i}}{c_{s}^{2}}\\[1.5ex]
+  &B =  \frac{1}{\rho}\\
+  \end{aligned}\end{equation}
+\noindent In this section ,  we have to give the assumption : 
+\begin{enumerate}
+\item : $\text{pressure field}$ is a constant field, so $\frac{\partial^{(1)}}{\partial x_{i}}p = 0$
+\item : $\text{density field}$ is a constant field, so $\frac{\partial^{(1)}}{\partial x_{\beta}}\rho = 0 $
+\end{enumerate}
+From the part of the equation above, I could find some zero term, let's show below : 
+\begin{equation}\begin{aligned}
+  &\frac{e_{\alpha}^{i} - u_{i}}{c_s^{2}} \cdot \left(\frac{-1}{\rho}\frac{\partial^{(1)}}{\partial x_{i}}p = 0\right) \dots (\text{second term of A})\\[1.5ex]
+  &\frac{1}{\rho}\left((e_{\alpha}^{\beta} - u_{\beta})\frac{\partial \rho}{\partial x_{\beta}}\right) = 0 \dots (\text{in B})\\[1.5ex]
+  & -\frac{\partial^{(1)} \rho u_{\beta}}{\partial x_{\beta}} = -u_{\beta}\frac{\partial^{(1)} \rho }{\partial x_{\beta}} - \rho\frac{\partial^{(1)}  u_{\beta}}{\partial x_{\beta}} \\
+\end{aligned}\end{equation}
+The distribution function is : (could be contolled by macroscopic variables)
+\begin{equation}\begin{aligned}
+  f_{\alpha} &= f_{\alpha}^{eq} + f_{\alpha}^{(1)} \\[1.5ex]
+  &= f_{\alpha}^{eq}  + \omega \delta t \left(\frac{(e_{\alpha}^{i} - u_{i})(e_{\alpha}^{\beta} - u_{\beta})}{c_s^{2}}\frac{\partial ^{(1)}u_{i}}{\partial x_{\beta}}- \frac{\partial^{(1)}  u_{\beta}}{\partial x_{\beta}}\right)f_{\alpha}^{eq}
+\end{aligned}\end{equation}
+where Knuson number is 1, and gerneral distribution function can be calulate as above equation.
 \subsection{Algorithm}
 
 \end{document}
