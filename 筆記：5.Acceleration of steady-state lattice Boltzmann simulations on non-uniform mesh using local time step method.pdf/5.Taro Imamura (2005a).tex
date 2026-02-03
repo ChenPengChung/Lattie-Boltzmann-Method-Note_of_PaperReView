@@ -425,11 +425,15 @@ In curvilinear coordinates, we have
 \begin{equation}\begin{aligned}
   f_{\alpha} (\vec{\xi} , t ) = f_{\alpha}^{\star}(\vec{\xi}-\Delta \vec{\xi}_{\alpha} , t)
 \end{aligned}\end{equation}
-where$\Delta \vec{\xi}_{\alpha}$ the change of position have 2nd order accuracy in time space, and the R.H.S term is the post-collision function.
+where $\Delta \vec{\xi}_{\alpha}$, the change of position, has 2nd order accuracy in time space, and the R.H.S. term is the post-collision function.
 \paragraph{Accuracy effect in time space for lattice Boltzmann equation - BGK operator}
 \noindent LBGK in curvilinear coordinates can be rewritten below: 
 \begin{equation}\begin{aligned}\label{eq:4}
   f_{\alpha} (\vec{\xi}  , t + 1) - f_{\alpha} (\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t ) = \omega (f_{\alpha}(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t ) - f_{\alpha}^{eq}(\rho , \vec{u} , t)) \dots (\text{curvilinear coordinate})
+\end{aligned}\end{equation}
+and we can define a material derivative for the discrete-velocity Boltzmann equation:
+\begin{equation}\begin{aligned}
+   \mathcal{D}_{t} = \partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi}
 \end{aligned}\end{equation}
 We call the above operator the "discrete-velocity material derivative".
 Using Taylor expansion on equation \eqref{eq:4}:  
@@ -438,7 +442,7 @@ Using Taylor expansion on equation \eqref{eq:4}:
 \end{aligned}\end{equation}
 Left-hand side and right-hand side are both divided by $\Delta t$, which can recover the N-S equation in differential form.
 \begin{equation}\begin{aligned}
-  &\left.\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi}\right)f_{\alpha} + \frac{1}{2}\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi}\right)^2f_{\alpha} \Delta t \right |_{(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t )} + O(\Delta t^{2})= \omega (f_{\alpha}(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t ) - f_{\alpha}^{eq}(\rho , \vec{u} , t)) \\[1.5ex]
+  &\left.\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi}\right)f_{\alpha} + \frac{1}{2}\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi}\right)^2f_{\alpha} \Delta t \right|_{(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t )} + O(\Delta t^{2})= \omega (f_{\alpha}(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t ) - f_{\alpha}^{eq}(\rho , \vec{u} , t)) \\[1.5ex]
 \end{aligned}\end{equation}
 The second term of the velocity-discrete Boltzmann equation corresponds to the shear stress field through Chapman-Enskog expansion. 
 If we use the explicit Euler method to discretize the particle path integration, the first term has only zeroth-order temporal accuracy, while the stress term has only first-order temporal accuracy. This is insufficient to recover the Navier-Stokes equation. 
@@ -526,7 +530,7 @@ In multiple scale analysis, the first time scale non-equilibrium distribution fu
 where the differential variable is the second time variable $t^{(1)}$, which belongs to the advection time scale $K^{(1)}$. 
 And the Maxwell-Boltzmann equilibrium distribution function with Hermite polynomials expansion has: 
 \begin{equation}
-    f_{\alpha}^{eq} = w_{\alpha} \rho \left(1 +\frac{c_{\alpha}^{i}u_{i}}{c_s^{2}} + \frac{u_{i}u_{j}\left(c_{\alpha}^{i} c_{\alpha}^{j} - c_s^{2} \delta^{ij}\right)}{2c_{s}^{4}}\right)
+    f_{\alpha}^{eq} = w_{\alpha} \rho \left(1 +\frac{e_{\alpha}^{i}u_{i}}{c_s^{2}} + \frac{u_{i}u_{j}\left(e_{\alpha}^{i} e_{\alpha}^{j} - c_s^{2} \delta^{ij}\right)}{2c_{s}^{4}}\right)
 \end{equation}
 so we have to deal with the macroscopic derivative: 
 \begin{equation}\begin{aligned}
@@ -536,9 +540,23 @@ so we have to deal with the macroscopic derivative:
 \noindent where $t^{(1)}\in K^{(1)}$ , which is time scale about advection.
 from equilibirium distribution function, the differential term have the result below : 
 \begin{equation}\begin{aligned}
-  \frac{\partial f^{eq}}{\partial u_{i}}(\vec{r}, t) = \omega(\vec{r})\rho \left[\frac{3c_{\alpha}^{i}}{c_{s}^{2}} + \frac{u_{j}\left(9c_{\alpha}^{i}c_{\alpha}^{j} - c_s^{2}\delta^{ij}\right)}{2c_s^{4}}\right]  
+  \frac{\partial f_{\alpha}^{eq}}{\partial u_{i}}(\vec{r}, t) &= w_{\alpha}\rho \left[\frac{e_{\alpha}^{i}}{c_{s}^{2}} + \frac{u_{j}\left(e_{\alpha}^{i}e_{\alpha}^{j} - c_s^{2}\delta^{ij}\right)}{2c_s^{4}}\right] \\[1.5ex]
+  &= \ w_{\alpha}\rho \left[\frac{1}{c_s^{2}}\left(e_{\alpha}^{i} - u_{i}\right) + \frac{u_{j}e_{\alpha}^{i}e_{\alpha}^{j}}{2c_s^{4}}\right]\\[1.5ex]
+  &\approx \frac{e_{\alpha}^{i} - u_{i}}{c_{s}^{2}} f_{\alpha}^{eq}\\[1.5ex]
+  \frac{\partial f_{\alpha}^{eq}}{\partial \rho}(\vec{r}, t) &= \frac{1}{\rho} f_{\alpha}^{eq}(\vec{r} ,t)
 \end{aligned}\end{equation} 
-\subsection{Algorithm}5g
+\noindent 
+Using macroscopic conservation law (include mass conservation and momentum conservation) to solve the time differential of density and vleocity.
+\begin{equation}\begin{aligned}
+& \frac{\partial^{(1)} \rho}{\partial t} =  - \vec{\nabla}^{(1)}\rho\vec{u} \\[1.5ex]
+& \frac{\partial^{(1)} \vec{u}}{\partial t}= -\vec{u}\cdot \vec{\nabla}^{(1)} \vec{u} - \frac{1}{\rho} \vec{\nabla}^{(1)} p
+\end{aligned}\end{equation}
+\noindent For equilibilirium distribution function, the first scale time variable derivation have : 
+\begin{equation}\begin{aligned}
+   &\partial_{t}^{(1)} f_{\alpha}^{eq} = \\[1.5ex]
+   &\vec{\nabla}^{(1)}f_{\alpha}^{eq}  = \\[1.5ex]
+
+\subsection{Algorithm}
 
 \end{document}
 
