@@ -413,7 +413,7 @@ We can see that the essential issue is computing the integration of the discrete
 The result of discrete integration \eqref{eq:RK} has 2nd order accuracy in time space. The figure shows the method of 2nd order Runge-Kutta to treat integration.
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.5\textwidth]{2.png}
+\includegraphics[width=0.5\textwidth]{3.png}
 \caption{integration skill-2nd Runge-Kutta}
 \label{fig:RK}
 \end{figure} 
@@ -558,7 +558,7 @@ Using macroscopic conservation law (include mass conservation and momentum conse
    &\vec{\nabla}^{(1)}f_{\alpha}^{eq}  =  f_{\alpha}^{eq} \left(\frac{e_{\alpha}^{i} - u_{i}}{c_{s}^{2}} (\vec{\nabla}^{(1)} u_{i})+ \frac{1}{\rho} \vec{\nabla}^{(1)} \rho\right)\\[1.5ex]
    &e_{\alpha}^{\gamma}\frac{\partial ^{(1)}}{\partial x_{\gamma}}f_{\alpha}^{eq} = e_{\alpha}^{\gamma} f_{\alpha}^{eq} \left(\frac{e_{\alpha}^{i} - u_{i}}{c_{s}^{2}} (\frac{\partial ^{(1)}}{\partial x_{\gamma}} u_{i})+ \frac{1}{\rho} \frac{\partial ^{(1)}}{\partial x_{\gamma}} \rho\right)\\[1.5ex]
   \end{aligned}\end{equation}
-\noindent Finially, we can get the $\textbf{the first scale non-equibilirium distribution function}$
+\noindent Finally, we can get the $\textbf{the first scale non-equibilirium distribution function}$
 \begin{equation}\begin{aligned}
  f_{\alpha}^{(1)} = \omega \delta t \left( A \cdot [-u_{\beta}\frac{\partial^{(1)}}{\partial x_{\beta}} u_{i} \underbrace{- \frac{1}{\rho} \frac{\partial ^{(1)}}{\partial x_{i}} p}_{ignore}  + e_{\alpha}^{\gamma} \frac{\partial^{(1)}}{\partial x_{\gamma}}u_{i}]+ \underbrace{B\cdot [-\frac{\partial^{(1)}\rho u_{\beta}}{\partial x_{\beta}} + e_{\alpha}^{\gamma}\frac{\partial^{(1)}\rho}{\partial x_{\gamma}}]}_{ignore} \right)f_{\alpha}^{eq}
 \end{aligned}\end{equation}
@@ -578,14 +578,47 @@ From the part of the equation above, I could find some zero term, let's show bel
   &\frac{1}{\rho}\left((e_{\alpha}^{\beta} - u_{\beta})\frac{\partial \rho}{\partial x_{\beta}}\right) = 0 \dots (\text{in B})\\[1.5ex]
   & -\frac{\partial^{(1)} \rho u_{\beta}}{\partial x_{\beta}} = -u_{\beta}\frac{\partial^{(1)} \rho }{\partial x_{\beta}} - \rho\frac{\partial^{(1)}  u_{\beta}}{\partial x_{\beta}} \\
 \end{aligned}\end{equation}
-The distribution function is : (could be contolled by macroscopic variables)
+The distribution function is : (could be controlled by macroscopic variables)
 \begin{equation}\begin{aligned}
   f_{\alpha} &= f_{\alpha}^{eq} + f_{\alpha}^{(1)} \\[1.5ex]
   &= f_{\alpha}^{eq}  + \omega \delta t \left(\frac{(e_{\alpha}^{i} - u_{i})(e_{\alpha}^{\beta} - u_{\beta})}{c_s^{2}}\frac{\partial ^{(1)}u_{i}}{\partial x_{\beta}}- \frac{\partial^{(1)}  u_{\beta}}{\partial x_{\beta}}\right)f_{\alpha}^{eq}
 \end{aligned}\end{equation}
-where Knuson number is 1, and gerneral distribution function can be calulate as above equation.
-\subsection{Algorithm}
+where Knuson number is 1, and general distribution function can be calculate as above equation.
+\paragraph{Boundary Condition}
+\noindent In GILBM, we use macroscopic parameter limitations to enforce boundary conditions on the distribution function. 
+At boundary nodes (i.e., nodes located between solid and fluid nodes), we make assumptions to construct the governing equations.
+\begin{equation}\begin{aligned}
+  \left.f_{\alpha}\right|_{b.c.} &= f_{\alpha}^{eq}  + f_{\alpha}^{(1)}\\
+  &= f_{\alpha}^{eq} + \omega \delta t f_{\alpha}^{eq} \left(\frac{(c_{\alpha}^{i}  - u_{i})(c_{\alpha}^{\beta} - u_{\beta})}{c_s^{2}}\frac{\partial u_{i}}{\partial x_{\beta}} - \frac{\partial u_{\beta}}{\partial x_{\beta}}\right) 
+\end{aligned}\end{equation}
+where gradient of velocity field : 
+\begin{equation}\begin{aligned}
+  \frac{\partial u_{i}}{\partial x_{\beta}} = \frac{\partial u_{i}}{\partial \xi_{i}} \frac{\partial \xi_{i}}{\partial x_{\beta}}
+\end{aligned}\end{equation}
+The first term is calculated using second order one side finite difference method : 
+\begin{equation}\begin{aligned}
+  \left.\frac{\partial u}{\partial \xi}\right|_{i+\frac{1}{2}} = \frac{3u_{i}-4u_{i-1}+u_{i-2}}{2\Delta \xi} + O(\Delta t^{2}) \\[1.5ex]
+  \left.\frac{\partial u}{\partial \xi}\right|_{i-\frac{1}{2}} = \frac{-3u_{i}+4u_{i+1}-u_{i+2}}{2\Delta \xi} + O(\Delta t^{2})
+ \end{aligned}\end{equation}
+ and second is the term related to the curvature, have been calculated in initialization. 
 
+\subsection{Algorithm}
+The contravariant velocity (i.e., the discrete velocity set in curvilinear coordinates) needs to be calculated at the beginning of the simulation process and requires an extra array in the code to store the data. However, this pre-calculated value can reduce the computational cost at every time step by close to 50 percent.
+\paragraph{ISLBM initialization}
+\begin{enumerate}
+  \item setting Re number and relaxation factor 
+  \item calculate relaxation time : $$\tau = \frac{\Delta t}{\omega}$$
+  \item calculate viscosity : $$\nu = c_s^{2}(\tau - 0.5 dt)$$
+  \item calculate reference velocity : $$U_{ref} = Re \ nu$$
+\end{enumerate}
+\paragraph{GILBM initialization}
+\begin{enumerate}
+  \item setting Re number and relaxation factor 
+  \item calculate contravariant velocity (i.e., normalized discrete particle velocity set) : $$e_{\alpha}^{i} = c_{\alpha}^{\beta}\frac{\partial \xi_{i}}{\partial x_{\beta}}$$
+  \item calculate the global time step using contravariant velocity : $$\Delta t_{glopbal} = CFL \cdot min_{i,j,k,\alpha}|\frac{1}{e_{\alpha}^{i}|_{j,k}}|$$ 
+  \item calculate the relaxation time : $$\tau = \frac{\Delta t_{global}}{\omega}$$
+  \item calculate the viscosity  $$\nu = (\tau - 0.5\Delta t_{global})c_s^{2}$$
+\end{enumerate}
 \end{document}
 
 
