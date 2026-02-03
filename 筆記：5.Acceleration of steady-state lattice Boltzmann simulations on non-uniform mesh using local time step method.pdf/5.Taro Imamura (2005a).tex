@@ -297,7 +297,7 @@ Note that because the transformation is based on coordinate mapping, we still co
 \end{figure}
 \section{Transformation}
 \subsection{Jacobian relation}
-This section woul give the proven of the Jacobian relation : 
+This section will give the proof of the Jacobian relation: 
 \begin{equation}
 \begin{bmatrix}
   \xi_{x} & \xi_{y}\\
@@ -309,7 +309,7 @@ This section woul give the proven of the Jacobian relation :
   -y_{\xi} & x_{\xi} 
 \end{bmatrix}
 \end{equation}
-For general curvilinear coordinate in two dimensions, we have to define Lamé coefficient for analyzing:
+For general curvilinear coordinates in two dimensions, we have to define the Lamé coefficient for analysis:
 \begin{equation}\begin{aligned}
 \vec{dr}_{+1}|_{q_{2},q_{3}} (\vec{r}) &\equiv \vec{r}(q_{1} + \Delta q_{1} , q_{2} , q_{3}) - \vec{r}(q_{1} , q_{2} , q_{3})
 = \left.\frac{\partial \vec{r}}{\partial q_{1}}\right|_{q_{2},q_{3}} dq_{1} 
@@ -322,8 +322,8 @@ h_{1} &\equiv \left|\frac{\partial \vec{r}}{\partial q_{1}}\right|_{q_{2},q_{3}}
 \vec{e}_{1} &\equiv \frac{1}{h_{1}}\left.\frac{\partial \vec{r}}{\partial q_{1}}\right|_{q_{2},q_{3}}
 \end{aligned}
 \end{equation}
-where symbol $h_{1}$ is a Lamé coefficient for the coordinate component. 
-Let's take the definition to defferential of position vector about variable $(\xi , \eta)$.
+where the symbol $h_{1}$ is a Lamé coefficient for the coordinate component. 
+Let's take the definition to the differential of the position vector about variable $(\xi , \eta)$.
 \begin{equation}\begin{aligned}\label{eq:r5} 
   &\frac{\partial \vec{r}}{\partial \xi} = h_{\xi} \vec{e}_{\xi} = \vec{e}_{x} x_{\xi} + \vec{e}_{y} y_{\xi} \\[1.5ex]
   &\frac{\partial \vec{r}}{\partial \eta} = h_{\eta} \vec{e}_{\eta}  = \vec{e}_{x} x_{\eta} + \vec{e}_{y} y_{\eta} \\[1.5ex]
@@ -355,12 +355,11 @@ Substitution the equation \eqref{eq:e6} into \eqref{eq:r5}
 The equation above is Jacobian relation.
 
 \subsection{Transform for Lattice Boltzmann Equation}
-First, review the basic governing equation for standard lattice boltzman method i.e., lattice boltzmann equation in Cartesian coordinate with 3 dimension: 
+First, review the basic governing equation for the standard lattice Boltzmann method, i.e., the lattice Boltzmann equation in Cartesian coordinates with 3 dimensions: 
 \begin{equation}\begin{aligned}
  f_{i}(\vec{x} + \vec{c}_{i} \Delta t , t + 1 ) = f_{i}(\vec{x} , t) + \Omega(f_{i} (\vec{x} , t), f_{i}^{eq}(\rho , \vec{u}, t))\
 \end{aligned}\end{equation}
-where the symbol $\Omega$ is a coillision operator, so it can apart two types of forms.
-
+where the symbol $\Omega$ is a collision operator, so it can be separated into two types of forms.
 \begin{equation}\begin{aligned}\label{eq:1}
     f_{i}(\vec{x} + \vec{c}_{i} \Delta t , t + 1 ) = f_{i}(\vec{x} , t) + \omega(f_{i} (\vec{x} , t)- f_{i}^{eq}(\rho , \vec{u}, t)) 
 \end{aligned}\end{equation}
@@ -368,7 +367,7 @@ If the collision operator is chosen as the BGK operator, we call the equation th
 On the other hand, we can allow each momentum component to have a different relaxation effect. 
 To achieve this, we introduce a basis transformation matrix that transforms the function from velocity space to momentum space. 
 This means that the streaming step and collision step are performed in separate spaces.
-Let's show the transform below : 
+Let's show the transform below: 
 \begin{equation}\begin{aligned}\label{eq:2}
       \textbf{M} \vec{f}(\vec{x} + \vec{c}_{i \Delta t , t + 1 }) &= \textbf{M}\vec{f}(\vec{x} , t) + \textbf{S}\textbf{M}(\vec{f} (\vec{x} , t ,  \vec{f}^{eq}(\rho , \vec{u}, t)) \\[1.5ex]
       &= \textbf{M}\vec{f}(\vec{x} , t) + \textbf{S} \left(\vec{m}(\vec{x} , t) - \vec{m}^{eq}(\vec{x} , t ,  f_{i}^{eq}(\rho , \vec{u}, t))\right)
@@ -377,42 +376,41 @@ In this work, we first apply the LBGK equation and use coordinate mapping to mod
 \subsubsection{Transform Collision Step}
 Equations \eqref{eq:1} and \eqref{eq:2} are described in three-dimensional Cartesian coordinates. To transform these equations to general curvilinear coordinates, we note that the position vector only appears at discrete grid nodes, and the collision operator does not involve derivatives with respect to position. Therefore, we can directly substitute $\vec{x}$ with $\vec{\xi}$, where $\vec{x}$ denotes the Cartesian coordinate position and $\vec{\xi}$ denotes the curvilinear coordinate position.
 
-we can say "position information only have position variable located at the grid node, so we can simply to transform by substituting
-.
+We can say that position information only has position variables located at the grid nodes, so we can simply transform by substituting.
 \begin{equation}\begin{aligned}
     f_{i}^{\star}(\vec{\xi} , t) = f_{i}(\vec{\xi} , t) + \omega(f_{i} (\vec{\xi} , t) - f_{i}^{eq}(\rho , \vec{u}, t)) 
 \end{aligned}\end{equation}
 \subsubsection{Transform Streaming Step }
 \paragraph{Definition of normalized discrete velocity set}
-In general curvilinear coordinate, the variation of position vector or velocity or any physical variable related length dimension need to condsider transform factor for basis transformation. 
-This is complexity for analiyzing the motion of particles. Let's define normalized discrete velocity set. 
+In general curvilinear coordinates, the variation of the position vector or velocity or any physical variable related to the length dimension needs to consider the transform factor for basis transformation. 
+This is complex for analyzing the motion of particles. Let's define the normalized discrete velocity set. 
 \begin{equation}\begin{aligned}
   \vec{e}_{\alpha} = \underbrace{c_{\alpha}^{i}}_{\text{non-dimension}} \ \underbrace{\vec{g}_{i}(\vec{\xi})}_{\text{curvature tangent vector}}  \ \underbrace{\frac{\Delta x}{\Delta t}} _{\text{(lattice speed )}\approx 1} 
 \end{aligned}\end{equation}
-where the vector $\vec{e}_{\alpha}$ is the non-dimension discrete particle velocity set, and vector $\vec{g}_{i}$ is the tangent vector related to the curvature at the position. $\frac{\Delta x}{\Delta t}$ is the lattice speed, and its function in this definition is velocity dimension.
-so we rewrite the definition  to  another form below based on differential geometry.
+where the vector $\vec{e}_{\alpha}$ is the non-dimensional discrete particle velocity set, and the vector $\vec{g}_{i}$ is the tangent vector related to the curvature at the position. $\frac{\Delta x}{\Delta t}$ is the lattice speed, and its function in this definition is velocity dimension.
+So we rewrite the definition to another form below based on differential geometry.
 \begin{equation}\begin{aligned}
   \vec{e}_{\alpha}^{\ j} = c_{\alpha}^{i}  \frac{\partial \xi_{j}}{\partial x_{i}}
 \end{aligned}\end{equation}
-where $x$ represent the index of Cartesian coordinate and $\xi$ is the index of general curvilinear coordinate, and the differential represent the basis transform from Cartesian coordinate to curve coordinate. 
+where $x$ represents the index of the Cartesian coordinate and $\xi$ is the index of the general curvilinear coordinate, and the differential represents the basis transform from Cartesian coordinates to curvilinear coordinates. 
 Therefore, we can see the particle velocity distortion through the factor of the transform.
 \paragraph{Path integration of the particle velocity}
-The streaming step equation $$f_{\alpha}(\vec{x} , t) = f_{\alpha}^{\star}(\vec{x}-+ \vec{c}_{\alpha} \delta t, t)$$
-we can see the essential issue is compute the integration of the dis crete particle velocity to know the  position where is post streaming position and streaming length. The length of the streaming step is defined as  below : 
+The streaming step equation $$f_{\alpha}(\vec{x} , t) = f_{\alpha}^{\star}(\vec{x} - \vec{c}_{\alpha} \delta t, t)$$
+We can see that the essential issue is computing the integration of the discrete particle velocity to know the position where the post-streaming position and streaming length are. The length of the streaming step is defined as below: 
 \begin{equation}\begin{aligned}
   \delta \vec{\xi}_{\alpha} = \int_{0}^{\Delta t} d \vec{\xi}_{\alpha} = \int_{0}^{\Delta t} \vec{e}_{\alpha} dt 
 \end{aligned}\end{equation}
-\noindent 1st explicit Euler method : 
+\noindent 1st explicit Euler method: 
 \begin{equation}\begin{aligned}
   \delta \vec{\xi}_{\alpha} \approx \vec{e}_{\alpha} \Delta t \dots O(\Delta t)
 \end{aligned}\end{equation}
-\noindent 2nd order Runge-Kutta method : \\
-\noindent  using 2nd  Runge-Kutta method to solving the integration, then it is apart into two step : 
+\noindent 2nd order Runge-Kutta method: \\
+\noindent Using the 2nd order Runge-Kutta method to solve the integration, it is separated into two steps: 
 \begin{equation}\begin{aligned}\label{eq:RK}
   &\text{step 1 : } \Delta  \vec{\xi}_{\alpha}^{(1)} = \frac{1}{2} \Delta t \vec{e}_{\alpha} \\[1.5ex]
   &\text{step 2 : } \Delta  \vec{\xi}_{\alpha} =  \Delta t \vec{e}_{\alpha} (\vec{\xi}  - \vec{\xi}_{\alpha}^{(1)})
 \end{aligned}\end{equation}
-The result of discrete integration \eqref{eq:RK} have 2nd order accuracy in time space. The figure show that the method of 2nd Runge-Kutta to treat integration.
+The result of discrete integration \eqref{eq:RK} has 2nd order accuracy in time space. The figure shows the method of 2nd order Runge-Kutta to treat integration.
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.5\textwidth]{2.png}
@@ -421,28 +419,24 @@ The result of discrete integration \eqref{eq:RK} have 2nd order accuracy in time
 \end{figure} 
 \noindent In Interpolation-Supplemented LBM, the streaming step is implemented by pulling data backward from the pre-streaming position to the current grid node through interpolation. This approach ensures that information does not spread from grid nodes to non-physical locations. Therefore, when integrating the particle path, we integrate backward from $\vec{\xi}_{\alpha}$ to $\vec{\xi}_{\alpha}-\Delta \vec{\xi}_{\alpha}$, rather than forward from $\vec{\xi}_{\alpha}$ to $\vec{\xi}_{\alpha} + \Delta \vec{\xi}_{\alpha}$.
 \paragraph{Streaming step after transformation}
-When we get the result of the path integration of particle discrete velocity along the direction, we can rewrite the streaming step equation below : 
-The discrete process is little similar as the process of distribution for time-space discretizing. However, the term discretized is different, one is time integration of distribution and the other is time integration of particle path. 
-In curvilinear coordinate , we have 
+When we get the result of the path integration of particle discrete velocity along the direction, we can rewrite the streaming step equation below: 
+The discrete process is a little similar to the process of distribution for time-space discretizing. However, the term discretized is different; one is time integration of distribution and the other is time integration of particle path. 
+In curvilinear coordinates, we have 
 \begin{equation}\begin{aligned}
   f_{\alpha} (\vec{\xi} , t ) = f_{\alpha}^{\star}(\vec{\xi}-\Delta \vec{\xi}_{\alpha} , t)
 \end{aligned}\end{equation}
-where$\Delta \vec{\xi}_{\alpha}$ the change of position have 2nd order accuracy in time space, and R.H.S term is post-collision function.
-\paragraph{Accuracy effect in time space for lattice bolrtzmann equation - BGK operator}
-\noindent LBGK in curvilinear coordinate can be rewrite below : 
+where$\Delta \vec{\xi}_{\alpha}$ the change of position have 2nd order accuracy in time space, and the R.H.S term is the post-collision function.
+\paragraph{Accuracy effect in time space for lattice Boltzmann equation - BGK operator}
+\noindent LBGK in curvilinear coordinates can be rewritten below: 
 \begin{equation}\begin{aligned}\label{eq:4}
   f_{\alpha} (\vec{\xi}  , t + 1) - f_{\alpha} (\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t ) = \omega (f_{\alpha}(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t ) - f_{\alpha}^{eq}(\rho , \vec{u} , t)) \dots (\text{curvilinear coordinate})
 \end{aligned}\end{equation}
-and we can define a material derivative for discrete-velocity Boltzmann equation 
-\begin{equation}\begin{aligned}
-   \mathcal{D}_{t} = \partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi}
-\end{aligned}\end{equation}\
-we call above operator as "discrete-velocity material derivation".
-Using Taylor expansion on equation \eqref{eq:4}  
+We call the above operator the "discrete-velocity material derivative".
+Using Taylor expansion on equation \eqref{eq:4}:  
 \begin{equation}\begin{aligned}
   &\left.\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi}\right)f_{\alpha} \Delta t  + \frac{1}{2}\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi}\right)^2f_{\alpha} \Delta t ^{2}\right |_{(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t )}= \omega (f_{\alpha}(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t ) - f_{\alpha}^{eq}(\rho , \vec{u} , t)) \\[1.5ex]
 \end{aligned}\end{equation}
-left hand side and right hand side are both divided by $\Delta t$, can reover N-S equation in differential form.
+Left-hand side and right-hand side are both divided by $\Delta t$, which can recover the N-S equation in differential form.
 \begin{equation}\begin{aligned}
   &\left.\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi}\right)f_{\alpha} + \frac{1}{2}\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi}\right)^2f_{\alpha} \Delta t \right |_{(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t )} + O(\Delta t^{2})= \omega (f_{\alpha}(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t ) - f_{\alpha}^{eq}(\rho , \vec{u} , t)) \\[1.5ex]
 \end{aligned}\end{equation}
@@ -450,62 +444,61 @@ The second term of the velocity-discrete Boltzmann equation corresponds to the s
 If we use the explicit Euler method to discretize the particle path integration, the first term has only zeroth-order temporal accuracy, while the stress term has only first-order temporal accuracy. This is insufficient to recover the Navier-Stokes equation. 
 Therefore, we must use a method that provides higher-order temporal accuracy for the path integration, ensuring that the differential term of the velocity-discrete Boltzmann equation has at least second-order temporal accuracy.
 \subsection{Multiple Scale Expansion}
-For collision and straming in mesoscopic space, and advevtion and diffusion in macroscpic space, we have three types of time scale :
+For collision and streaming in mesoscopic space, and advection and diffusion in macroscopic space, we have three types of time scales:
 \begin{enumerate}
-\item $K^{(0)}$ : The first time scale, related to collision and streaming in mesoscopic space. 
-\item $K^{(1)}$ : The second time scale, related to convection in macroscopic space .
-\item $K^{(2)}$ : The third time scale, related to diffusion in macroscopic space. 
+\item $K^{(0)}$: The first time scale, related to collision and streaming in mesoscopic space. 
+\item $K^{(1)}$: The second time scale, related to convection in macroscopic space.
+\item $K^{(2)}$: The third time scale, related to diffusion in macroscopic space. 
 \end{enumerate}
 If K = 0.01, then 
-so we can define three types of time variables : (the value is about $K^{(0)}, K^{(1)}$, $K^{(2)}$)\\
-
+we can define three types of time variables: (the value is about $K^{(0)}, K^{(1)}$, $K^{(2)}$)\\
 \begin{equation}\begin{aligned}
   &t \in K^{(2)}\\[1.5ex]
   &t^{(1)} \equiv K * t \in K^{(1)}\\[1.5ex] 
   &t^{(2)} \equiv K^{2} * t \in K^{(0)}
 \end{aligned}\end{equation}
-and define two types of space variables : 
+and define two types of space variables: 
 \begin{equation}
   \vec{r}^{(1)} \equiv K * \vec{r} 
 \end{equation}
-Therefore, the differential about time variable is :
+Therefore, the differential about the time variable is:
 \begin{equation}
   \frac{\partial }{\partial t} = K \frac{\partial }{\partial t^{(1)}} + K^{2} \frac{\partial }{\partial t^{(2)}}
 = K \partial_{t}^{(1)} + K \partial_{t}^{(2)}
 \end{equation}
-In physical space, we have the relation about two variables : 
+In physical space, we have the relation about two variables: 
 \begin{equation}\begin{aligned}
      \frac{\partial }{\partial \vec{\xi}} &= K \frac{\partial }{\partial \vec{\xi}^{(1)}}\\[1.5ex]
      \Rightarrow \vec{\nabla}_{\vec{\xi}} &= K \vec{\nabla}_{\vec{\xi}^{(1)}}
 \end{aligned}\end{equation}
-Finally, for three types of time variable, multi-scale expansion of dis distribution funtion : 
+Finally, for three types of time variables, the multi-scale expansion of the distribution function: 
 \begin{equation}
    f_{i} = f_{i}^{eq} + K f_{i}^{(1)}  + K^{2}f_{i}^{(2)} + \dots
 \end{equation} 
-We have to known that time scale is a domain for time space like $K^{(0)}, K^{(1)}$, and the element of the time scale is a variable, and their scale have different property. 
+We have to know that the time scale is a domain for time space like $K^{(0)}, K^{(1)}$, and the element of the time scale is a variable, and their scales have different properties. 
 \paragraph{Multi-Scale Technique and LBGK}
-Before analyzing the LBGK, first, review the form of the basic equation : 
+Before analyzing the LBGK, first, review the form of the basic equation: 
 \begin{equation}\begin{aligned}
 f_{\alpha}(\vec{r}+\vec{e}_{\alpha} \delta t , t +\delta t) - f_{\alpha}(\vec{r} , t) = -\frac{\delta t}{\tau } \left[f^{neq}(\vec{r} ,t)\right]
 \end{aligned}\end{equation}
-Using particle material derivation : 
+Using particle material derivative: 
 \begin{equation*}
   \mathcal{D}_{t} = \partial_{t} + \vec{e}_{\alpha} \cdot \vec{\nabla}
 \end{equation*}
-and Taylor expansion to analiyzing the left hand side of the LBGK :
+and Taylor expansion to analyze the left-hand side of the LBGK:
 \begin{equation}\begin{aligned}
     \left.\mathcal{D}_{t}\delta t  + \frac{\delta t^{2}}{2}\mathcal{D}_{t}^{2} f_{\alpha} \right|_{\vec{r} , t} = -\frac{\delta t}{\tau } \left[f^{neq}(\vec{r} ,t)\right]
 \end{aligned} \end{equation}
 \begin{equation}\begin{aligned}
 \left(\partial_{t} + \vec{e}_{\alpha} \cdot \vec{\nabla}\right) f_{\alpha}   + \frac{\delta t^{1}}{2}\left(\partial_{t} + \vec{e}_{\alpha} \cdot \vec{\nabla}\right)^{2} f_{\alpha} = -\frac{1}{\tau } \left[f^{neq}(\vec{r} ,t)\right]
 \end{aligned} \end{equation}
-substitue above equation using the discrete velocity Boltzmann equation : 
+substitute the above equation using the discrete velocity Boltzmann equation: 
 $$\left(\partial_{t} + \vec{e}_{\alpha} \cdot \vec{\nabla}\right)f_{\alpha} = -\frac{1}{\tau } \left[f^{neq}(\vec{r} ,t)\right]  $$
-we have the equation below : 
+we have the equation below: 
 \begin{equation}\begin{aligned}\label{eq:Goback}
 \left(\partial_{t} + \vec{e}_{\alpha} \cdot \vec{\nabla}\right) f_{\alpha}  -\frac{\delta t^{1}}{2}\left(\partial_{t} + \vec{e}_{\alpha} \cdot \vec{\nabla}\right) \frac{1}{\tau } \left[f_{\alpha}^{neq}(\vec{r} ,t)\right] = -\frac{1}{\tau } \left[f_{\alpha}^{neq}(\vec{r} ,t)\right]
 \end{aligned}\end{equation}
-For analiyzing the equation above, review the multiple scale relation as shown below: 
+For analyzing the equation above, review the multiple scale relation as shown below: 
 \begin{equation}\begin{aligned}
 &\partial_{t} = K \partial_{t}^{(1)} + K^{2} \partial_{t}^{(2)} + \dots \\[1.5ex]
 &\vec{\nabla} = K \vec{\nabla}^{(1)} + K^{2} \vec{\nabla}^{(2)} + \dots \\[1.5ex]
@@ -523,9 +516,23 @@ But $f_{\alpha} =f_{\alpha}^{eq}+f_{\alpha}^{neq} = f_{\alpha}^{eq} + K f_{\alph
   &= -K^{2}\frac{1}{\tau} \left[f_{\alpha}^{(2)}(\vec{r}, t)\right]  \\[1.5ex]
 \end{aligned}\end{equation}
 
+
+
 \subsection{Boundary Condition }
-
-
+In multiple scale analysis, the first time scale non-equilibrium distribution function is: 
+\begin{equation}\begin{aligned}
+  & -\omega \delta t\left(\partial_{t}^{(1)}+ \vec{e}_{\alpha} \cdot \vec{\nabla}^{(1)}\right)  f_{\alpha}^{eq} = \left[f_{\alpha}^{(1)}(\vec{r}, t)\right]  \\[1.5ex]
+\end{aligned}\end{equation}
+where the differential variable is the second time variable $t^{(1)}$, which belongs to the advection time scale $K^{(1)}$. 
+And the Maxwell-Boltzmann equilibrium distribution function with Hermite polynomials expansion has: 
+\begin{equation}
+    f_{\alpha}^{eq} = w_{\alpha} \rho \left(1 +\frac{c_{\alpha}^{i}u_{i}}{c_s^{2}} + \frac{u_{i}u_{j}\left(c_{\alpha}^{i} c_{\alpha}^{j} - c_s^{2} \delta^{ij}\right)}{2c_{s}^{4}}\right)
+\end{equation}
+so we have to deal with the macroscopic derivative: 
+\begin{equation}\begin{aligned}
+    \partial_{t}^{(1)} f_{\alpha}^{eq}  
+    
+\end{aligned}\end{equation}
 \subsection{Algorithm}
 
 \end{document}
