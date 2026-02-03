@@ -513,12 +513,19 @@ For analiyzing the equation above, review the multiple scale relation as shown b
 \end{aligned}\end{equation}
 and go back to the equation \eqref{eq:Goback}, we have 
 \begin{equation}\begin{aligned}
-  &K = K  \\[1.5ex]
-  &K^{2} + K^{2} = K^{2}
+  &K \left(\partial_{t}^{(1)}+ \vec{e}_{\alpha} \cdot \vec{\nabla}^{(1)}\right)  f_{\alpha} = -K\frac{1}{\tau} \left[f_{\alpha}^{(1)}(\vec{r}, t)\right]  \\[1.5ex]
+  &K^{2}  \left(\partial_{t}^{(2)}+ \vec{e}_{\alpha} \cdot \vec{\nabla}^{(2)}\right)  f_{\alpha} -\frac{\delta t K^{2} }{2 \tau}\left(\partial_{t}^{(1)} + \vec{e}_{\alpha} \cdot \vec{\nabla}^{(1)} \right) \left[f_{\alpha}^{(1)}(\vec{r} ,t)\right]  = -K^{2}\frac{1}{\tau} \left[f_{\alpha}^{(2)}(\vec{r}, t)\right]  \\[1.5ex]
+\end{aligned}\end{equation}
+But $f_{\alpha} =f_{\alpha}^{eq}+f_{\alpha}^{neq} = f_{\alpha}^{eq} + K f_{\alpha}^{(1)}+\dots $, the equation can be shown below :
+\begin{equation}\begin{aligned}
+  &K \left(\partial_{t}^{(1)}+ \vec{e}_{\alpha} \cdot \vec{\nabla}^{(1)}\right)  f_{\alpha}^{eq} = -K\frac{1}{\tau} \left[f_{\alpha}^{(1)}(\vec{r}, t)\right]  \\[1.5ex]
+  &K^{2}  \left(\partial_{t}^{(2)}+ \vec{e}_{\alpha} \cdot \vec{\nabla}^{(2)}\right)  f_{\alpha}^{eq} -\frac{\delta t K^{2} }{2 \tau}\left(\partial_{t}^{(1)} + \vec{e}_{\alpha} \cdot \vec{\nabla}^{(1)} \right) \left[f_{\alpha}^{(1)}(\vec{r} ,t)\right]  + K^{2} \left(\partial_{t}^{(1)}+ \vec{e}_{\alpha} \cdot \vec{\nabla}^{(1)}\right)  f_{\alpha}^{(1)}\\[1.5ex]
+  &= -K^{2}\frac{1}{\tau} \left[f_{\alpha}^{(2)}(\vec{r}, t)\right]  \\[1.5ex]
 \end{aligned}\end{equation}
 
-
 \subsection{Boundary Condition }
+
+
 \subsection{Algorithm}
 
 \end{document}
