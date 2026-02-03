@@ -530,12 +530,16 @@ And the Maxwell-Boltzmann equilibrium distribution function with Hermite polynom
 \end{equation}
 so we have to deal with the macroscopic derivative: 
 \begin{equation}\begin{aligned}
-    \partial_{t}^{(1)} f_{\alpha}^{eq}  
-    
+    &\partial_{t}^{(1)} f_{\alpha}^{eq} =   \frac{\partial f_{\alpha}^{eq}}{\partial u_{i}}\partial_{t}^{(1)} u_{i}  +  \frac{\partial f_{\alpha}^{eq}}{\partial \rho }\partial_{t}^{(1)} \rho \\[1.5ex]
+    &\vec{\nabla}^{(1)}f_{\alpha}^{eq}  =   \frac{\partial f_{\alpha}^{eq}}{\partial u_{i}}\vec{\nabla}^{(1)} u_{i}  +  \frac{\partial f_{\alpha}^{eq}}{\partial \rho } \vec{\nabla}^{(1)} \rho \\[1.5ex]  
 \end{aligned}\end{equation}
-\subsection{Algorithm}
+\noindent where $t^{(1)}\in K^{(1)}$ , which is time scale about advection.
+from equilibirium distribution function, the differential term have the result below : 
+\begin{equation}\begin{aligned}
+  \frac{\partial f^{eq}}{\partial u_{i}}(\vec{r}, t) = \omega(\vec{r})\rho \left[\frac{3c_{\alpha}^{i}}{c_{s}^{2}} + \frac{u_{j}\left(9c_{\alpha}^{i}c_{\alpha}^{j} - c_s^{2}\delta^{ij}\right)}{2c_s^{4}}\right]  
+\end{aligned}\end{equation} 
+\subsection{Algorithm}5g
 
 \end{document}
-
 
 
