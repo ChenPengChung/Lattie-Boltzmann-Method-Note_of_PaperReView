@@ -83,8 +83,8 @@ Received 29 December 2003; revised 21 June 2004; accepted 2 August 2004
 \section{Introduction}
 \begin{frame}{General Interpolation LBM (GILBM)}
 
-\begin{block}{Core Idea}
-Extend \textbf{Interpolation-Supplemented LBM (ISLBM)} to general curvilinear coordinates through \alert{conformal mapping}, without changing the lattice system.
+\begin{block}{GILBM and ISLBM}
+Extend \textbf{Interpolation-Supplemented LBM (ISLBM)} to general curvilinear coordinates through \alert{conformal mapping}, without changing the lattice system. But the point of mapping is How can I deal with discrete particle velocity set.
 \end{block}
 
 \vspace{0.2cm}
@@ -95,13 +95,16 @@ Extend \textbf{Interpolation-Supplemented LBM (ISLBM)} to general curvilinear co
     \item Cartesian $\rightarrow$ Curvilinear via coordinate mapping
     \item Curved particle paths in computational domain
     \item Lattice structure remains \alert{unchanged}
-    \item Pull-back interpolation for streaming
+    \item Pull-back interpolation for streaming 
+    \begin{equation}
+    f_{\alpha}(\vec{\xi},t+\Delta t) = f_{\alpha}^{\star}(\vec{\xi} - \Delta \vec{\xi}_{\alpha} ,t)
+    \end{equation}
 \end{itemize}
 \end{column}
 \begin{column}{0.45\textwidth}
-\begin{figure}
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.85\textwidth]{2.png}
+    \includegraphics[width=0.6\textwidth]{2.png}
     \caption{GILBM: curved paths in $\xi$-space}
 \end{figure}
 \end{column}
@@ -110,7 +113,7 @@ Extend \textbf{Interpolation-Supplemented LBM (ISLBM)} to general curvilinear co
 \end{frame}
 
 %========== 4. Jacobian Relation ==========
-\section{Coordinate Transformation}
+\section{Introduction to Coordinate Transformation}
 \begin{frame}{Jacobian Relation and Lamé Coefficients}
 
 \textbf{Jacobian Transformation Matrix:}
@@ -161,9 +164,13 @@ Position vector differentials:
 \section{LBE Transformation}
 \begin{frame}{Lattice Boltzmann Equation in Curvilinear Coordinates}
 
-\textbf{Standard LBE (Cartesian):}
+\textbf{Standard LBE (BGK Collision Operator):}
 \[
-f_{i}(\vec{x} + \vec{c}_{i} \Delta t, t + \Delta t) = f_{i}(\vec{x}, t) + \Omega(f_i, f_i^{eq})
+f_{\alpha}(\vec{x} + \vec{c}_{\alpha} \Delta t, t + \Delta t) = f_{\alpha}(\vec{x}, t) + \omega(f_ {\alpha}- f_{\alpha}^{eq})
+\]
+\textbf{LBE with MRT Collision Operator:} 
+\[
+\mathrm{M}\  \vec{f}\ (\vec{x} + \vec{c}_{\alpha} \Delta t, t + \Delta t) = \mathrm{M}\  \vec{f}\  (\vec{x}, t) + \mathrm{S}\mathrm{M}\   (\vec{f}-  \vec{f}^{\ eq})
 \]
 
 \vspace{0.3cm}
@@ -195,38 +202,41 @@ Requires \alert{path integration} of particle velocity in curvilinear space.
 \end{frame}
 
 %========== 6. Contravariant Velocity ==========
-\begin{frame}{Contravariant Velocity (Normalized Discrete Velocity)}
+\begin{frame}{Contravariant Velocity (Discrete Velocity in Curvilinear Coordinates)}
 
 \begin{block}{Definition}
 Transform Cartesian lattice velocity to curvilinear coordinates:
 \[
-\boxed{\vec{e}_{\alpha}^{\ j} = c_{\alpha}^{i} \frac{\partial \xi_{j}}{\partial x_{i}}}
+\boxed{e_{\alpha}^{\ j} = c_{\alpha}^{i} \frac{\partial \xi_{j}}{\partial x_{i}}} \dots (\text{assume laatice speed = 1}) 
 \]
 \end{block}
-
-\textbf{Physical Interpretation:}
-\[
-\vec{e}_{\alpha} = \underbrace{c_{\alpha}^{i}}_{\text{lattice velocity}} \cdot \underbrace{\vec{g}_{i}(\vec{\xi})}_{\text{tangent vector}} \cdot \underbrace{\frac{\Delta x}{\Delta t}}_{\text{lattice speed} \approx 1}
-\]
-
 \begin{itemize}
     \item $c_{\alpha}^{i}$: Dimensionless discrete velocity (e.g., D2Q9: $0, \pm 1$)
     \item $\frac{\partial \xi_j}{\partial x_i}$: Coordinate transformation (from Jacobian)
     \item $\vec{e}_{\alpha}^{\ j}$: Shows \alert{velocity distortion} due to curvature
 \end{itemize}
-
+\textbf{Volumetric Lattice Boltzmann in Curvilinear Coordinates:}
+\[
+\vec{e}_{\alpha} = \underbrace{c_{\alpha}^{i}}_{\text{an integer}} \cdot \underbrace{\vec{g}_{i}(\vec{\xi})}_{\text{tangent vector}} \cdot \underbrace{\frac{\Delta x}{\Delta t}}_{\text{lattice speed} \approx 1}
+\]
+Redefine the particle's discrete velocity:
+Enforce the direction of velocity to be the same as the tangent vector.
 \end{frame}
 
 %========== 7. Path Integration ==========
 \begin{frame}{Path Integration: 2nd Order Runge-Kutta}
-
+From straming step : 
+\begin{equation*}
+    f_{\alpha}(\vec{\xi} , t + \Delta t) = f_{\alpha}^{\star}(\vec{\xi} - \delta \vec{\xi}_{\alpha}, t)
+\end{equation*}
+In curvilinear coordinate, we have to calculate the position of the pre-streaming particles.\\ 
 \textbf{Streaming Length:}
 \[
 \delta \vec{\xi}_{\alpha} = \int_{0}^{\Delta t} \vec{e}_{\alpha}(\vec{\xi}(t)) \, dt
 \]
 
 \begin{columns}[T]
-\begin{column}{0.55\textwidth}
+\begin{column}{0.44zx\textwidth}
 \textbf{2nd Order Runge-Kutta:}
 \begin{align*}
 \text{Step 1:} \quad & \Delta\vec{\xi}_{\alpha}^{(1)} = \tfrac{1}{2}\Delta t \, \vec{e}_{\alpha}(\vec{\xi}) \\[0.8ex]

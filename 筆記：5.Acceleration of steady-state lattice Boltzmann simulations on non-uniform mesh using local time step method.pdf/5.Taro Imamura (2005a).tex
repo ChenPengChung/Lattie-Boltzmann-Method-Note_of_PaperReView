@@ -447,7 +447,7 @@ Left-hand side and right-hand side are both divided by $\Delta t$, which can rec
 The second term of the velocity-discrete Boltzmann equation corresponds to the shear stress field through Chapman-Enskog expansion. 
 If we use the explicit Euler method to discretize the particle path integration, the first term has only zeroth-order temporal accuracy, while the stress term has only first-order temporal accuracy. This is insufficient to recover the Navier-Stokes equation. 
 Therefore, we must use a method that provides higher-order temporal accuracy for the path integration, ensuring that the differential term of the velocity-discrete Boltzmann equation has at least second-order temporal accuracy.
-\subsection{Multiple Scale Expansion}
+\section{Multiple Scale Expansion}
 For collision and streaming in mesoscopic space, and advection and diffusion in macroscopic space, we have three types of time scales:
 \begin{enumerate}
 \item $K^{(0)}$: The first time scale, related to collision and streaming in mesoscopic space. 
@@ -522,7 +522,7 @@ But $f_{\alpha} =f_{\alpha}^{eq}+f_{\alpha}^{neq} = f_{\alpha}^{eq} + K f_{\alph
 
 
 
-\subsection{Boundary Condition }
+\section{Boundary Condition }
 In multiple scale analysis, the first time scale non-equilibrium distribution function is: 
 \begin{equation}\begin{aligned}
   & -\omega \delta t\left(\partial_{t}^{(1)}+ \vec{e}_{\alpha} \cdot \vec{\nabla}^{(1)}\right)  f_{\alpha}^{eq} = \left[f_{\alpha}^{(1)}(\vec{r}, t)\right]  \\[1.5ex]
@@ -602,7 +602,7 @@ The first term is calculated using second order one side finite difference metho
  \end{aligned}\end{equation}
  and second is the term related to the curvature, have been calculated in initialization. 
 
-\subsection{Algorithm}
+\section{Algorithm}
 The contravariant velocity (i.e., the discrete velocity set in curvilinear coordinates) needs to be calculated at the beginning of the simulation process and requires an extra array in the code to store the data. However, this pre-calculated value can reduce the computational cost at every time step by close to 50 percent.
 \paragraph{ISLBM initialization}
 \begin{enumerate}
