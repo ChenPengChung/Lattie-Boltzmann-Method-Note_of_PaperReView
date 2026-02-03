@@ -415,17 +415,17 @@ we can see the essential issue is compute the integration of the dis crete parti
 The result of discrete integration \eqref{eq:RK} have 2nd order accuracy in time space. The figure show that the method of 2nd Runge-Kutta to treat integration.
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.5\textwidth]{3.png}
+\includegraphics[width=0.5\textwidth]{2.png}
 \caption{integration skill-2nd Runge-Kutta}
 \label{fig:RK}
 \end{figure} 
 \noindent In Interpolation-Supplemented LBM, the streaming step is implemented by pulling data backward from the pre-streaming position to the current grid node through interpolation. This approach ensures that information does not spread from grid nodes to non-physical locations. Therefore, when integrating the particle path, we integrate backward from $\vec{\xi}_{\alpha}$ to $\vec{\xi}_{\alpha}-\Delta \vec{\xi}_{\alpha}$, rather than forward from $\vec{\xi}_{\alpha}$ to $\vec{\xi}_{\alpha} + \Delta \vec{\xi}_{\alpha}$.
 \paragraph{Streaming step after transformation}
 When we get the result of the path integration of particle discrete velocity along the direction, we can rewrite the streaming step equation below : 
-The discrete process is little similar as the process of distribution for time-space discretizing. However, the term diecretized is different, one is time integration of distribution and the other is time integration of particle path. 
+The discrete process is little similar as the process of distribution for time-space discretizing. However, the term discretized is different, one is time integration of distribution and the other is time integration of particle path. 
 In curvilinear coordinate , we have 
 \begin{equation}\begin{aligned}
-  f_{\alpha} (\vec{\xi}- , t ) = f_{\alpha}^{\star}(\vec{\xi}-\Delta \vec{\xi}_{\alpha} , t)
+  f_{\alpha} (\vec{\xi} , t ) = f_{\alpha}^{\star}(\vec{\xi}-\Delta \vec{\xi}_{\alpha} , t)
 \end{aligned}\end{equation}
 where$\Delta \vec{\xi}_{\alpha}$ the change of position have 2nd order accuracy in time space, and R.H.S term is post-collision function.
 \paragraph{Accuracy effect in time space for lattice bolrtzmann equation - BGK operator}
@@ -435,20 +435,89 @@ where$\Delta \vec{\xi}_{\alpha}$ the change of position have 2nd order accuracy 
 \end{aligned}\end{equation}
 and we can define a material derivative for discrete-velocity Boltzmann equation 
 \begin{equation}\begin{aligned}
-   \mathcal{D}_{t} = \partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi_{\alpha}}
+   \mathcal{D}_{t} = \partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi}
 \end{aligned}\end{equation}\
 we call above operator as "discrete-velocity material derivation".
 Using Taylor expansion on equation \eqref{eq:4}  
 \begin{equation}\begin{aligned}
-  &\left.\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi_{\alpha}}\right)f_{\alpha} \Delta t  + \frac{1}{2}\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi_{\alpha}}\right)^2f_{\alpha} \Delta t ^{2}\right |_{(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t )}= \omega (f_{\alpha}(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t ) - f_{\alpha}^{eq}(\rho , \vec{u} , t)) \\[1.5ex]
+  &\left.\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi}\right)f_{\alpha} \Delta t  + \frac{1}{2}\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi}\right)^2f_{\alpha} \Delta t ^{2}\right |_{(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t )}= \omega (f_{\alpha}(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t ) - f_{\alpha}^{eq}(\rho , \vec{u} , t)) \\[1.5ex]
 \end{aligned}\end{equation}
 left hand side and right hand side are both divided by $\Delta t$, can reover N-S equation in differential form.
 \begin{equation}\begin{aligned}
-  &\left.\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi_{\alpha}}\right)f_{\alpha} + \frac{1}{2}\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi_{\alpha}}\right)^2f_{\alpha} \Delta t \right |_{(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t )} + O(\Delta t^{2})= \omega (f_{\alpha}(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t ) - f_{\alpha}^{eq}(\rho , \vec{u} , t)) \\[1.5ex]
+  &\left.\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi}\right)f_{\alpha} + \frac{1}{2}\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi}\right)^2f_{\alpha} \Delta t \right |_{(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t )} + O(\Delta t^{2})= \omega (f_{\alpha}(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t ) - f_{\alpha}^{eq}(\rho , \vec{u} , t)) \\[1.5ex]
 \end{aligned}\end{equation}
 The second term of the velocity-discrete Boltzmann equation corresponds to the shear stress field through Chapman-Enskog expansion. 
 If we use the explicit Euler method to discretize the particle path integration, the first term has only zeroth-order temporal accuracy, while the stress term has only first-order temporal accuracy. This is insufficient to recover the Navier-Stokes equation. 
 Therefore, we must use a method that provides higher-order temporal accuracy for the path integration, ensuring that the differential term of the velocity-discrete Boltzmann equation has at least second-order temporal accuracy.
+\subsection{Multiple Scale Expansion}
+For collision and straming in mesoscopic space, and advevtion and diffusion in macroscpic space, we have three types of time scale :
+\begin{enumerate}
+\item $K^{(0)}$ : The first time scale, related to collision and streaming in mesoscopic space. 
+\item $K^{(1)}$ : The second time scale, related to convection in macroscopic space .
+\item $K^{(2)}$ : The third time scale, related to diffusion in macroscopic space. 
+\end{enumerate}
+If K = 0.01, then 
+so we can define three types of time variables : (the value is about $K^{(0)}, K^{(1)}$, $K^{(2)}$)\\
+
+\begin{equation}\begin{aligned}
+  &t \in K^{(2)}\\[1.5ex]
+  &t^{(1)} \equiv K * t \in K^{(1)}\\[1.5ex] 
+  &t^{(2)} \equiv K^{2} * t \in K^{(0)}
+\end{aligned}\end{equation}
+and define two types of space variables : 
+\begin{equation}
+  \vec{r}^{(1)} \equiv K * \vec{r} 
+\end{equation}
+Therefore, the differential about time variable is :
+\begin{equation}
+  \frac{\partial }{\partial t} = K \frac{\partial }{\partial t^{(1)}} + K^{2} \frac{\partial }{\partial t^{(2)}}
+= K \partial_{t}^{(1)} + K \partial_{t}^{(2)}
+\end{equation}
+In physical space, we have the relation about two variables : 
+\begin{equation}\begin{aligned}
+     \frac{\partial }{\partial \vec{\xi}} &= K \frac{\partial }{\partial \vec{\xi}^{(1)}}\\[1.5ex]
+     \Rightarrow \vec{\nabla}_{\vec{\xi}} &= K \vec{\nabla}_{\vec{\xi}^{(1)}}
+\end{aligned}\end{equation}
+Finally, for three types of time variable, multi-scale expansion of dis distribution funtion : 
+\begin{equation}
+   f_{i} = f_{i}^{eq} + K f_{i}^{(1)}  + K^{2}f_{i}^{(2)} + \dots
+\end{equation} 
+We have to known that time scale is a domain for time space like $K^{(0)}, K^{(1)}$, and the element of the time scale is a variable, and their scale have different property. 
+\paragraph{Multi-Scale Technique and LBGK}
+Before analyzing the LBGK, first, review the form of the basic equation : 
+\begin{equation}\begin{aligned}
+f_{\alpha}(\vec{r}+\vec{e}_{\alpha} \delta t , t +\delta t) - f_{\alpha}(\vec{r} , t) = -\frac{\delta t}{\tau } \left[f^{neq}(\vec{r} ,t)\right]
+\end{aligned}\end{equation}
+Using particle material derivation : 
+\begin{equation*}
+  \mathcal{D}_{t} = \partial_{t} + \vec{e}_{\alpha} \cdot \vec{\nabla}
+\end{equation*}
+and Taylor expansion to analiyzing the left hand side of the LBGK :
+\begin{equation}\begin{aligned}
+    \left.\mathcal{D}_{t}\delta t  + \frac{\delta t^{2}}{2}\mathcal{D}_{t}^{2} f_{\alpha} \right|_{\vec{r} , t} = -\frac{\delta t}{\tau } \left[f^{neq}(\vec{r} ,t)\right]
+\end{aligned} \end{equation}
+\begin{equation}\begin{aligned}
+\left(\partial_{t} + \vec{e}_{\alpha} \cdot \vec{\nabla}\right) f_{\alpha}   + \frac{\delta t^{1}}{2}\left(\partial_{t} + \vec{e}_{\alpha} \cdot \vec{\nabla}\right)^{2} f_{\alpha} = -\frac{1}{\tau } \left[f^{neq}(\vec{r} ,t)\right]
+\end{aligned} \end{equation}
+substitue above equation using the discrete velocity Boltzmann equation : 
+$$\left(\partial_{t} + \vec{e}_{\alpha} \cdot \vec{\nabla}\right)f_{\alpha} = -\frac{1}{\tau } \left[f^{neq}(\vec{r} ,t)\right]  $$
+we have the equation below : 
+\begin{equation}\begin{aligned}\label{eq:Goback}
+\left(\partial_{t} + \vec{e}_{\alpha} \cdot \vec{\nabla}\right) f_{\alpha}  -\frac{\delta t^{1}}{2}\left(\partial_{t} + \vec{e}_{\alpha} \cdot \vec{\nabla}\right) \frac{1}{\tau } \left[f_{\alpha}^{neq}(\vec{r} ,t)\right] = -\frac{1}{\tau } \left[f_{\alpha}^{neq}(\vec{r} ,t)\right]
+\end{aligned}\end{equation}
+For analiyzing the equation above, review the multiple scale relation as shown below: 
+\begin{equation}\begin{aligned}
+&\partial_{t} = K \partial_{t}^{(1)} + K^{2} \partial_{t}^{(2)} + \dots \\[1.5ex]
+&\vec{\nabla} = K \vec{\nabla}^{(1)} + K^{2} \vec{\nabla}^{(2)} + \dots \\[1.5ex]
+&f_{\alpha}^{neq} = f_{\alpha} - f_{\alpha}^{eq} = K f_{\alpha}^{(1)} + K^{2} f_{\alpha}^{(2)} + \dots
+\end{aligned}\end{equation}
+and go back to the equation \eqref{eq:Goback}, we have 
+\begin{equation}\begin{aligned}
+  &K = K  \\[1.5ex]
+  &K^{2} + K^{2} = K^{2}
+\end{aligned}\end{equation}
+
+
 \subsection{Boundary Condition }
 \subsection{Algorithm}
 

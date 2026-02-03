@@ -54,3 +54,6 @@
 # Thumbs.db (Windows)
 Thumbs.db
 ehthumbs.db
+
+# Ignore nested git repository
+Lattie-Boltzmann-Method-Note_of_PaperReView/
