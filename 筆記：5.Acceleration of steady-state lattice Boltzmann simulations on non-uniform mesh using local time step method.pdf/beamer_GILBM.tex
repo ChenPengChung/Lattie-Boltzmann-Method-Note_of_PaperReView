@@ -1,0 +1,411 @@
+\documentclass[aspectratio=169,10pt]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% 字體設定 - Times New Roman
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\setsansfont{Times New Roman}
+\usefonttheme{serif}
+
+% 數學與圖片
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bm}
+
+% 顏色設定
+\usepackage{xcolor}
+\definecolor{mainblue}{RGB}{0,74,128}
+\definecolor{accent}{RGB}{180,60,30}
+\setbeamercolor{structure}{fg=mainblue}
+\setbeamercolor{title}{fg=white,bg=mainblue}
+\setbeamercolor{frametitle}{fg=white,bg=mainblue}
+\setbeamercolor{block title}{bg=mainblue!85,fg=white}
+\setbeamercolor{block body}{bg=mainblue!8}
+\setbeamercolor{alerted text}{fg=accent}
+
+% 設定字體大小
+\setbeamerfont{frametitle}{size=\normalsize}
+
+% 移除導航符號
+\setbeamertemplate{navigation symbols}{}
+
+\begin{document}
+
+%========== 1. Title Page (Paper Style) ==========
+\begin{frame}[plain]
+\vfill
+\begin{center}
+{\Large\textbf{Acceleration of steady-state lattice Boltzmann simulations on non-uniform mesh using local time step method}}
+
+\vspace{0.8cm}
+
+{\normalsize
+Taro Imamura$^{a,*}$, Kojiro Suzuki$^{b}$, Takashi Nakamura$^{a}$, Masahiro Yoshida$^{a}$
+}
+
+\vspace{0.4cm}
+
+{\small\itshape
+$^{a}$ Japan Aerospace Exploration Agency, Institute of Space Technology and Aeronautics,\\
+7-44-1, Jindai-ji Higashi-mati, Chofu-si, Tokyo 182-8522, Japan\\[0.2cm]
+$^{b}$ Department of Advanced Energy, The University of Tokyo,\\
+5-1-5 Kashiwa-no-ha, Kashiwa, Chiba 277-8562, Japan
+}
+
+\vspace{0.6cm}
+
+{\small
+\textbf{Journal of Computational Physics} 202 (2005) 645--663
+}
+
+\vspace{0.3cm}
+
+{\footnotesize
+Received 29 December 2003; revised 21 June 2004; accepted 2 August 2004
+}
+
+\vspace{0.8cm}
+
+{\small\textbf{Presenter:} Chen Peng Chung}
+
+\end{center}
+\vfill
+\end{frame}
+
+%========== 2. Outline ==========
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+%========== 3. Introduction ==========
+\section{Introduction}
+\begin{frame}{General Interpolation LBM (GILBM)}
+
+\begin{block}{Core Idea}
+Extend \textbf{Interpolation-Supplemented LBM (ISLBM)} to general curvilinear coordinates through \alert{conformal mapping}, without changing the lattice system.
+\end{block}
+
+\vspace{0.2cm}
+\begin{columns}[T]
+\begin{column}{0.52\textwidth}
+\textbf{Key Features:}
+\begin{itemize}
+    \item Cartesian $\rightarrow$ Curvilinear via coordinate mapping
+    \item Curved particle paths in computational domain
+    \item Lattice structure remains \alert{unchanged}
+    \item Pull-back interpolation for streaming
+\end{itemize}
+\end{column}
+\begin{column}{0.45\textwidth}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\textwidth]{2.png}
+    \caption{GILBM: curved paths in $\xi$-space}
+\end{figure}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%========== 4. Jacobian Relation ==========
+\section{Coordinate Transformation}
+\begin{frame}{Jacobian Relation and Lamé Coefficients}
+
+\textbf{Jacobian Transformation Matrix:}
+\[
+\begin{bmatrix}
+  \xi_{x} & \xi_{y}\\
+  \eta_{x} & \eta_{y} 
+\end{bmatrix}
+= \frac{1}{J}
+\begin{bmatrix}
+  y_{\eta} & -x_{\eta} \\
+  -y_{\xi} & x_{\xi} 
+\end{bmatrix}
+, \quad J = x_{\xi}y_{\eta} - x_{\eta}y_{\xi}
+\]
+
+\vspace{0.2cm}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Lamé Coefficient \& Unit Vector:}
+\[
+h_{1} \equiv \left|\frac{\partial \vec{r}}{\partial q_{1}}\right|, \quad
+\vec{e}_{1} \equiv \frac{1}{h_{1}}\frac{\partial \vec{r}}{\partial q_{1}}
+\]
+
+\vspace{0.1cm}
+Position vector differentials:
+\begin{align*}
+\frac{\partial \vec{r}}{\partial \xi} &= h_{\xi} \vec{e}_{\xi} = x_{\xi}\vec{e}_{x} + y_{\xi}\vec{e}_{y} \\
+\frac{\partial \vec{r}}{\partial \eta} &= h_{\eta} \vec{e}_{\eta} = x_{\eta}\vec{e}_{x} + y_{\eta}\vec{e}_{y}
+\end{align*}
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\textbf{Physical Meaning:}
+\begin{itemize}
+    \item $h_i$: Scale factor (metric coefficient)
+    \item $\vec{e}_i$: Local tangent direction
+    \item $J$: Jacobian determinant (area scaling)
+    \item Transforms derivatives between coordinates
+\end{itemize}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%========== 5. LBE Transform ==========
+\section{LBE Transformation}
+\begin{frame}{Lattice Boltzmann Equation in Curvilinear Coordinates}
+
+\textbf{Standard LBE (Cartesian):}
+\[
+f_{i}(\vec{x} + \vec{c}_{i} \Delta t, t + \Delta t) = f_{i}(\vec{x}, t) + \Omega(f_i, f_i^{eq})
+\]
+
+\vspace{0.3cm}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Collision Step:}
+
+Position appears only at grid nodes; collision has \alert{no spatial derivatives}.
+
+$\Rightarrow$ Direct substitution: $\vec{x} \to \vec{\xi}$
+\[
+\boxed{f_{i}^{\star}(\vec{\xi}, t) = f_{i} + \omega(f_{i}^{eq} - f_{i})}
+\]
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\textbf{Streaming Step:}
+
+Requires \alert{path integration} of particle velocity in curvilinear space.
+\[
+\boxed{f_{\alpha}(\vec{\xi}, t) = f_{\alpha}^{\star}(\vec{\xi} - \Delta\vec{\xi}_{\alpha}, t)}
+\]
+
+\vspace{0.1cm}
+\small{(Pull-back from pre-streaming position via interpolation)}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%========== 6. Contravariant Velocity ==========
+\begin{frame}{Contravariant Velocity (Normalized Discrete Velocity)}
+
+\begin{block}{Definition}
+Transform Cartesian lattice velocity to curvilinear coordinates:
+\[
+\boxed{\vec{e}_{\alpha}^{\ j} = c_{\alpha}^{i} \frac{\partial \xi_{j}}{\partial x_{i}}}
+\]
+\end{block}
+
+\textbf{Physical Interpretation:}
+\[
+\vec{e}_{\alpha} = \underbrace{c_{\alpha}^{i}}_{\text{lattice velocity}} \cdot \underbrace{\vec{g}_{i}(\vec{\xi})}_{\text{tangent vector}} \cdot \underbrace{\frac{\Delta x}{\Delta t}}_{\text{lattice speed} \approx 1}
+\]
+
+\begin{itemize}
+    \item $c_{\alpha}^{i}$: Dimensionless discrete velocity (e.g., D2Q9: $0, \pm 1$)
+    \item $\frac{\partial \xi_j}{\partial x_i}$: Coordinate transformation (from Jacobian)
+    \item $\vec{e}_{\alpha}^{\ j}$: Shows \alert{velocity distortion} due to curvature
+\end{itemize}
+
+\end{frame}
+
+%========== 7. Path Integration ==========
+\begin{frame}{Path Integration: 2nd Order Runge-Kutta}
+
+\textbf{Streaming Length:}
+\[
+\delta \vec{\xi}_{\alpha} = \int_{0}^{\Delta t} \vec{e}_{\alpha}(\vec{\xi}(t)) \, dt
+\]
+
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\textbf{2nd Order Runge-Kutta:}
+\begin{align*}
+\text{Step 1:} \quad & \Delta\vec{\xi}_{\alpha}^{(1)} = \tfrac{1}{2}\Delta t \, \vec{e}_{\alpha}(\vec{\xi}) \\[0.8ex]
+\text{Step 2:} \quad & \Delta\vec{\xi}_{\alpha} = \Delta t \, \vec{e}_{\alpha}(\vec{\xi} - \Delta\vec{\xi}_{\alpha}^{(1)})
+\end{align*}
+
+\vspace{0.2cm}
+\textbf{Why not 1st order Euler?}
+\begin{itemize}
+    \item Euler: $O(\Delta t)$ error $\rightarrow$ insufficient
+    \item Need $O(\Delta t^2)$ to recover Navier-Stokes
+    \item Stress term requires 2nd order accuracy
+\end{itemize}
+\end{column}
+
+\begin{column}{0.42\textwidth}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.95\textwidth]{3.png}
+    \caption{RK2 path integration}
+\end{figure}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%========== 8. Multi-Scale Expansion ==========
+\section{Chapman-Enskog Analysis}
+\begin{frame}{Multi-Scale Expansion}
+
+\textbf{Three Time Scales:}
+\begin{itemize}
+    \item $K^{(0)}$: Collision \& streaming (mesoscopic)
+    \item $K^{(1)}$: Convection / advection (macroscopic)
+    \item $K^{(2)}$: Diffusion (macroscopic)
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Scale Operators:}
+\begin{align*}
+\partial_t &= K\partial_t^{(1)} + K^2\partial_t^{(2)} \\
+\vec{\nabla} &= K\vec{\nabla}^{(1)}
+\end{align*}
+
+\textbf{Distribution Expansion:}
+\[
+f_{\alpha} = f_{\alpha}^{eq} + K f_{\alpha}^{(1)} + K^2 f_{\alpha}^{(2)} + \cdots
+\]
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\textbf{Order $K^1$ Equation:}
+\[
+\left(\partial_t^{(1)} + \vec{e}_{\alpha}\cdot\vec{\nabla}^{(1)}\right) f_{\alpha}^{eq} = -\frac{1}{\tau} f_{\alpha}^{(1)}
+\]
+
+$\Rightarrow$ First-order non-equilibrium:
+\[
+f_{\alpha}^{(1)} = -\tau \left(\partial_t^{(1)} + \vec{e}_{\alpha}\cdot\vec{\nabla}^{(1)}\right) f_{\alpha}^{eq}
+\]
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%========== 9. Boundary Condition Derivation ==========
+\section{Boundary Conditions}
+\begin{frame}{Boundary Condition Derivation}
+
+\textbf{Maxwell-Boltzmann Equilibrium (Hermite Expansion):}
+\[
+f_{\alpha}^{eq} = w_{\alpha} \rho \left(1 + \frac{e_{\alpha}^{i}u_{i}}{c_s^{2}} + \frac{(e_{\alpha}^{i} e_{\alpha}^{j} - c_s^{2} \delta^{ij})u_{i}u_{j}}{2c_{s}^{4}}\right)
+\]
+
+\textbf{Derivatives of $f^{eq}$:}
+\[
+\frac{\partial f_{\alpha}^{eq}}{\partial u_{i}} \approx \frac{e_{\alpha}^{i} - u_{i}}{c_{s}^{2}} f_{\alpha}^{eq}, \quad
+\frac{\partial f_{\alpha}^{eq}}{\partial \rho} = \frac{f_{\alpha}^{eq}}{\rho}
+\]
+
+\textbf{Conservation Laws (1st order scale):}
+\begin{align*}
+\partial_t^{(1)} \rho &= -\vec{\nabla}^{(1)} \cdot (\rho\vec{u}) \\
+\partial_t^{(1)} \vec{u} &= -\vec{u}\cdot\vec{\nabla}^{(1)}\vec{u} - \frac{1}{\rho}\vec{\nabla}^{(1)} p
+\end{align*}
+
+\end{frame}
+
+%========== 10. Boundary Condition Final ==========
+\begin{frame}{Boundary Condition Implementation}
+
+\textbf{Assumptions at Boundary:}
+\begin{enumerate}
+    \item Constant pressure: $\nabla p = 0$
+    \item Incompressible: $\nabla \rho = 0$
+\end{enumerate}
+
+\vspace{0.2cm}
+\textbf{Distribution Function at Boundary:}
+\[
+\boxed{f_{\alpha}\big|_{bc} = f_{\alpha}^{eq} + \omega\delta t \left(\frac{(e_{\alpha}^{i} - u_{i})(e_{\alpha}^{\beta} - u_{\beta})}{c_s^{2}}\frac{\partial u_{i}}{\partial x_{\beta}} - \frac{\partial u_{\beta}}{\partial x_{\beta}}\right) f_{\alpha}^{eq}}
+\]
+
+\textbf{Velocity Gradient in Curvilinear Coordinates:}
+\[
+\frac{\partial u_{i}}{\partial x_{\beta}} = \frac{\partial u_{i}}{\partial \xi_{j}} \cdot \frac{\partial \xi_{j}}{\partial x_{\beta}}
+\]
+
+\textbf{2nd Order One-Side Finite Difference:}
+\[
+\left.\frac{\partial u}{\partial \xi}\right|_{i+\frac{1}{2}} = \frac{3u_{i} - 4u_{i-1} + u_{i-2}}{2\Delta \xi} + O(\Delta \xi^{2})
+\]
+
+\end{frame}
+
+%========== 11. Algorithm ==========
+\section{Algorithm}
+\begin{frame}{GILBM Initialization \& Runtime}
+
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{GILBM Initialization:}
+\begin{enumerate}
+    \item Set $Re$, relaxation factor $\omega$
+    \item Contravariant velocity:
+    \[
+    e_{\alpha}^{i} = c_{\alpha}^{\beta}\frac{\partial \xi_{i}}{\partial x_{\beta}}
+    \]
+    \item Global time step (CFL):
+    \[
+    \Delta t = \text{CFL} \cdot \min\left|\frac{1}{e_{\alpha}^{i}}\right|
+    \]
+    \item Relaxation time: $\tau = \Delta t / \omega$
+    \item Viscosity: $\nu = (\tau - 0.5\Delta t)c_s^{2}$
+\end{enumerate}
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\textbf{Runtime Loop:}
+\begin{enumerate}
+    \item \textbf{Collision:}
+    $f_i^* = f_i + \omega(f_i^{eq} - f_i)$
+    
+    \item \textbf{Streaming:}
+    $f_i(\vec{\xi}) = f_i^*(\vec{\xi} - \Delta\vec{\xi}_i)$
+    (with interpolation)
+    
+    \item \textbf{Boundary:} Apply $f_{\alpha}|_{bc}$
+    
+    \item \textbf{Macroscopic:}
+    $\rho = \sum_i f_i$, $\vec{u} = \frac{1}{\rho}\sum_i f_i\vec{c}_i$
+\end{enumerate}
+
+\vspace{0.3cm}
+\alert{Pre-calculation reduces runtime by $\sim$50\%}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%========== 12. Summary ==========
+\begin{frame}{Summary}
+
+\begin{block}{GILBM: Key Points}
+\begin{enumerate}
+    \item \textbf{Coordinate Transform:} Jacobian relation maps Cartesian $\leftrightarrow$ curvilinear
+    \item \textbf{Collision:} Direct substitution $\vec{x} \to \vec{\xi}$ (no spatial derivatives)
+    \item \textbf{Streaming:} Path integration with contravariant velocity $e_{\alpha}^{j}$
+    \item \textbf{Accuracy:} 2nd order RK required for N-S recovery
+    \item \textbf{Boundary:} Distribution from Chapman-Enskog with $\nabla p = 0$, $\nabla\rho = 0$
+    \item \textbf{Efficiency:} Pre-calculated contravariant velocity saves $\sim$50\% runtime
+\end{enumerate}
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Limitation:} MRT operator extension to curvilinear coordinates not yet developed.
+
+\end{frame}
+
+\end{document}
