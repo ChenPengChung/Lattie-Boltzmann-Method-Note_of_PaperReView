@@ -1,0 +1,407 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+\usepackage{amsmath,amssymb,physics}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{fontspec}
+\usepackage{tcolorbox}
+
+% 設定 Times New Roman 字體
+\setmainfont{Times New Roman}
+\setsansfont{Times New Roman}
+\setmonofont{Courier New}
+
+% Beamer 字體設定為 serif (Times New Roman)
+\usefonttheme{serif}
+
+% 自定義顏色
+\definecolor{mainblue}{RGB}{0,82,147}
+\definecolor{darkred}{RGB}{180,0,0}
+\definecolor{darkgreen}{RGB}{0,120,0}
+
+\setbeamercolor{title}{fg=white,bg=mainblue}
+\setbeamercolor{frametitle}{fg=white,bg=mainblue}
+\setbeamercolor{structure}{fg=mainblue}
+\setbeamercolor{block title}{bg=mainblue!85,fg=white}
+\setbeamercolor{block body}{bg=mainblue!8}
+
+% 設定字體大小
+\setbeamerfont{frametitle}{size=\large}
+
+% 版面與字級優化
+\setbeamersize{text margin left=0.8cm, text margin right=0.8cm}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+\setbeamerfont{title}{size=\Large}
+\setbeamerfont{block title}{size=\normalsize}
+\setbeamerfont{block body}{size=\small}
+\setlength{\parskip}{0.4em}
+\setlength{\abovedisplayskip}{0.4em}
+\setlength{\belowdisplayskip}{0.4em}
+
+% 標題資訊
+\title{Volumetric Lattice Boltzmann Models in General Curvilinear Coordinates: Theoretical Formulation}
+\author{Hudong Chen}
+\institute{
+Dassault Systemes, Waltham, MA, United States\\[0.5em]
+\footnotesize Front. Appl. Math. Stat. 7:691582 \quad doi: 10.3389/fams.2021.691582\\
+\footnotesize Published: 16 June 2021
+}
+\date{Presenter: Chen Peng Chung}
+
+% 期刊風格封面排版
+\newcommand{\journalheader}{%
+\small\textbf{frontiers} in Applied Mathematics and Statistics\hfill\textbf{ORIGINAL RESEARCH}\\
+\footnotesize published: 16 June 2021\hfill doi: 10.3389/fams.2021.691582
+}
+\newcommand{\journalsummary}{%
+\begin{tcolorbox}[colback=gray!10, colframe=gray!50, boxrule=0.3pt, arc=2pt, left=0.5em, right=0.5em, top=0.3em, bottom=0.3em]
+\small
+A volumetric formulation for lattice Boltzmann models on general curvilinear coordinates is presented, preserving one-to-one advection and recovering the Navier--Stokes equations in the hydrodynamic limit.
+\end{tcolorbox}
+}
+
+\begin{document}
+%========== 第1頁：Title ==========
+\begin{frame}[plain]
+\vspace*{-0.2cm}
+\journalheader
+\vspace{0.2cm}
+\hrule
+\vspace{0.8cm}
+
+{\LARGE\bfseries \inserttitle}\par
+\vspace{0.6cm}
+{\large\itshape \insertauthor}\par
+\vspace{0.2cm}
+{\small \insertinstitute}\par
+\vspace{0.6cm}
+
+\journalsummary
+
+\vfill
+\hfill\small \insertdate
+\end{frame}
+
+%========== 第2頁：Outline ==========
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+%========== 第3頁：Introduction ==========
+\section{Introduction \& Motivation}
+\begin{frame}{Introduction \& Motivation}
+\begin{block}{Core Problem}
+In \textbf{general curvilinear coordinates}, macroscopic values ($\rho$, $\rho\vec{u}$) experience \textbf{momentum loss} due to:
+\begin{itemize}
+    \item Curvature effects
+    \item Nonuniform grid properties
+\end{itemize}
+\end{block}
+
+\vspace{0.5em}
+\begin{alertblock}{Key Question}
+How to maintain \textbf{momentum conservation} in the streaming step of LBM when using curvilinear coordinates?
+\end{alertblock}
+
+\vspace{0.5em}
+\begin{block}{Solution Approach}
+Define a \textbf{velocity-space discretized force field} to compensate for the momentum loss (interpreted as an \textbf{inertial force}).
+\end{block}
+\end{frame}
+
+%========== 第4頁：LBGK Equation ==========
+\section{Momentum Loss in Propagation}
+\begin{frame}{Lattice Boltzmann BGK Equation}
+The standard LBGK equation in curvilinear coordinates:
+\begin{equation*}
+\boxed{N_{\alpha}(\vec{q} + \vec{e}_{\alpha}\delta t, t+1) = N_{\alpha}(\vec{q} , t) + \Omega_{\alpha} +  \textcolor{red}{\delta N_{\alpha}(\vec{q} ,t)}}
+\end{equation*}
+
+\vspace{0.5em}
+where the \textcolor{red}{correction term} is defined as:
+\begin{equation*}
+\delta N_{\alpha}(\vec{q} , t) \equiv N_{\alpha}(\vec{q} , t) - N_{\alpha}^{\star} (\vec{q} - \vec{e}_{\alpha}  \delta t, t-1) 
+\end{equation*}
+
+\begin{itemize}
+    \item $\vec{q}$ : nondimensional position $(q_1, q_2, q_3)$
+    \item $N^{\star}$ : \textbf{post-collision} distribution function
+    \item $\Omega_{\alpha}$ : collision operator
+    \item $\vec{e}_{\alpha}$ : discrete velocity directions
+\end{itemize}
+\end{frame}
+
+%========== 第5頁：Mass vs Momentum Conservation ==========
+\begin{frame}{Mass Conservation vs Momentum Loss}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\begin{block}{\textcolor{darkgreen}{Mass Conservation (\checkmark)}}
+\begin{equation*}
+\sum_{\alpha=0}^{q-1} \delta N_{\alpha}(\vec{q} , t) = 0
+\end{equation*}
+\vspace{0.3em}
+\textbf{Reason:} Sum of distributions over velocity space is conserved.
+\end{block}
+
+\column{0.48\textwidth}
+\begin{alertblock}{\textcolor{darkred}{Momentum Loss ($\times$)}}
+\begin{equation*}
+\sum_{\alpha=1}^{q} \vec{e}_{\alpha}\,\delta N_{\alpha} \neq 0
+\end{equation*}
+\vspace{0.3em}
+\textbf{Reason:} Discrete velocity vectors $\vec{e}_\alpha$ vary with position in curvilinear coords!
+\end{alertblock}
+\end{columns}
+
+\vspace{1em}
+\begin{center}
+\tikz{
+\node[draw, rounded corners, fill=yellow!20, text width=10cm, align=center] {
+\textbf{Key Insight:} $N_{\alpha} (\vec{q} , t) \neq N_{\alpha}^{\star}(\vec{q} - \vec{e}_{\alpha} \delta t , t - 1)$\\[0.3em]
+Pre-streaming $\neq$ Post-collision at different positions
+};
+}
+\end{center}
+\end{frame}
+
+%========== 第6頁：Curvature Change Definition ==========
+\section{Key Definitions}
+\begin{frame}{Definition: Nondimensional Curvature Change}
+\begin{definition}
+The \textbf{nondimensional change of curvature tangent vector}:
+\begin{equation*}
+\boxed{\vec{\Theta}_{i}^{j} (\vec{q} + \vec{e}_{\alpha} \delta t , \vec{q} ) = \left[\vec{g}_{i}(\vec{q} +\vec{e}_{\alpha} \delta t) - \vec{g}_{i}(\vec{q})\right] \cdot \vec{g}^{\ j} (\vec{q})}
+\end{equation*}
+\end{definition}
+
+where the \textbf{contravariant basis vector} $\vec{g}^j$ is:
+\begin{equation*}
+\vec{g}^{1} = \frac{\vec{g}_{2}\times \vec{g}_{3}}{(\vec{g}_{2}\times \vec{g}_{3}) \cdot \vec{g}_{1}} 
+\end{equation*}
+
+\vspace{0.5em}
+\begin{itemize}
+    \item $\vec{g}_i$ : covariant basis vectors (tangent to coordinate curves)
+    \item $\vec{g}^j$ : contravariant basis vectors (normal to coordinate surfaces)
+    \item $\Theta_i^j$ measures how the tangent vector changes along $\vec{e}_\alpha$
+\end{itemize}
+\end{frame}
+
+%========== 第7頁：Momentum Loss Definition ==========
+\begin{frame}{Definition: Momentum Loss}
+\begin{definition}
+\textbf{Total Momentum Loss} at point $(\vec{q}, t)$:
+\begin{equation*}
+\vec{M}_{\mathrm{Loss}} (\vec{q},t) \equiv
+ \sum_{\alpha = 1}^{q} \left[N_{\alpha}(\vec{q} ,t)\,\vec{e}_{\alpha}(\vec{q}) - N_{\alpha}^{\star}(\vec{q} - \vec{e}_{\alpha} \delta t, t-1)\,\vec{e}_{\alpha}(\vec{q} - \vec{e}_{\alpha} \delta t )\right]
+\end{equation*}
+\end{definition}
+
+\vspace{0.5em}
+\textbf{Physical Meaning:}
+\begin{itemize}
+    \item Momentum carried by particles \textbf{arriving} at $\vec{q}$
+    \item Minus momentum carried by particles \textbf{leaving} from $\vec{q} - \vec{e}_\alpha \delta t$
+    \item Difference arises because $\vec{e}_\alpha(\vec{q}) \neq \vec{e}_\alpha(\vec{q} - \vec{e}_\alpha \delta t)$
+\end{itemize}
+\end{frame}
+
+%========== 第8頁：Inner and Outer Momentum Loss ==========
+\begin{frame}{Inner \& Outer Momentum Loss}
+The paper separates momentum loss into \textbf{two contributions}:
+
+\begin{definition}
+\textbf{Inner Momentum Loss} (particles entering):
+\begin{equation*}
+\mathcal{J}(\vec{q} ) \,\vec{\chi}^{\mathrm{in}}(\vec{q} ,t) \equiv
+-\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q},t)\cdot \left(\vec{e}_{\alpha}(\vec{q}) - \vec{e}_{\alpha}(\vec{q} - \vec{e}_{\alpha} \delta t ) \right)
+\end{equation*}
+\end{definition}
+
+\begin{definition}
+\textbf{Outer Momentum Loss} (particles leaving):
+\begin{equation*}
+\mathcal{J}(\vec{q}) \,\vec{\chi}^{ \mathrm{out}}(\vec{q},t) \equiv
+-\sum_{\alpha = 1}^{q} \left(\vec{e}_{\alpha}(\vec{q} + \vec{e}_{\alpha} \delta t ) -\vec{e}_{\alpha}(\vec{q})\right)\cdot N_{\alpha}^{\star}(\vec{q},t)
+\end{equation*}
+\end{definition}
+
+\vspace{0.3em}
+where $\mathcal{J}$ is the Jacobian of the coordinate transformation.
+\end{frame}
+
+%========== 第9頁：Discrete Velocity Set ==========
+\begin{frame}{Discrete Velocity in Curvilinear Coordinates}
+The \textbf{discrete particle velocity set} in curvilinear coordinates:
+\begin{equation*}
+\boxed{\vec{e}_{\alpha}(\vec{q}) = \sum_{i = 1}^{3} (c_{\alpha}^{i}) \,\vec{g}_{i} \,\frac{\Delta x}{\Delta t}}
+\end{equation*}
+
+\vspace{1em}
+\begin{itemize}
+    \item $c_{\alpha}^{i}$ : lattice velocity components (integers like $0, \pm 1$)
+    \item $\vec{g}_i$ : local covariant basis vectors
+    \item $\Delta x / \Delta t$ : lattice speed ratio
+\end{itemize}
+
+\vspace{0.5em}
+\begin{alertblock}{Important}
+Unlike Cartesian coordinates, $\vec{e}_\alpha$ depends on position $\vec{q}$ through the basis vectors $\vec{g}_i(\vec{q})$.
+\end{alertblock}
+\end{frame}
+
+%========== 第10頁：Momentum Conservation Constraint ==========
+\section{Force Field Derivation}
+\begin{frame}{Momentum Conservation Constraint}
+\small
+The author imposes the \textbf{momentum constraint} for the streaming step:
+
+\begin{equation*}
+\sum_{\alpha = 1}^{q} \vec{e}_{\alpha}(\vec{q})\,\delta N_{\alpha}(\vec{q}) = \mathcal{J} \cdot \frac{\vec{\chi}^{\mathrm{in}}(\vec{q} ,t)+ \vec{\chi}^{\mathrm{out}}(\vec{q} ,t)}{2}
+\end{equation*}
+
+\vspace{0.5em}
+Expanding:
+\begin{equation*}
+= \mathcal{J} \cdot \frac{
+\textcolor{blue}{-\sum_{\alpha} N_{\alpha}(\vec{q})\left(\vec{e}_{\alpha}(\vec{q})- \vec{e}_{\alpha}(\vec{q} - \vec{e}_{\alpha} \delta t )\right)}
+\textcolor{red}{-\sum_{\alpha} N_{\alpha}^{\star}(\vec{q}) \left(\vec{e}_{\alpha}(\vec{q} + \vec{e}_{\alpha} \delta t )- \vec{e}_{\alpha}(\vec{q})\right)}
+}{2}
+\end{equation*}
+
+\begin{itemize}
+    \item \textcolor{blue}{Blue}: contribution from pre-collision distribution
+    \item \textcolor{red}{Red}: contribution from post-collision distribution
+\end{itemize}
+\normalsize
+\end{frame}
+
+%========== 第11頁：Velocity-Space Discretized Force ==========
+\begin{frame}{Velocity-Space Discretized Force Field}
+\begin{definition}
+The \textbf{velocity-space discretized force field} in curvilinear coordinates:
+\begin{equation*}
+\boxed{F^{i} (\vec{q} , t) = \frac{\vec{\chi}^{\mathrm{in}}(\vec{q} ,t) + \vec{\chi}^{\mathrm{out}}(\vec{q} ,t)}{2} \cdot \vec{g}^{\ i}(\vec{q})}
+\end{equation*}
+\end{definition}
+
+\vspace{0.5em}
+\textbf{Physical Interpretation:}
+\begin{itemize}
+    \item This force represents the \textbf{inertial force} arising from curvilinear coordinates
+    \item Analogous to centrifugal/Coriolis forces in rotating frames
+    \item Compensates for the ``loss'' in momentum during streaming
+\end{itemize}
+
+\vspace{0.5em}
+\begin{block}{General Force Definition}
+$\mathcal{J} (\vec{q}) F^{i} (\vec{q} ,t) \equiv \dfrac{\text{Momentum Loss}}{\Delta t}\cdot \vec{e}_{j} \dfrac{1}{|\vec{g}_{j}|}$
+\end{block}
+\end{frame}
+
+%========== 第12頁：Final Force Formula ==========
+\begin{frame}{Final Force Formula}
+\small
+After derivation, the force field becomes:
+\begin{equation*}
+\boxed{
+\mathcal{J} (\vec{q} )  F^{j}(\vec{q} , t) = \frac{-1}{2} \left(\sum_{\alpha} N_{\alpha}\,c_{\alpha}^{i} \Theta_{i}^{j} (\vec{q} - \vec{e}_{\alpha}\delta t , \vec{q})
++ \sum_{\alpha}N_{\alpha}^{\star}\,c_{\alpha}^{i} \Theta_{i}^{j} (\vec{q} + \vec{e}_{\alpha}\delta t , \vec{q}) \right)
+}
+\end{equation*}
+
+\vspace{0.5em}
+\textbf{Key Components:}
+\begin{table}[h]
+\centering
+\begin{tabular}{cl}
+\toprule
+Symbol & Meaning \\
+\midrule
+$\mathcal{J}$ & Jacobian of transformation \\
+$c_\alpha^i$ & Lattice velocity component \\
+$\Theta_i^j$ & Curvature change tensor \\
+$N_\alpha$ & Pre-collision distribution \\
+$N_\alpha^\star$ & Post-collision distribution \\
+\bottomrule
+\end{tabular}
+\end{table}
+\normalsize
+\end{frame}
+
+%========== 第13頁：Derivation Steps ==========
+\begin{frame}{Derivation Outline}
+\small
+\textbf{Three-Step Derivation:}
+\vspace{0.5em}
+
+\begin{enumerate}
+\item \textbf{Define Momentum Loss:}
+\begin{equation*}
+\sum_{\alpha=1}^{q}\vec{e}_{\alpha}(\vec{q})\ \delta N_{\alpha}(\vec{q},t) \equiv \text{Momentum Loss}
+\end{equation*}
+
+\item \textbf{Express via Inner/Outer contributions:}
+\begin{equation*}
+\sum_{\alpha=1}^{q}\vec{e}_{\alpha}(\vec{q})\ \delta N_{\alpha} \equiv \mathcal{J} (\vec{q}) \cdot \frac{\vec{\chi}^{\mathrm{in}} + \vec{\chi}^{\mathrm{out}}}{2}
+\end{equation*}
+
+\item \textbf{Project onto coordinate directions:}
+\begin{equation*}
+\mathcal{J} (\vec{q} ) F^{i} \equiv \frac{\text{Momentum Loss}}{\Delta t}\cdot \vec{e}_{j} \frac{1}{|\vec{g}_{j}|}
+\end{equation*}
+\end{enumerate}
+\normalsize
+\end{frame}
+
+%========== 第14頁：Basic Equations for Implementation ==========
+\section{Implementation Formulas}
+\begin{frame}{Basic Equations for Curvilinear LBM}
+\small
+\textbf{Correction term:}
+\begin{equation*}
+\delta N_{\alpha}(\vec{q} , t) = w_{\alpha}\left(\frac{c_{\alpha}^{i} F^{i}}{c_{s}^{2}} + \frac{c_{\alpha}^{i}c_{\alpha}^{j}-c_s^{2}\delta ^{i j }}{2c_{s}^{4}}\right)
+\end{equation*}
+
+\textbf{Moment constraints (for Chapman-Enskog $\rightarrow$ Navier-Stokes):}
+\begin{align*}
+\sum_{\alpha} f^{eq} &= \rho \\
+\sum_{\alpha} f^{eq} c_{\alpha}^{i} &= \rho u^{i}\\
+\sum_{\alpha} f^{eq} c_{\alpha}^{i}c_{\alpha}^{j} &= \rho c_s^{2} g^{ij} + \rho \left(u^{i} + \frac{F^{i}}{2\rho}\right)\left(u^{j} + \frac{F^{j}}{2\rho}\right)
+\end{align*}
+
+\vspace{0.3em}
+\textbf{Note:} The force $F^i$ enters the velocity shift: $u^i \rightarrow u^i + \frac{F^i}{2\rho}$
+\normalsize
+\end{frame}
+
+%========== 第15頁：Summary ==========
+\section{Summary}
+\begin{frame}{Summary \& Key Takeaways}
+\begin{block}{Main Contributions}
+\begin{enumerate}
+\item Identified \textbf{momentum loss} in streaming step for curvilinear LBM
+\item Introduced \textbf{curvature change tensor} $\Theta_i^j$ to quantify geometric effects
+\item Derived \textbf{velocity-space discretized force field} to restore conservation
+\end{enumerate}
+\end{block}
+
+\vspace{0.5em}
+\begin{alertblock}{Physical Insight}
+The force field $F^i$ acts as an \textbf{inertial force} (like centrifugal force), arising purely from the curvilinear coordinate system.
+\end{alertblock}
+
+\vspace{0.5em}
+\begin{block}{Practical Use}
+Add correction term $\delta N_\alpha$ to LBGK equation:
+\begin{equation*}
+N_{\alpha}(\vec{q} + \vec{e}_{\alpha}\delta t, t+1) = N_{\alpha}(\vec{q} , t) + \Omega_{\alpha} + \delta N_{\alpha}
+\end{equation*}
+\end{block}
+\end{frame}
+
+\end{document}
