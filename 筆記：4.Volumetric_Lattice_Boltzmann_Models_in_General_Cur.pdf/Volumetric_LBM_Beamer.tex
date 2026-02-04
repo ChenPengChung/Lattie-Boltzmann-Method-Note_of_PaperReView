@@ -67,18 +67,18 @@ A volumetric formulation for lattice Boltzmann models on general curvilinear coo
 \begin{document}
 %========== 第1頁：Title ==========
 \begin{frame}[plain]
-\vspace*{-0.2cm}
+\vspace*{0.3cm}
 \journalheader
 \vspace{0.2cm}
 \hrule
-\vspace{0.8cm}
+\vspace{0.6cm}
 
 {\LARGE\bfseries \inserttitle}\par
-\vspace{0.6cm}
+\vspace{0.5cm}
 {\large\itshape \insertauthor}\par
 \vspace{0.2cm}
 {\small \insertinstitute}\par
-\vspace{0.6cm}
+\vspace{0.4cm}
 
 \journalsummary
 
@@ -95,9 +95,10 @@ A volumetric formulation for lattice Boltzmann models on general curvilinear coo
 \section{Introduction \& Motivation}
 \begin{frame}{Introduction \& Motivation}
 \begin{block}{Core Problem}
-In \textbf{general curvilinear coordinates}, macroscopic values ($\rho$, $\rho\vec{u}$) experience \textbf{momentum loss} due to:
+For standard Lattice Boltzmann Methd, Because the velocity direction set, it only was used in Cartesian coordinates.However, this paper show the basic theoretical formulation to extend the limitation.
+In \textbf{general curvilinear coordinates}, we have to consider:
 \begin{itemize}
-    \item Curvature effects
+     \item Curvature effects
     \item Nonuniform grid properties
 \end{itemize}
 \end{block}
@@ -109,7 +110,7 @@ How to maintain \textbf{momentum conservation} in the streaming step of LBM when
 
 \vspace{0.5em}
 \begin{block}{Solution Approach}
-Define a \textbf{velocity-space discretized force field} to compensate for the momentum loss (interpreted as an \textbf{inertial force}).
+Define a \textbf{velocity-space discretized force field} to compensate for the momentum loss (interpreted as an \textbf{inertial force}), and make it be tangent with curve line.
 \end{block}
 \end{frame}
 
@@ -131,15 +132,16 @@ where the \textcolor{red}{correction term} is defined as:
     \item $\vec{q}$ : nondimensional position $(q_1, q_2, q_3)$
     \item $N^{\star}$ : \textbf{post-collision} distribution function
     \item $\Omega_{\alpha}$ : collision operator
-    \item $\vec{e}_{\alpha}$ : discrete velocity directions
+    \item $\vec{e}_{\alpha}$ : discrete velocity directions in curvilinear coordinate.
 \end{itemize}
-\end{frame}
+where $\delta N(\vec{q} , t)$ is the source of momentum loss.
+\end{frame} 
 
 %========== 第5頁：Mass vs Momentum Conservation ==========
 \begin{frame}{Mass Conservation vs Momentum Loss}
 \begin{columns}[T]
 \column{0.48\textwidth}
-\begin{block}{\textcolor{darkgreen}{Mass Conservation (\checkmark)}}
+\begin{block}{\textcolor{black}{Mass Conservation (\checkmark)}}
 \begin{equation*}
 \sum_{\alpha=0}^{q-1} \delta N_{\alpha}(\vec{q} , t) = 0
 \end{equation*}
@@ -148,12 +150,12 @@ where the \textcolor{red}{correction term} is defined as:
 \end{block}
 
 \column{0.48\textwidth}
-\begin{alertblock}{\textcolor{darkred}{Momentum Loss ($\times$)}}
+\begin{alertblock}{\textcolor{black}{Momentum Loss ($\times$)}}
 \begin{equation*}
 \sum_{\alpha=1}^{q} \vec{e}_{\alpha}\,\delta N_{\alpha} \neq 0
 \end{equation*}
 \vspace{0.3em}
-\textbf{Reason:} Discrete velocity vectors $\vec{e}_\alpha$ vary with position in curvilinear coords!
+\textbf{Reason:} Discrete velocity vectors $\vec{e}_\alpha$ vary (in direction and magnititude)with position in curvilinear coords!
 \end{alertblock}
 \end{columns}
 
@@ -165,28 +167,42 @@ where the \textcolor{red}{correction term} is defined as:
 Pre-streaming $\neq$ Post-collision at different positions
 };
 }
+
+\noindent Due to curvilinearity, though the
+amount of particles advected from cell $\vec{q}$ is exactly equal to what is
+arrived at cell $\vec{q} + \vec{e}_{\alpha}$, the momentum is in
+fact changed along the way
 \end{center}
 \end{frame}
 
 %========== 第6頁：Curvature Change Definition ==========
 \section{Key Definitions}
 \begin{frame}{Definition: Nondimensional Curvature Change}
+\begin{columns}[T]
+\column{0.55\textwidth}
 \begin{definition}
 The \textbf{nondimensional change of curvature tangent vector}:
 \begin{equation*}
-\boxed{\vec{\Theta}_{i}^{j} (\vec{q} + \vec{e}_{\alpha} \delta t , \vec{q} ) = \left[\vec{g}_{i}(\vec{q} +\vec{e}_{\alpha} \delta t) - \vec{g}_{i}(\vec{q})\right] \cdot \vec{g}^{\ j} (\vec{q})}
+\boxed{\vec{\Theta}_{i}^{j} (\vec{q} + \vec{e}_{\alpha} \delta t , \vec{q} ) \equiv  \left[\vec{g}_{i}(\vec{q} +\vec{e}_{\alpha} \delta t) - \vec{g}_{i}(\vec{q})\right] \cdot \vec{g}^{\ j} (\vec{q})}
 \end{equation*}
 \end{definition}
 
-where the \textbf{contravariant basis vector} $\vec{g}^j$ is:
+where the \textbf{co-tangent basis vector} $\vec{g}^{\ j}$ is:
 \begin{equation*}
-\vec{g}^{1} = \frac{\vec{g}_{2}\times \vec{g}_{3}}{(\vec{g}_{2}\times \vec{g}_{3}) \cdot \vec{g}_{1}} 
+\vec{g}^{1} \equiv \frac{\vec{g}_{2}\times \vec{g}_{3}}{(\vec{g}_{2}\times \vec{g}_{3}) \cdot \vec{g}_{1}} 
 \end{equation*}
 
-\vspace{0.5em}
+\column{0.42\textwidth}
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{1.png}
+\end{figure}
+\end{columns}
+
+\vspace{0.3em}
 \begin{itemize}
-    \item $\vec{g}_i$ : covariant basis vectors (tangent to coordinate curves)
-    \item $\vec{g}^j$ : contravariant basis vectors (normal to coordinate surfaces)
+    \item $\vec{g}_i$ : curvatue tangent basis vector  (tangent to coordinate curves)
+    \item $\vec{g}^j$ : co-tangent basis vector (normal to coordinate surfaces)
     \item $\Theta_i^j$ measures how the tangent vector changes along $\vec{e}_\alpha$
 \end{itemize}
 \end{frame}
@@ -201,13 +217,18 @@ where the \textbf{contravariant basis vector} $\vec{g}^j$ is:
 \end{equation*}
 \end{definition}
 
-\vspace{0.5em}
-\textbf{Physical Meaning:}
 \begin{itemize}
     \item Momentum carried by particles \textbf{arriving} at $\vec{q}$
     \item Minus momentum carried by particles \textbf{leaving} from $\vec{q} - \vec{e}_\alpha \delta t$
     \item Difference arises because $\vec{e}_\alpha(\vec{q}) \neq \vec{e}_\alpha(\vec{q} - \vec{e}_\alpha \delta t)$
 \end{itemize}
+For inducing the inertial force, the author adopt the definition as below : 
+\begin{definition}
+\begin{equation*}
+\vec{M}_{\mathrm{Loss}} (\vec{q},t) \equiv
+ \sum_{\alpha = 1}^{q} \vec{e}_{\alpha}(\vec{q} , t)\delta N_{\alpha}(\vec{q},t)
+\end{equation*}
+\end{definition}
 \end{frame}
 
 %========== 第8頁：Inner and Outer Momentum Loss ==========
@@ -231,7 +252,7 @@ The paper separates momentum loss into \textbf{two contributions}:
 \end{definition}
 
 \vspace{0.3em}
-where $\mathcal{J}$ is the Jacobian of the coordinate transformation.
+where $\mathcal{J}$ is the Volume element in gerneral coordinate.
 \end{frame}
 
 %========== 第9頁：Discrete Velocity Set ==========
@@ -260,7 +281,7 @@ Unlike Cartesian coordinates, $\vec{e}_\alpha$ depends on position $\vec{q}$ thr
 \small
 The author imposes the \textbf{momentum constraint} for the streaming step:
 
-\begin{equation*}
+\begin{equation*}\label{eq:2}
 \sum_{\alpha = 1}^{q} \vec{e}_{\alpha}(\vec{q})\,\delta N_{\alpha}(\vec{q}) = \mathcal{J} \cdot \frac{\vec{\chi}^{\mathrm{in}}(\vec{q} ,t)+ \vec{\chi}^{\mathrm{out}}(\vec{q} ,t)}{2}
 \end{equation*}
 
@@ -281,11 +302,11 @@ Expanding:
 \end{frame}
 
 %========== 第11頁：Velocity-Space Discretized Force ==========
-\begin{frame}{Velocity-Space Discretized Force Field}
+\begin{frame}{Inertial Force Definition}
 \begin{definition}
-The \textbf{velocity-space discretized force field} in curvilinear coordinates:
+The \textbf{inertial force} produced by curvature in curvilinear coordinates:
 \begin{equation*}
-\boxed{F^{i} (\vec{q} , t) = \frac{\vec{\chi}^{\mathrm{in}}(\vec{q} ,t) + \vec{\chi}^{\mathrm{out}}(\vec{q} ,t)}{2} \cdot \vec{g}^{\ i}(\vec{q})}
+\boxed{F^{i} (\vec{q} , t) \equiv  \sum_{\alpha = 1}^{q} \vec{e}_{\alpha} \delta N_{\alpha}(\vec{q},t)= \frac{\vec{\chi}^{\mathrm{in}}(\vec{q} ,t) + \vec{\chi}^{\mathrm{out}}(\vec{q} ,t)}{2} \cdot \vec{g}^{\ i}(\vec{q})}
 \end{equation*}
 \end{definition}
 
@@ -293,13 +314,14 @@ The \textbf{velocity-space discretized force field} in curvilinear coordinates:
 \textbf{Physical Interpretation:}
 \begin{itemize}
     \item This force represents the \textbf{inertial force} arising from curvilinear coordinates
-    \item Analogous to centrifugal/Coriolis forces in rotating frames
+    \item the reason why this term exist is difference between pre-streaming and post-collision distributojn function.
     \item Compensates for the ``loss'' in momentum during streaming
 \end{itemize}
 
 \vspace{0.5em}
-\begin{block}{General Force Definition}
-$\mathcal{J} (\vec{q}) F^{i} (\vec{q} ,t) \equiv \dfrac{\text{Momentum Loss}}{\Delta t}\cdot \vec{e}_{j} \dfrac{1}{|\vec{g}_{j}|}$
+\begin{block}{My problem about definiton of force}
+\begin{equation*}\mathcal{J} (\vec{q}) F^{i} (\vec{q} ,t) \equiv \dfrac{\text{Momentum Loss}}{\Delta t}\cdot \vec{e}_{j} 
+\end{equation*}
 \end{block}
 \end{frame}
 
@@ -322,11 +344,11 @@ After derivation, the force field becomes:
 \toprule
 Symbol & Meaning \\
 \midrule
-$\mathcal{J}$ & Jacobian of transformation \\
-$c_\alpha^i$ & Lattice velocity component \\
-$\Theta_i^j$ & Curvature change tensor \\
-$N_\alpha$ & Pre-collision distribution \\
-$N_\alpha^\star$ & Post-collision distribution \\
+$\mathcal{J}$ & volume  of the cell centered at $\vec{x}(\vec{q})$, \\[1ex]
+$c_\alpha^i$ & Lattice velocity component \\[1ex]
+$\Theta_i^j$ & change of Curvature change tensor \\[1ex]
+$N_\alpha$ & Post-streaming distribution \\[1ex]
+$N_\alpha^\star$ & Post-collision(pre-streaming) distribution \\[1ex]
 \bottomrule
 \end{tabular}
 \end{table}
@@ -334,49 +356,68 @@ $N_\alpha^\star$ & Post-collision distribution \\
 \end{frame}
 
 %========== 第13頁：Derivation Steps ==========
-\begin{frame}{Derivation Outline}
+\begin{frame}{Solving the addition term $\delta N_{\alpha}$}
 \small
-\textbf{Three-Step Derivation:}
-\vspace{0.5em}
+To recover the full viscous Navier-Stokes equation, an additional constraint on the \textbf{momentum flux} is needed:
 
-\begin{enumerate}
-\item \textbf{Define Momentum Loss:}
-\begin{equation*}
-\sum_{\alpha=1}^{q}\vec{e}_{\alpha}(\vec{q})\ \delta N_{\alpha}(\vec{q},t) \equiv \text{Momentum Loss}
+\vspace{0.3em}
+\textbf{Momentum flux constraint (Eq.29):}
+\begin{equation*}\label{eq:1}
+\sum_{\alpha} c_{\alpha}^{i} c_{\alpha}^{j} \delta N_{\alpha}(\vec{q},t) = \mathcal{J}(\vec{q})\left[\delta \Pi^{ij}(\vec{q},t) + \delta \Pi^{ji}(\vec{q},t)\right]
 \end{equation*}
 
-\item \textbf{Express via Inner/Outer contributions:}
+\textbf{Non-equilibrium stress tensor (Eq.30):}
 \begin{equation*}
-\sum_{\alpha=1}^{q}\vec{e}_{\alpha}(\vec{q})\ \delta N_{\alpha} \equiv \mathcal{J} (\vec{q}) \cdot \frac{\vec{\chi}^{\mathrm{in}} + \vec{\chi}^{\mathrm{out}}}{2}
+\delta \Pi^{ij}(\vec{q},t) = -\frac{1}{2}\left(1 - \frac{1}{2\tau}\right) \sum_{\alpha} c_{\alpha}^{i} c_{\alpha}^{k} \left[\Theta_{k}^{j}(\vec{q} + \vec{e}_{\alpha}\delta t, \vec{q}) - \Theta_{k}^{j}(\vec{q} - \vec{e}_{\alpha}\delta t, \vec{q})\right] f_{\alpha}^{\text{eq}}(\vec{q},t)
 \end{equation*}
 
-\item \textbf{Project onto coordinate directions:}
+\textbf{Specific form of $\delta N_{\alpha}$ (Eq.31):}
 \begin{equation*}
-\mathcal{J} (\vec{q} ) F^{i} \equiv \frac{\text{Momentum Loss}}{\Delta t}\cdot \vec{e}_{j} \frac{1}{|\vec{g}_{j}|}
+\boxed{\delta N_{\alpha}(\vec{q},t) = w_{\alpha} \mathcal{J}(\vec{q}) \left[\frac{c_{\alpha}^{i} F^{i}(\vec{q},t)}{T_{0}} + \left(\frac{c_{\alpha}^{i} c_{\alpha}^{k}}{T_{0}} - \delta^{ik}\right) \frac{\delta \Pi^{ik}(\vec{q},t)}{T_{0}}\right]}
 \end{equation*}
-\end{enumerate}
-\normalsize
+
+\vspace{0.2em}
+{\footnotesize This form satisfies the moment constraints of \eqref{eq:1}, \eqref{eq:1}}
 \end{frame}
 
 %========== 第14頁：Basic Equations for Implementation ==========
-\section{Implementation Formulas}
-\begin{frame}{Basic Equations for Curvilinear LBM}
+\section{Equilibrium Distribution Function}
+\begin{frame}{Equilibrium Distribution \& Moment Constraints}
 \small
-\textbf{Correction term:}
-\begin{equation*}
-\delta N_{\alpha}(\vec{q} , t) = w_{\alpha}\left(\frac{c_{\alpha}^{i} F^{i}}{c_{s}^{2}} + \frac{c_{\alpha}^{i}c_{\alpha}^{j}-c_s^{2}\delta ^{i j }}{2c_{s}^{4}}\right)
-\end{equation*}
-
-\textbf{Moment constraints (for Chapman-Enskog $\rightarrow$ Navier-Stokes):}
+\textbf{Fundamental moment conditions} (to recover Euler \& Navier-Stokes):
 \begin{align*}
-\sum_{\alpha} f^{eq} &= \rho \\
-\sum_{\alpha} f^{eq} c_{\alpha}^{i} &= \rho u^{i}\\
-\sum_{\alpha} f^{eq} c_{\alpha}^{i}c_{\alpha}^{j} &= \rho c_s^{2} g^{ij} + \rho \left(u^{i} + \frac{F^{i}}{2\rho}\right)\left(u^{j} + \frac{F^{j}}{2\rho}\right)
+&\sum_{\alpha} f_{\alpha} = \rho \\[0.5ex]
+&\sum_{\alpha} \vec{e}_{\alpha} f_{\alpha} = \rho \vec{u} (\vec{q} , t)  \Rightarrow \sum_{\alpha} c_{\alpha}^{i} f_{\alpha} =  \rho U^{i}\\[0.5ex]
+&\sum_{\alpha} c_{\alpha}^{i} c_{\alpha}^{j} f_{\alpha}^{\text{eq}} = \Pi^{ij,\text{eq}} = g^{ij} \rho T_{0} + \rho \tilde{U}^{i} \tilde{U}^{j}
 \end{align*}
 
-\vspace{0.3em}
-\textbf{Note:} The force $F^i$ enters the velocity shift: $u^i \rightarrow u^i + \frac{F^i}{2\rho}$
-\normalsize
+where the \textbf{shifted velocity}: $\displaystyle\tilde{U}^{i}(\vec{q},t) = U^{i}(\vec{q},t) + \frac{1}{2} a^{i}(\vec{q},t)$, \quad with $\rho a^{i} \equiv F^{i}$
+
+\vspace{0.5em}
+\textbf{Equilibrium distribution form:}
+\begin{equation*}
+\boxed{f_{\alpha}^{\text{eq}} = \rho w_{\alpha} \left[1 + \frac{c_{\alpha}^{i} U^{i}}{T_{0}} + \frac{1}{2T_{0}} \left(\frac{c_{\alpha}^{i} c_{\alpha}^{j}}{T_{0}} - \delta^{ij}\right) \left[(g^{ij} - \delta^{ij}) T_{0} + \tilde{U}^{i} \tilde{U}^{j}\right]\right]}
+\end{equation*}
+
+{\footnotesize This form satisfies all the fundamental moment conditions above.}
+\end{frame}
+
+\begin{frame}{Standard Lattice Boltzmann Method}
+\small
+\textbf{Fundamental moment conditions} (to recover Euler \& Navier-Stokes):
+\begin{align*}
+&\sum_{\alpha} f_{\alpha}(\vec{r},t) = \rho \\[0.5ex]
+&\sum_{\alpha} c_{\alpha}^{i} f_{\alpha} =  \rho U^{i}\\[0.5ex]
+&\sum_{\alpha} c_{\alpha}^{i} c_{\alpha}^{j} f_{\alpha}^{\text{eq}} = \rho \left(U^{i}U^{j} + c_s^{2} \delta_{ij}\right)
+\end{align*}
+
+\vspace{0.5em}
+\textbf{Equilibrium distribution form:}
+\begin{equation*}
+\boxed{f_{\alpha}^{\text{eq}} = \rho w_{\alpha} \left[1 + \frac{c_{\alpha}^{i}U^{i}}{c_{x}^{2}} + \frac{(U^{i}U^{j}+ (\theta-1)\delta_{ij})(c_{\alpha}^{i}c_{\alpha}^{j} - c_{s}^{2}\delta_{ij})}{2c_s^{4}}\right]}
+\end{equation*}
+
+{\footnotesize This form satisfies all the fundamental moment conditions above.}
 \end{frame}
 
 %========== 第15頁：Summary ==========
@@ -402,6 +443,65 @@ Add correction term $\delta N_\alpha$ to LBGK equation:
 N_{\alpha}(\vec{q} + \vec{e}_{\alpha}\delta t, t+1) = N_{\alpha}(\vec{q} , t) + \Omega_{\alpha} + \delta N_{\alpha}
 \end{equation*}
 \end{block}
+\end{frame}
+
+%========== Appendix ==========
+\appendix
+\section{Appendix}
+
+\begin{frame}{Appendix: Derivation of Force Field Equation}
+\small
+\textbf{Target Equation:}
+\begin{equation*}
+\mathcal{J} (\vec{q} )  F^{\ i}(\vec{q} , t) = \frac{-1}{2} \left(\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q} ,t)\left(c_{\alpha}^{i} \Theta_{i}^{j} (\vec{q} - \vec{e}_{\alpha}\delta t , \vec{q})\right)
++ \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(c_{\alpha}^{i} \Theta_{i}^{j} (\vec{q} + \vec{e}_{\alpha}\delta t , \vec{q}) \right)\right)
+\end{equation*}
+
+\vspace{0.3em}
+\textbf{Derivation Principles:}
+\begin{enumerate}
+\item $\displaystyle\sum_{\alpha=1}^{q}\vec{e}_{\alpha}(\vec{q})\ \delta N_{\alpha}(\vec{q},t)\equiv$ Momentum Loss of the Streaming Step 
+\item $\displaystyle\sum_{\alpha=1}^{q}\vec{e}_{\alpha}(\vec{q})\ \delta N_{\alpha}(\vec{q},t)\equiv \mathcal{J} (\vec{q}) \cdot \frac{\vec{\chi}^{\ in } + \vec{\chi}^{\ out}}{2}$ (for Volumetric LBM)
+\item Velocity space discretized force field: $\displaystyle\mathcal{J} (\vec{q} ) F^{\ i}\equiv \frac{\text{Momentum Loss}}{\Delta t}\cdot \vec{e}_{j} \frac{1}{|\vec{g}_{j}|}$
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Appendix: Derivation (cont.)}
+\footnotesize
+\textbf{Step-by-step derivation:}
+\begin{equation*}\begin{aligned}
+\mathcal{J} (\vec{q}) F^{1} &= \sum_{\alpha = 1}^{q}\vec{e}_{\alpha}(\vec{q}) \delta  N_{\alpha}(\vec{q} , t) \cdot \vec{g}^{\ 1} = \sum_{\alpha = 1}^{q}\vec{e}_{\alpha}(\vec{q}) \delta  N_{\alpha}(\vec{q} , t)  \cdot \frac{\vec{g_{2}} \times \vec{g_{3}}}{(\vec{g_{2}} \times \vec{g_{3}})\cdot \vec{g}_{1}}\\[1ex] 
+&= \frac{-1}{2} \left(\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q} ,t)\left(\vec{e}_{\alpha}(\vec{q}) - \vec{e}_{\alpha}(\vec{q} - \vec{e}_{\alpha} \delta t ) \right) + \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(\vec{e}_{\alpha}(\vec{q} + \vec{e}_{\alpha} \delta t) - \vec{e}_{\alpha}(\vec{q}) \right)\right)\\
+&\quad \cdot \frac{\vec{g_{2}} \times \vec{g_{3}}}{(\vec{g_{2}} \times \vec{g_{3}})\cdot \vec{g}_{1}}
+\end{aligned}\end{equation*}
+\end{frame}
+
+\begin{frame}{Appendix: Derivation (cont.)}
+\footnotesize
+\textbf{Continuing:}
+\begin{equation*}\begin{aligned}
+&= \frac{-1}{2} \left(\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q} ,t)\left(\vec{e}_{\alpha}(\vec{q}) - \vec{e}_{\alpha}(\vec{q} - \vec{e}_{\alpha} \delta t ) \right)+ \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(\vec{e}_{\alpha}(\vec{q} + \vec{e}_{\alpha} \delta t ) - \vec{e}_{\alpha}(\vec{q}) \right)\right)\cdot \vec{e}_{j} \frac{1}{|\vec{g}_{j}|}\\[1ex] 
+&= \frac{-1}{2} \left(\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q} ,t)\left(\vec{e}_{\alpha}(\vec{q})\cdot \vec{e}_{j} \frac{1}{|\vec{g}_{j}|}  - \vec{e}_{\alpha}(\vec{q} - \vec{e}_{\alpha} \delta t )\cdot \vec{e}_{j} \frac{1}{|\vec{g}_{j}|} \right)\right.\\[1ex] 
+&\quad \left.+ \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(\vec{e}_{\alpha}(\vec{q} + \vec{e}_{\alpha} \delta t )\cdot \vec{e}_{j} \frac{1}{|\vec{g}_{j}|}- \vec{e}_{\alpha}(\vec{q})\cdot \vec{e}_{j} \frac{1}{|\vec{g}_{j}|}\right)\right)
+\end{aligned}\end{equation*}
+\end{frame}
+
+\begin{frame}{Appendix: Derivation (Final)}
+\footnotesize
+\textbf{Using $\Theta_i^j$ definition:}
+\begin{equation*}\begin{aligned}
+&= \frac{-1}{2}  \left(\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q} ,t)\left(c_{\alpha}^{j} \cdot \frac{|\vec{g}_{j}|(\vec{q}) - |\vec{g}_{j}|(\vec{q} - \vec{e}_{\alpha}\delta t)}{|\vec{g}_{j}|} \right)
++ \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(c_{\alpha}^{j} \cdot \frac{|\vec{g}_{j}|(\vec{q} +  \vec{e}_{\alpha}\delta t) - |\vec{g}_{j}|(\vec{q})}{|\vec{g}_{j}|} \right)\right)\\[1.5ex]
+&= \frac{-1}{2} \left(\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q} ,t)\left(c_{\alpha}^{j} \cdot \frac{{\color{red}|\vec{g}_{j}|(\vec{q}-\vec{e}_{\alpha}\delta t) - |\vec{g}_{j}|(\vec{q})}}{|\vec{g}_{j}|} \right)
++ \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(c_{\alpha}^{j} \cdot \frac{|\vec{g}_{j}|(\vec{q} +  \vec{e}_{\alpha}\delta t) - |\vec{g}_{j}|(\vec{q})}{|\vec{g}_{j}|} \right)\right)
+\end{aligned}\end{equation*}
+
+\vspace{0.5em}
+\textbf{Final Result:}
+\begin{equation*}
+\boxed{\mathcal{J} (\vec{q} )  F^{\ i} = \frac{-1}{2}  \left(\sum_{\alpha = 1}^{q} N_{\alpha}(\vec{q} ,t)\left(c_{\alpha}^{i} \Theta_{i}^{j} (\vec{q} - \vec{e}_{\alpha}\delta t , \vec{q})\right)
++ \sum_{\alpha = 1}^{q}N_{\alpha}^{\star}(\vec{q},t) \left(c_{\alpha}^{i} \Theta_{i}^{j} (\vec{q} + \vec{e}_{\alpha}\delta t , \vec{q}) \right)\right)}
+\end{equation*}
 \end{frame}
 
 \end{document}
