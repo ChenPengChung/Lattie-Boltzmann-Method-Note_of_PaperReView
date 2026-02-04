@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pdflatex:*)",
+      "Bash(xelatex:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)"
+    ]
+  }
+}

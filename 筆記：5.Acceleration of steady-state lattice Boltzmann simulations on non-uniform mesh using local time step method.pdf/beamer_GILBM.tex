@@ -236,7 +236,7 @@ In curvilinear coordinate, we have to calculate the position of the pre-streamin
 \]
 
 \begin{columns}[T]
-\begin{column}{0.44zx\textwidth}
+\begin{column}{0.44\textwidth}
 \textbf{2nd Order Runge-Kutta:}
 \begin{align*}
 \text{Step 1:} \quad & \Delta\vec{\xi}_{\alpha}^{(1)} = \tfrac{1}{2}\Delta t \, \vec{e}_{\alpha}(\vec{\xi}) \\[0.8ex]
@@ -263,6 +263,22 @@ In curvilinear coordinate, we have to calculate the position of the pre-streamin
 
 \end{frame}
 
+\begin{frame}{Path Integration: Accuracy Analysis}
+\textbf{material derivative for the discrete-velocity Boltzmann equation:}
+\begin{equation*}
+   \mathcal{D}_{t} = \partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi}
+\end{equation*}
+and using Taylor expansion on lattice Bolrtzmann equation : 
+\begin{equation*}
+  \left.\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi}\right)f_{\alpha} + \frac{1}{2}\left(\partial_{t} + \frac{\delta\vec{\xi}_{\alpha}}{\delta t} \cdot \vec{\nabla}_{\xi}\right)^2f_{\alpha} \Delta t \right|_{(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t )} + O(\Delta t^{2})= \omega (f_{\alpha}(\vec{\xi} - \Delta \vec{\xi}_{\alpha}, t ) - f_{\alpha}^{eq}(\rho , \vec{u} , t)) 
+\end{equation*}
+Therefore, we
+must use a method that provides higher-order temporal accuracy for the path integration, ensuring that
+the differential term of the velocity-discrete Boltzmann equation has at least second-order temporal
+accuracy.
+
+\end{frame}
+
 %========== 8. Multi-Scale Expansion ==========
 \section{Chapman-Enskog Analysis}
 \begin{frame}{Multi-Scale Expansion}
@@ -273,7 +289,7 @@ In curvilinear coordinate, we have to calculate the position of the pre-streamin
     \item $K^{(1)}$: Convection / advection (macroscopic)
     \item $K^{(2)}$: Diffusion (macroscopic)
 \end{itemize}
-
+For three types of time scales, we can define three time variables and two types of position vector :
 \vspace{0.2cm}
 \begin{columns}[T]
 \begin{column}{0.48\textwidth}
@@ -295,10 +311,11 @@ f_{\alpha} = f_{\alpha}^{eq} + K f_{\alpha}^{(1)} + K^2 f_{\alpha}^{(2)} + \cdot
 \left(\partial_t^{(1)} + \vec{e}_{\alpha}\cdot\vec{\nabla}^{(1)}\right) f_{\alpha}^{eq} = -\frac{1}{\tau} f_{\alpha}^{(1)}
 \]
 
-$\Rightarrow$ First-order non-equilibrium:
-\[
-f_{\alpha}^{(1)} = -\tau \left(\partial_t^{(1)} + \vec{e}_{\alpha}\cdot\vec{\nabla}^{(1)}\right) f_{\alpha}^{eq}
-\]
+\textbf{Order $K^2$ Equation:}
+\begin{multline*}
+\left(\partial_t^{(2)} + \vec{e}_{\alpha}\cdot\vec{\nabla}^{(2)}\right) f_{\alpha}^{\ eq} + \left(1 - \frac{\delta t}{2\tau}\right) \\
+\times \left(\partial_t^{(1)} + \vec{e}_{\alpha}\cdot\vec{\nabla}^{(1)}\right) f_{\alpha}^{\ (1)} = -\frac{1}{\tau} f_{\alpha}^{\ (2)}
+\end{multline*}
 \end{column}
 \end{columns}
 
