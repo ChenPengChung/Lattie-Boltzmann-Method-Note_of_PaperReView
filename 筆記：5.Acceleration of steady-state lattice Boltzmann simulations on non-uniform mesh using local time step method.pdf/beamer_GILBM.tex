@@ -308,14 +308,14 @@ f_{\alpha} = f_{\alpha}^{eq} + K f_{\alpha}^{(1)} + K^2 f_{\alpha}^{(2)} + \cdot
 \begin{column}{0.48\textwidth}
 \textbf{Order $K^1$ Equation:}
 \[
-\left(\partial_t^{(1)} + \vec{e}_{\alpha}\cdot\vec{\nabla}^{(1)}\right) f_{\alpha}^{eq} = -\frac{1}{\tau} f_{\alpha}^{(1)}
+\left(\partial_t^{(1)} + \vec{e}_{\alpha}\cdot\vec{\nabla}^{(1)}\right) f_{\alpha}^{\ eq} = -\frac{1}{\tau} f_{\alpha}^{(1)}
 \]
 
 \textbf{Order $K^2$ Equation:}
-\begin{multline*}
-\left(\partial_t^{(2)} + \vec{e}_{\alpha}\cdot\vec{\nabla}^{(2)}\right) f_{\alpha}^{\ eq} + \left(1 - \frac{\delta t}{2\tau}\right) \\
-\times \left(\partial_t^{(1)} + \vec{e}_{\alpha}\cdot\vec{\nabla}^{(1)}\right) f_{\alpha}^{\ (1)} = -\frac{1}{\tau} f_{\alpha}^{\ (2)}
-\end{multline*}
+\begin{equation*}\begin{aligned}
+&\left(\partial_t^{(2)} + \vec{e}_{\alpha}\cdot\vec{\nabla}^{(2)}\right) f_{\alpha}^{\ eq} + \left(1 - \frac{\delta t}{2\tau}\right) \\
+&\times \left(\partial_t^{(1)} + \vec{e}_{\alpha}\cdot\vec{\nabla}^{(1)}\right) f_{\alpha}^{\ (1)} = -\frac{1}{\tau} f_{\alpha}^{\ (2)}
+\end{aligned}\end{equation*}
 \end{column}
 \end{columns}
 
@@ -323,53 +323,82 @@ f_{\alpha} = f_{\alpha}^{eq} + K f_{\alpha}^{(1)} + K^2 f_{\alpha}^{(2)} + \cdot
 
 %========== 9. Boundary Condition Derivation ==========
 \section{Boundary Conditions}
-\begin{frame}{Boundary Condition Derivation}
 
-\textbf{Maxwell-Boltzmann Equilibrium (Hermite Expansion):}
-\[
-f_{\alpha}^{eq} = w_{\alpha} \rho \left(1 + \frac{e_{\alpha}^{i}u_{i}}{c_s^{2}} + \frac{(e_{\alpha}^{i} e_{\alpha}^{j} - c_s^{2} \delta^{ij})u_{i}u_{j}}{2c_{s}^{4}}\right)
-\]
+\begin{frame}{Boundary Condition Overview}
+\textbf{Strategy:} In GILBM, we enforce boundary conditions by constraining macroscopic parameters at boundary nodes (nodes between solid and fluid regions).
 
-\textbf{Derivatives of $f^{eq}$:}
-\[
-\frac{\partial f_{\alpha}^{eq}}{\partial u_{i}} \approx \frac{e_{\alpha}^{i} - u_{i}}{c_{s}^{2}} f_{\alpha}^{eq}, \quad
-\frac{\partial f_{\alpha}^{eq}}{\partial \rho} = \frac{f_{\alpha}^{eq}}{\rho}
-\]
+\vspace{0.3cm}
+\textbf{Distribution function at boundaries:}
+\begin{equation}
+\begin{aligned}
+  \left.f_{\alpha}\right|_{\text{b.c.}} &= f_{\alpha}^{\ \text{eq}} + f_{\alpha}^{\ (1)}\\[0.5ex]
+  &= f_{\alpha}^{\ \text{eq}} + \omega \Delta t \, f_{\alpha}^{\ \text{eq}} \left(\frac{(c_{\alpha}^{i} - u_{i})(c_{\alpha}^{j} - u_{j})}{c_s^{2}}\frac{\partial u_{i}}{\partial x_{j}} - \frac{\partial u_{j}}{\partial x_{j}}\right)
+\end{aligned}
+\end{equation}
 
-\textbf{Conservation Laws (1st order scale):}
-\begin{align*}
-\partial_t^{(1)} \rho &= -\vec{\nabla}^{(1)} \cdot (\rho\vec{u}) \\
-\partial_t^{(1)} \vec{u} &= -\vec{u}\cdot\vec{\nabla}^{(1)}\vec{u} - \frac{1}{\rho}\vec{\nabla}^{(1)} p
-\end{align*}
+\vspace{0.2cm}
+\textbf{Velocity gradient in curvilinear coordinates:}
+\begin{equation*}
+\frac{\partial u_{i}}{\partial x_{j}} = \frac{\partial u_{i}}{\partial \xi_{k}} \frac{\partial \xi_{k}}{\partial x_{j}}
+\end{equation*}
+The second have been caculated in start of the simulation.
 
 \end{frame}
 
-%========== 10. Boundary Condition Final ==========
-\begin{frame}{Boundary Condition Implementation}
 
-\textbf{Assumptions at Boundary:}
+\begin{frame}{First-Order Non-Equilibrium Distribution (1/2)}
+\textbf{From Multi-Scale Analysis:}
+
+\begin{equation}
+\boxed{
+f_{\alpha}^{\ (1)} = -\omega \delta t\left(\partial_{t}^{(1)}+ \vec{e}_{\alpha} \cdot \vec{\nabla}^{(1)}\right) f_{\alpha}^{\ \text{eq}}
+}
+\end{equation}
+
+\vspace{0.2cm}
+\textbf{Chain Rule for $f_{\alpha}^{\ eq}$ Derivatives:}
+\begin{align*}
+\partial_{t}^{(1)} f_{\alpha}^{\ eq} &= \frac{\partial f_{\alpha}^{\ eq}}{\partial u_{i}}\partial_{t}^{(1)} u_{i} + \frac{\partial f_{\alpha}^{\ eq}}{\partial \rho}\partial_{t}^{(1)} \rho \\[1ex]
+\vec{\nabla}^{(1)}f_{\alpha}^{\ eq} &= \frac{\partial f_{\alpha}^{\ eq}}{\partial u_{i}}\vec{\nabla}^{(1)} u_{i} + \frac{\partial f_{\alpha}^{\ eq}}{\partial \rho} \vec{\nabla}^{(1)} \rho
+\end{align*}
+
+\vspace{0.2cm}
+\textbf{Partial Derivatives of $f_{\alpha}^{eq}$:}
+\[
+\frac{\partial f_{\alpha}^{\ eq}}{\partial u_{i}} \approx \frac{e_{\alpha}^{i} - u_{i}}{c_{s}^{2}} f_{\alpha}^{\ eq}, \quad
+\frac{\partial f_{\alpha}^{\ eq}}{\partial \rho} = \frac{1}{\rho} f_{\alpha}^{\ eq}
+\]
+
+\end{frame}
+
+\begin{frame}{First-Order Non-Equilibrium Distribution (2/2)}
+\textbf{Conservation Laws ($K^{(1)}$ scale):}
+\[
+\partial_{t}^{(1)} \rho = -\vec{\nabla}^{(1)} \cdot (\rho\vec{u}), \quad
+\partial_{t}^{(1)} \vec{u} = -\vec{u}\cdot\vec{\nabla}^{(1)}\vec{u} - \frac{1}{\rho}\vec{\nabla}^{(1)} p
+\]
+
+\vspace{0.2cm}
+\textbf{Boundary Assumptions:}
 \begin{enumerate}
     \item Constant pressure: $\nabla p = 0$
     \item Incompressible: $\nabla \rho = 0$
 \end{enumerate}
 
 \vspace{0.2cm}
-\textbf{Distribution Function at Boundary:}
+\textbf{Final Result --- Distribution at Boundary:}
 \[
-\boxed{f_{\alpha}\big|_{bc} = f_{\alpha}^{eq} + \omega\delta t \left(\frac{(e_{\alpha}^{i} - u_{i})(e_{\alpha}^{\beta} - u_{\beta})}{c_s^{2}}\frac{\partial u_{i}}{\partial x_{\beta}} - \frac{\partial u_{\beta}}{\partial x_{\beta}}\right) f_{\alpha}^{eq}}
+\boxed{f_{\alpha}\big|_{bc} = f_{\alpha}^{\ eq} + \omega\delta t \left(\frac{(e_{\alpha}^{i} - u_{i})(e_{\alpha}^{\beta} - u_{\beta})}{c_s^{2}}\frac{\partial u_{i}}{\partial x_{\beta}} - \frac{\partial u_{\beta}}{\partial x_{\beta}}\right) f_{\alpha}^{\ eq}}
 \]
 
-\textbf{Velocity Gradient in Curvilinear Coordinates:}
-\[
-\frac{\partial u_{i}}{\partial x_{\beta}} = \frac{\partial u_{i}}{\partial \xi_{j}} \cdot \frac{\partial \xi_{j}}{\partial x_{\beta}}
-\]
-
-\textbf{2nd Order One-Side Finite Difference:}
-\[
-\left.\frac{\partial u}{\partial \xi}\right|_{i+\frac{1}{2}} = \frac{3u_{i} - 4u_{i-1} + u_{i-2}}{2\Delta \xi} + O(\Delta \xi^{2})
-\]
-
+\vspace{0.1cm}
+\small{This allows boundary conditions to be enforced through \alert{macroscopic variables} only.}
 \end{frame}
+
+
+
+
+
 
 %========== 11. Algorithm ==========
 \section{Algorithm}
@@ -384,9 +413,9 @@ f_{\alpha}^{eq} = w_{\alpha} \rho \left(1 + \frac{e_{\alpha}^{i}u_{i}}{c_s^{2}} 
     \[
     e_{\alpha}^{i} = c_{\alpha}^{\beta}\frac{\partial \xi_{i}}{\partial x_{\beta}}
     \]
-    \item Global time step (CFL):
+    \item global time step : ($\Delta t_{g}$):
     \[
-    \Delta t = \text{CFL} \cdot \min\left|\frac{1}{e_{\alpha}^{i}}\right|
+    \Delta t_{g} = CFL \cdot min_{i,j,k,\alpha}|\frac{1}{e_{\alpha}^{i}|_{j,k}}|
     \]
     \item Relaxation time: $\tau = \Delta t / \omega$
     \item Viscosity: $\nu = (\tau - 0.5\Delta t)c_s^{2}$
@@ -396,17 +425,28 @@ f_{\alpha}^{eq} = w_{\alpha} \rho \left(1 + \frac{e_{\alpha}^{i}u_{i}}{c_s^{2}} 
 \begin{column}{0.48\textwidth}
 \textbf{Runtime Loop:}
 \begin{enumerate}
-    \item \textbf{Collision:}
-    $f_i^* = f_i + \omega(f_i^{eq} - f_i)$
-    
+    \item Interpolation : 
+    {\footnotesize
+    \begin{equation}\begin{aligned}\label{eq:eq1}
+&f_{i}(\vec{r},t) = f_{i}(x_{i} + \delta x, y_{j} + \delta y, z_{k} +\delta z, t)\\
+&=\sum_{m = -3}^{3}\sum_{n = -3}^{3}\sum_{q = -3}^{3} 
+f_{i}(x_{i + m}, y_{j + n}, z_{k + q}, t) \cdot \\
+&\prod_{\substack{\dot{m} = -3 \\\dot{m} \neq m}}^{3} \frac{\delta x - \dot m}{m - \dot m }
+\cdot   \prod_{\substack{\dot{n} = -3 \\\dot{n} \neq n}}^{3} \frac{\delta y - \dot n}{ n - \dot n }
+\cdot   \prod_{\substack{\dot{q} = -3 \\\dot{q} \neq q}}^{3} \frac{\delta z - \dot q}{ q - \dot q }
+\end{aligned}\end{equation}
+}
     \item \textbf{Streaming:}
-    $f_i(\vec{\xi}) = f_i^*(\vec{\xi} - \Delta\vec{\xi}_i)$
+    $f_i(\vec{\xi}) = f_i^{\ \star}(\vec{\xi} - \Delta\vec{\xi}_i)$
     (with interpolation)
-    
+    \vspace{0.5ex}
     \item \textbf{Boundary:} Apply $f_{\alpha}|_{bc}$
-    
+    \vspace{0.5ex}
+    \item \textbf{Collision:}
+    $f_i^{\ \star} = f_i + \omega(f_i^{\ eq} - f_i)$
+    \vspace{0.5ex}
     \item \textbf{Macroscopic:}
-    $\rho = \sum_i f_i$, $\vec{u} = \frac{1}{\rho}\sum_i f_i\vec{c}_i$
+    $\rho = \sum_i f_i$, \ $\vec{u} = \frac{1}{\rho}\sum_i f_i\vec{c}_i$
 \end{enumerate}
 
 \vspace{0.3cm}
@@ -419,19 +459,18 @@ f_{\alpha}^{eq} = w_{\alpha} \rho \left(1 + \frac{e_{\alpha}^{i}u_{i}}{c_s^{2}} 
 %========== 12. Summary ==========
 \begin{frame}{Summary}
 
-\begin{block}{GILBM: Key Points}
+\begin{block}{GILBM: Coordinate Transform:}
+\vspace{0.5ex}
 \begin{enumerate}
-    \item \textbf{Coordinate Transform:} Jacobian relation maps Cartesian $\leftrightarrow$ curvilinear
-    \item \textbf{Collision:} Direct substitution $\vec{x} \to \vec{\xi}$ (no spatial derivatives)
-    \item \textbf{Streaming:} Path integration with contravariant velocity $e_{\alpha}^{j}$
-    \item \textbf{Accuracy:} 2nd order RK required for N-S recovery
-    \item \textbf{Boundary:} Distribution from Chapman-Enskog with $\nabla p = 0$, $\nabla\rho = 0$
-    \item \textbf{Efficiency:} Pre-calculated contravariant velocity saves $\sim$50\% runtime
-\end{enumerate}
+    \item \textbf{Curvarture} :  Jacobian relation maps Cartesian $\leftrightarrow$ Curvilinear, and pre-calculates the coefficients.
+    \item \textbf{Discrete Velocity} : Mulpling the transform coefficient to get contravariant velocity in curvilinear coordinates.
+    \item \textbf{Bouncdary Conditon} : Using the macroscopic parameters to enforce the limitation to distriobution function at the boundary nodes.
+    \end{enumerate}
 \end{block}
 
 \vspace{0.3cm}
-\textbf{Limitation:} MRT operator extension to curvilinear coordinates not yet developed.
+\textbf{Limitation:} MRT operator extension to curvilinear coordinates not yet developed. Furthermore, we can see that this method essentially still operates in the curvilinear coordinate system, but transforms the computational domain to appear as a Cartesian grid. However, many other aspects still require coordinate transformation.
+
 
 \end{frame}
 
