@@ -271,7 +271,7 @@
 
 % ========== 設為預設樣式 ==========
 \lstset{style=monokailight}
-%14.
+%14. 
 % ========== 表格樣式設定 ==========
 \setlength{\arrayrulewidth}{0.5pt}  % 表格線條粗細
 \renewcommand{\arraystretch}{1.3}   % 行高
@@ -310,15 +310,15 @@
 \end{aligned}\end{equation}
 定義濾波變換：
 \begin{equation}\begin{aligned}
-\mathcal{L} (f) = \int_{\Omega} f(\vec{r}) G(\vec{r} - \vec{r}^{'}) dr^{3}
+\mathcal{L} [f] = \int_{\Omega} f(\vec{r}) G(\vec{r} - \vec{r}^{'}) dr^{3}
 \end{aligned}\end{equation}
 \noindent 對\eqref{eq:1}上式兩側左右同取濾波變換，則有：
 \begin{equation}\begin{aligned}\label{eq:2}
-\frac{\partial \mathcal{L} (f_{i})}{\partial t} (\vec{r}  , t) + \vec{e}_{i}\cdot \frac{\partial \mathcal{L} (f_{i})}{\partial \vec{r}}(\vec{r}  , t)  = \mathcal{L} \left(\Omega(f_{i}  , f_{i}^{eq})\right)
+\frac{\partial \mathcal{L} [f_{i}(\vec{r}  , t)]}{\partial t}  + \vec{e}_{i}\cdot \frac{\partial \mathcal{L} [f_{i}(\vec{r}  , t) ]}{\partial \vec{r}} = \mathcal{L} [\Omega(f_{i}  , f_{i}^{eq})]
 \end{aligned}\end{equation}
 上式\eqref{eq:2}即稱為濾波型速度空間離散化波茲曼方程，對上式\eqref{eq:2}進行時空離散化，則有：
 \begin{equation}\begin{aligned}
-  \mathcal{L}(f_{i})(\vec{r} + \vec{e}_{i}\delta t , t+ \delta t) = \mathcal{L}(f_{i}) (\vec{r} ,t) + \mathcal{L} (\Omega(f_{i} - f_{i}^{eq})) \delta t
+  \mathcal{L}[f_{i}](\vec{r} + \vec{e}_{i}\delta t , t+ \delta t) = \mathcal{L}[f_{i}] (\vec{r} ,t) + \mathcal{L} [\Omega(f_{i} - f_{i}^{eq})] \delta t
 \end{aligned}\end{equation}
 \noindent 上式即稱為濾波型晶格波茲曼方程。
 \section{亞格子模型與濾波}
@@ -342,41 +342,203 @@
   &\frac{\partial \overline{u_{i}}}{\partial x_{i}} = 0 \\[1.5ex]
   &\frac{\partial \overline{u_{i}}}{\partial t} + \frac{\partial \overline{u_{i}}\cdot \overline{u_{j}}}{\partial x_{i}} = - \frac{1}{\overline{\rho}}\frac{\partial \overline{p}}{\partial x_{i}} - \frac{\partial \tau_{ij}}{\partial x_{i}} + \frac{\partial }{\partial x_{i}} \left(\nu \left(\frac{\partial \overline{u_{j}}}{\partial x_{i}}+\frac{\partial \overline{u_{i}}}{\partial x_{j}}\right)\right)
 \end{aligned}\end{equation}
-那我們在LBM當中，應該關心的問題是要如何修正Lattice Boltzmann Equation，才能恢復對應到濾波型Navier-Stokes方程組，如下給出一般碰撞算符下的LBE與單鬆弛時間下的LBE:
+在LES模擬中，我們應該關心到當對elocity-discrete boltzmann equation左右兩邊取濾波變換後，得到濾波型速度空間離散化波茲曼方程，我們要如何修正，才能讓時間空間離散化後的濾波型晶格波茲曼方程回歸到宏觀Navier-Stokes方程。\\
+\noindent 下面我們給出待修正的方程式：
 \begin{equation}\begin{aligned}
-&f_{i}(\vec{r}+\vec{e}_{i}\delta t , t+\delta t) = f_{i}(\vec{r}, t)  + \Omega_{i}\\[1.5ex]
-&f_{i}(\vec{r}+\vec{e}_{i}\delta t , t+\delta t) = f_{i}(\vec{r}, t)  + \frac{1}{\tau}\left(f_{i}(\vec{r} , t) - f_{i}^{eq}(\rho , \vec{u})\right)\\[1.5ex]
-\end{aligned}\end{equation}
-同時對上式左右兩側取濾波卷積，則有(E濾波型晶格波茲曼方程)與(R濾波型單鬆弛時間晶格波茲曼方程)：
+\mathcal{L} \Rightarrow & \\[1.5ex]
+& 
+\frac{\partial f_{i}(\vec{r}  , t) }{\partial t} + \vec{e}_{i}\cdot \frac{\partial f_{i}(\vec{r}  , t)}{\partial \vec{r}}  = \Omega(f_{i}  , f_{i}^{eq})
+\end{aligned}
+\end{equation}
+\noindent 這邊要注意，文獻在對於LBM處理濾波變換時，都是對於時空連續的方程式作用，然而因為等是左側的算子為線性算子，所以變換符號可以跟微分算子對調：
 \begin{equation}\begin{aligned}
-&\overline{f_{i}(\vec{r}+\vec{e}_{i}\delta t , t+\delta t)} = \overline{f_{i}(\vec{r}, t)}  + \overline{\Omega_{i}}\\[1.5ex]
-&\overline{f_{i}(\vec{r}+\vec{e}_{i}\delta t , t+\delta t)} = \overline{f_{i}(\vec{r}, t)}  + \frac{1}{\tau}\left(\overline{f_{i}(\vec{r} , t)} - \overline{f_{i}^{eq}(\rho , \vec{u}})\right)\\[1.5ex]
+  \mathcal {D}_{t} = \partial_{t} + \vec{e}_{i} \cdot \frac{\partial }{\partial \vec{r}} \leftrightarrow \mathcal{L}
 \end{aligned}\end{equation}
-\noindent 在這邊．文獻所採取的方法為 
+因此有如下，濾波型速度空間離散化波茲曼方程：
+\begin{equation}\begin{aligned}
+  \frac{\partial}{\partial t} + \vec{e}_{i} \frac{\partial}{\partial \vec{r}} \left(\mathcal{L}[f(\vec{r} , t)]\right) = \mathcal{L} [\Omega(f_{i}(\vec{r} , t) - f_{i}^{eq}(\rho , \vec{u})]
+\end{aligned}\end{equation}
+
+
+
+
+
+\noindent 對於碰撞算子取濾波變換$\mathcal{L} (\Omega(f_{i}(\vec{r} , t) - f_{i}^{eq}(\rho , \vec{u}))$，文獻所採取的方法為 
 \begin{enumerate}
-\item (G(T(E一般態分佈函數)且(F平衡態分佈函數)的(碰撞修正項))的(濾波卷積))改為(A(e(E一般態分佈函數)的(濾波卷積))且(f(F平衡態分佈函數)的(濾波卷積))的(碰撞修正項))：
+\item ($L_{12}$($C_{12}$(E一般態分佈函數)且(F平衡態分佈函數)的(碰撞修正場))的(濾波變換))改為
+($C_{ef}$(e(E一般態分布函數)的(濾波變換))且(f(F平衡態分函數)的(濾波變換))的(碰撞修正場))
 \begin{equation}\begin{aligned}
-\text{先娶碰撞再取濾波} &\Rightarrow \text{先取濾波再次取碰撞}\\[1.5ex]
-\overline{\Omega_{i}(f(\vec{r},t),f_{i}^{eq}(\rho , \vec{u}))} &\Rightarrow \Omega_{i}(\overline{f(\vec{r},t)},\overline{f_{i}^{eq}(\rho , \vec{u})})
+ \mathcal{L} [\Omega(f_{i}(\vec{r} , t) - f_{i}^{eq}(\rho , \vec{u})] \Rightarrow \Omega\left(\mathcal{L}[f_{i}(\vec{r} , t)] - \mathcal{L}[f_{i}^{eq}(\rho , \vec{u})]\right)
 \end{aligned}\end{equation}
-\item (f(F平衡態分佈函數)的(濾波卷積)) 取為 
+
+\item (f(F平衡態分佈函數)的(濾波變換)) 取為 
 \begin{equation}\begin{aligned}
-\overline{f_{i}^{eq}(\rho , \vec{u})} \Rightarrow f_{i}^{eq}(\overline{\rho} , \overline{\vec{u}}) 
+  \mathcal{L}[f_{i}^{eq}(\rho , \vec{u})] \approx f_{i}^{eq}(\mathcal{L}[\rho] , \mathcal{L}[\vec{u}])
 \end{aligned}\end{equation}
 \end{enumerate}
 \noindent 因此，以濾波速度場為自變數的平衡態分佈函數為 
 \begin{equation}\begin{aligned}
-  f_{i}(\overline{\rho}\, \overline{\vec{u}}) = w_{i}\overline{\rho} \left(1 + \frac{c_{i\alpha}\overline{u_{\alpha}}}{c_{s}^{2}} + \frac{(\overline{u_{\alpha}} \cdot \overline{u_{\beta}})(c_{i\alpha}c_{i\beta} - c_{s}^{2}\delta_{\alpha \beta})}{2c_s^{4}}\right)
+  f_{i}^{eq}(\mathcal{L}[\rho] , \mathcal{L}[\vec{u}]) =  w_{i}\overline{\rho} \left(1 + \frac{c_{i\alpha} \mathcal{L}[u_{\alpha}]}{c_{s}^{2}} + \frac{( \mathcal{L}[u_{\alpha}] \cdot  \mathcal{L}[u_{\beta}])(c_{i\alpha}c_{i\beta} - c_{s}^{2}\delta_{\alpha \beta})}{2c_s^{4}}\right) 
 \end{aligned}\end{equation}
-\subsection{非封閉問題}
+\subsection{第一非封閉問題}
 \noindent 如果我沒有一點修正，則該濾波型晶格波茲曼方程的解的濾波形式不見得為原晶格波茲曼方程的解：
 \begin{equation}\begin{aligned}
   \mathcal{F} \rightarrow \overline{}....  
 \end{aligned}\end{equation}
 就算你做了第一點修正，形成如下濾波型晶格波茲曼方程：
-\\令濾波變換為 ：
+\subsection{第二非封閉問題}
+
+令濾波變換為 ：
 \begin{equation}\begin{aligned}
-  \mathcal{L}(f) =  \int f(\vec{r}) G(\vec{r} , \vec{r}^{'}) dr^{3}
+  \mathcal{L}[f(\vec{r})] =  \int f(\vec{r}) G(\vec{r} , \vec{r}^{'}) dr^{3}
+\end{aligned}\end{equation}
+\paragraph{速度空間離散化Boltzmann Equation}
+\noindent 具體形式為：
+\begin{equation}\begin{aligned}\label{eq:P}
+\frac{\partial f_{i}(\vec{r} , t)}{\partial t} + \vec{e}_{i}\cdot \frac{\partial f_{i}(\vec{r} , t)}{\partial \vec{r}} = \frac{1}{\tau}\left(f_{i}(\vec{r} , t) - f_{i}^{eq}(\rho , \vec{u})\right)
+\end{aligned}\end{equation}
+\noindent 以下兩點基於宏觀參數上面的討論，基於動量守恆，(S($C_{12}$(G一般態分布函數)且(F平衡態分佈函數(碰撞修正場))的(一階離散矩)) = 0，即有下式：
+\begin{equation}\begin{aligned}
+  \sum_{i} \vec{e}_{i} \Omega\left(\mathcal{L}[f_{i}(\vec{r}  , t)] - \mathcal{L}[f_{i}^{eq}(\rho , \vec{u})]\right)  &= 
+  \sum_{i} \vec{e}_{i} \frac{1}{\tau}\left(f_{i}(\vec{r} , t) - f_{i}^{eq}(\rho , \vec{u})\right) = 0 \\[1.5ex]
+  \sum_{i =} \vec{e}_{i}f_{i}(\vec{r} , t)&= \sum_{i} \vec{e}_{i} f_{i}^{eq} (\rho , \vec{u}) 
+\end{aligned}\end{equation}
+\noindent 而因為平衡態分佈函數度的句體表達式為：
+\begin{equation}\begin{aligned}
+ f_{i}(\rho , \vec{u}) = w_{i}\rho \left(1 + \frac{c_{i\alpha} u_{\alpha}}{c_{s}^{2}} + \frac{( u_{\alpha} \cdot u_{\beta})(c_{i\alpha}c_{i\beta} - c_{s}^{2}\delta_{\alpha \beta})}{2c_s^{4}}\right)
+\end{aligned}\end{equation}
+\noindent 所以，在方程式\eqref{eq:P}中，(S(F平衡態分佈函數)的(一階離散矩))為自身表達式的一階項係數：
+\begin{equation}\begin{aligned}
+  \sum_{i =} \vec{e}_{i}f_{i}(\vec{r} , t)= \sum_{i} \vec{e}_{i} f_{i}^{eq} (\rho , \vec{u})  = \rho \vec{u}
+\end{aligned}\end{equation}
+\paragraph{濾波型速度空間離散化Boltzmann Equation}
+\noindent 對於Filtered discrete-velocity Boltzmann Equation : 
+\begin{equation}\begin{aligned}\label{eq:I}
+  \frac{\partial \mathcal{L}[f_{i}(\vec{r} , t)]}{\partial t} + \vec{e}_{i} \cdot \frac{\partial \mathcal{L}[f_{i}(\vec{r}, t)]}{\partial \vec{r}} = \frac{1}{\tau}\left(\mathcal{L}[f_{i}(\vec{r},t)] - \mathcal{L}[f_{i}^{eq}(\rho,\vec{u})]\right)
+\end{aligned}\end{equation}
+\noindent 以下有兩點對於宏觀參數的討論，基於動量守恆，(B($C_{gf}$($g_{1}$($G_{1}$一般態分布函數)的(濾波變換))且($f_{1}$($F_{1}$平衡態分佈函數)的(濾波變換))的(碰撞修正場))的一階離散矩)) = 0，即有下式：
+\begin{equation}\begin{aligned}
+  \sum_{i} \vec{e}_{i} \Omega\left(f_{i}(\vec{r}  , t) - f_{i}^{eq}(\rho , \vec{u})\right)  &= 
+  \sum_{i} \vec{e}_{i} \frac{1}{\tau}\left(\mathcal{L}[f_{i}(\vec{r},t)] - \mathcal{L}[f_{i}^{eq}(\rho,\vec{u})]\right)\\[1.5ex]
+  \sum_{i =} \vec{e}_{i}\mathcal{L}[f_{i}(\vec{r} , t)]&= \sum_{i} \vec{e}_{i} \mathcal{L}[f_{i}^{eq} (\rho , \vec{u}) ]
+\end{aligned}\end{equation}
+\noindent 對平衡態分佈函數取濾波變換，則有($f_{1}$($F_{1}$平衡態分佈函數)的(濾波變換))的表達式為：
+\begin{equation}\begin{aligned}\label{eq:L}
+  \mathcal{L}[f_{i}^{eq}(\rho , \vec{u})] &=   w_{i}\mathcal{L} \left[\rho \left(1 + \frac{c_{i\alpha} u_{\alpha}}{c_{s}^{2}} + \frac{( u_{\alpha} \cdot u_{\beta})(c_{i\alpha}c_{i\beta} - c_{s}^{2}\delta_{\alpha \beta})}{2c_s^{4}}\right) \right] \\[1.5ex]
+  &= w_{i} \left[\mathcal{L}[\rho] + \mathcal{L}[\rho \vec{u}] \cdot \frac{\vec{c}_{i}}{c_s^{2}} + \mathcal{L}[\rho\vec{u}\vec{u}] : \frac{(\vec{c}_{i}\vec{c}_{i} - \sum_{\alpha}\sum_{\beta}c_s^{2}\delta_{\alpha \beta} \vec{e}_{\alpha}\vec{e}_{\beta})}{2c_s^{4}}\right] 
+\end{aligned}\end{equation}
+\noindent 所以在方程式\eqref{eq:I}中，(T($f_{1}$($F_{1}$平衡態分佈函數)的(濾波變換))的(一階離散矩)) 為自身表達式\eqref{eq:L}的一階項係數：
+\begin{equation}\begin{aligned}
+  \sum_{i =} \vec{e}_{i}\mathcal{L}[f_{i}(\vec{r} , t)]&= \sum_{i} \vec{e}_{i} \mathcal{L}[f_{i}^{eq} (\rho , \vec{u}) ]  = \mathcal{L}[\rho \vec{u}]
+\end{aligned}\end{equation}
+\paragraph{修正型濾波型速度空間離散化Boltzmann Equation} 
+\noindent 在論文中，對於方程式\eqref{eq:I}，有如下封閉性操作：（第二步）
+\begin{equation}\begin{aligned}
+  \frac{\partial  }{\partial t} \mathcal{L}[f_{i}(\vec{r} , t)] + \vec{e}_{i} \cdot  \frac{\partial }{\partial \vec{r}} \mathcal{L}[f_{i}(\vec{r} , t)] = \frac{1}{\tau}\left( \mathcal{L}[f_{i}(\vec{r} , t)] - f_{i}^{eq}(\mathcal{L}[\rho] , \mathcal{L}[\vec{u}])\right)
+\end{aligned}\end{equation}
+\noindent 以下有兩點關於宏觀參數的討論，基於動量守恆，($C_{gF}$($F_{2}$濾波基底平衡態分佈函數)且($g_{2}$($G_{2}$一般態分佈函數)的(濾波變換))的(碰撞修正場))
+ = 0 ， 所以有：
+\begin{equation}\begin{aligned}
+\sum_{i} \vec{e}_{i} \Omega\left(\mathcal{L}[f_{i}(\vec{r} , t)]- f_{i}^{eq}(\mathcal{L}[\rho] , \mathcal{L}[\vec{u}])\right) &= 
+\sum_{i} \vec{e}_{i} \frac{1}{\tau}\left(\mathcal{L}[f_{i}(\vec{r} , t)]- f_{i}^{eq}(\mathcal{L}[\rho] , \mathcal{L}[\vec{u}])\right)\\[1.5ex]
+\sum_{i} \vec{e}_{i} \mathcal{L}[f_{i}(\vec{r} , t)] &= \sum_{i}\vec{e}_{i} f_{i}^{eq}(\mathcal{L}[\rho] , \mathcal{L}[\vec{u}])  
+\end{aligned}\end{equation}
+\noindent ($F_{2}$濾波基底平衡態分佈函數)的具體表達式為：
+\begin{equation}\begin{aligned}
+  f_{i}^{eq} (\mathcal{L}[\rho] ,\mathcal{L}[\vec{u}] ) = w_{i}\mathcal{L}[\rho] \left[1+\frac{\vec{c}_{i}}{c_{s}^{2}}\mathcal{L}[\vec{u}] +  \frac{\mathcal{L}[\vec{u}]\mathcal{L}[\vec{u}]}{2c_s^{4}} : \left(\vec{c}_{i}\vec{c}_{i}  -  c_{s}^{2}\sum_{\alpha , \beta} \delta_{\alpha \beta}\vec{e}_{\alpha}\vec{e}_{\beta}\right)\right] 
+\end{aligned}\end{equation}
+\noindent 所以在方程式：修正型濾波型速度空間離散化Boltzmann Equation中，(U($F_{2}$濾波基底平衡態分佈函數)的(一階離散矩))利用厄密特多項正交性，可以求出：
+\begin{equation}\begin{aligned}
+    \sum_{i} \vec{e}_{i} f_{i}^{eq} (\mathcal{L}[\rho] , \mathcal{L}[\vec{u}]) = \mathcal{L}[\rho] \cdot \mathcal{L}[\vec{u}]
+\end{aligned}
+\end{equation}
+\noindent 所以我們有兩點重要結論：
+\noindent 1.\ 因為平衡態分佈函數為非線性映射，所以 (f(F平衡態分佈函數)的(濾波變換))不等於 ($F_{2}$濾波基底平衡態分佈函數)
+\begin{equation}\begin{aligned}
+  \mathcal{L}[f_{i}^{eq}(\rho , \vec{u})] \neq f_{i}^{eq}(\mathcal{L}[\rho] , \mathcal{L}[\vec{u}])
+\end{aligned}\end{equation}
+\noindent 2.\ (T(s(D濾波型速度空間離散化Boltzmann Equation)的(解))的(濾波變換))不等於(I(R速度空間離散化BOltzmann Equation)的(解)) : 
+分別為如下方程式 ：
+\begin{equation}\begin{aligned}\label{eq:P}
+&\frac{\partial f_{i}(\vec{r} , t)}{\partial t} + \vec{e}_{i}\cdot \frac{\partial f_{i}(\vec{r} , t)}{\partial \vec{r}} = \frac{1}{\tau}\left(f_{i}(\vec{r} , t) - f_{i}^{eq}(\rho , \vec{u})\right)\\[1.5ex]
+&\frac{\partial \mathcal{L}[f_{i}(\vec{r} , t)]}{\partial t} + \vec{e}_{i} \cdot \frac{\partial \mathcal{L}[f_{i}(\vec{r}, t)]}{\partial \vec{r}} = \frac{1}{\tau}\left(\mathcal{L}[f_{i}(\vec{r},t)] - \mathcal{L}[f_{i}^{eq}(\rho,\vec{u})]\right)
+\end{aligned}\end{equation}
+\noindent 原因可由一階離散矩得知：在第一式中，(R(G一般態分佈函數)的(一階離散矩))為：
+\begin{equation}\begin{aligned}
+  \sum_{i} \vec{e}_{i} f_{i}(\vec{r} , t) = \rho \vec{u}
+\end{aligned}\end{equation}
+\noindent 而在第二式中，(E($g_{1}$($G_{1}$一般態分佈函數)的(濾波變換))的(一階離散矩)) : 
+\begin{equation}\begin{aligned}
+  \sum_{i} \vec{e}_{i} \mathcal{L}[f_{i}(\vec{r} , t)] = \mathcal{L}[\rho\vec{u}]
+\end{aligned}\end{equation}
+\noindent 所以我們可以知道，對於速度空間離散化Boltzmann Equation的解不唯一，實際求解時，可以為求方便，自動將其解視為某一個分佈函數的濾波變換，這就是在LBE中，可以隱式求解濾波解的特性。
+\subsection{第三非封閉問題}
+\paragraph{兩個最重要的應力參數}
+\noindent 在宏觀空間當中，先定義兩個最重要的宏觀應力場：\\
+\noindent 1.\ (P(Y(N非平衡態分佈函數)的(二階離散速度矩))的(濾波變換)) 等於 (v(n(N非平衡態分佈函數)的(濾波變換))的(二階離散速度矩)):
+\begin{equation}\begin{aligned}
+\mathcal{L}\left[\prod_{\alpha \beta}^{neq}\right]  = \sum_{i} e_{i\alpha}e_{i\beta} \mathcal{L}\left[f_{i}^{neq} \right]\Rightarrow |\mathcal{L}[S_{ij}]|\sqrt{2} = |\overline{S}|
+\end{aligned}
+\end{equation}
+\noindent 2.\ (a(A($G_{1}$一階尺度一般態分佈函數)的(二階離散速度矩))的(濾波變換))  = (E($g_{1}$($G_{1}$一階尺度一般態分佈函數)的(濾波變換))的(二階離散速度矩))
+\begin{equation}\begin{aligned}\label{eq:L}
+  \mathcal{L}\left[\prod_{\alpha \beta}^{(1)}\right] = \sum_{i}e_{i\alpha}e_{i\beta}\mathcal{L}\left[f_{i}^{(1)}\right] = -\rho c_{s}^{2}\tau \left(\partial_{\beta}\mathcal{L}\left[u_{\alpha}\right] + \partial_{\alpha}\mathcal{L}\left[u_{\beta}\right]\right) \Rightarrow \mathcal{L}\left[S_{ij}\right]
+\end{aligned}\end{equation}
+\noindent 其中，$\tau$ 為 原鬆弛時間場。後來，發現其實一階尺度一般態分佈函數不好求解，方程式\eqref{eq:L}基本上為理論過程的方程，可以說是用處不大。
+\paragraph{公式組合}
+\noindent 在LES-LBM當中，會對於原鬆弛時間場進行推廣，將原鬆弛時間場取為(R(A原鬆弛時間場)的(Smagorinsky格式))，將原運動黏滯係數場推廣為(R(A原運動黏滯係數場)的(Smagorinsky格式))，附加的渦運動黏滯係數場由$\mathcal{L}\left[S_{ij}\right]$：(s(S實對稱剪應變率張量場)的(濾波變換))計算，
+$\mathcal{L}\left[S_{ij}\right]$本身可以由
+(E($g_{1}$($G_{1}$一階尺度一般態分佈函數)的(濾波變換))的(二階離散速度矩))求出，如果理想的話，一般由差分得出。
+$\sqrt{s\mathcal{L}\left[S_{ij}\right]\mathcal{L}\left[S_{ij}\right]}$
+(T(s(S實對稱簡應變率張量場)的(濾波變換))的(絕對值))
+由(P(n(N非平衡態分佈函數)的(濾波變換))的(二階離散速度矩))求出。
+\begin{enumerate}
+  \item \begin{equation}\begin{aligned}
+  \tau_{ij} - \frac{1}{3}\delta_{ij}\tau_{kk} \equiv -2\nu_{t} \mathcal{L}[S_{ij}] = -2 \cdot \cdot C_{s}\Delta^{2} \sqrt{2\mathcal{L}[S_{ij}] \mathcal{L}[S_{ij}] }\cdot \mathcal{L}[S_{ij}] \\[1.5ex]
+  \end{aligned}\end{equation}
+  \noindent 其中，$\mathcal{L}[S_{ij}]  = \frac{1}{2} \mathcal{L}[\partial_{\beta} u_{\alpha}+ \partial_{\alpha}u_{\beta}]$
+  \item \begin{equation}\begin{aligned} \tau^{*} \equiv \tau_{0} + \tau_{t} \equiv \tau_{0} + 3\left(C_{s}\Delta^{2}\sqrt{s\mathcal{L}[S_{ij}]\mathcal{L}[S_{ij}]} \right)+ \frac{1}{2} \end{aligned}\end{equation}
+  \item \begin{equation}\begin{aligned} \nu^{*} \equiv \nu_{0} + \nu_{t} \equiv \nu_{0} + \left(C_{s}\Delta^{2}\sqrt{s\mathcal{L}[S_{ij}]\mathcal{L}[S_{ij}]} \right)\end{aligned}\end{equation}
+  \item \begin{equation}\begin{aligned} Q \equiv \mathcal{L}\left[\prod_{ij}^{neq}\right]\mathcal{L}\left[\prod_{ij}^{neq}\right]\end{aligned}\end{equation} 
+  \item \begin{equation}\begin{aligned} Q^{1/2} = (\tau_{0} + 3C_{s}\Delta^{2}|\overline{S}|) 2 \rho c_{s}^{2} |\overline{S}| = (\tau_{0} + 3\nu_{t}) 2 \rho c_{s}^{2} |\overline{S}| \end{aligned}\end{equation} 
+  \item \begin{equation}\begin{aligned} |\overline{S}| = \frac{\sqrt{\nu_{0}^{2}+ 18C_{s}\Delta^{2}Q^{1/2}} - \nu_{0}}{6C_{s}\Delta^{2}}\end{aligned}\end{equation}
+\end{enumerate}
+\paragraph{LBM-LES}
+在濾波變換中，(R修正型濾波型Lattice Boltzmann Equation))為：
+\begin{equation}\begin{aligned}
+  \mathcal{L} [f](\vec{r}+\vec{e}_{i}\delta t , t+\delta t) = \mathcal{L}[f](\vec{r,t}) + \frac{1}{\tau^{*}}\left(\mathcal{L}[f](\vec{r},t) - f^{eq}(\mathcal{L}[\rho] , \mathcal{L}[\vec{u}])\right)
+\end{aligned}\end{equation}
+\noindent 其中，
+\begin{equation}\begin{aligned}
+  &\text{(T(R原鬆弛時間場)的(Smagorinsky格式))} \equiv \tau_{0} + 3\left(C_{s}\Delta^{2} |\overline{S}|\right)+\frac{1}{2} 
+  \\[1.5ex]&= \tau_{0} + 3\left(C_{s}\Delta^{2}\sqrt{2\mathcal{L}[S_{ij}]\mathcal{L}[S_{ij}]}\right)+\frac{1}{2}\\[1.5ex]
+  &\text{(S(D原運動黏度場)的(Smagorinsky格式))} \equiv \nu_{0} + \nu_{t} \equiv \nu_{0} + C_{s}\Delta^{2}||\overline{S}\\[1.5ex]
+  &= \nu_{0} + C_{s}\Delta^{2} \sqrt{2\mathcal{L}[S_{ij}]\mathcal{L}[S_{ij}]} 
+\end{aligned}\end{equation}
+\noindent 其中，$C_{s}$為Smagorinsky常數，$\Delta$為濾波尺度，$\nu_{0}$為原運動黏滯係數場，$\tau_{0}$為原鬆弛時間場。
+\noindent 所以重點來了，應該是如何透過介關參數的濾波變換，求解(R(D(A實對稱剪應變率張量場)的(濾波變換))的(絕對值))\\
+\noindent 第一步：\\
+\noindent (r(R(N非平衡態分佈函數)的(二階離散速度矩))的(濾波變換)) = (Y(n(N非平衡態分佈函數)的(濾波變換))的(二階離散速度矩))\\
+\begin{equation}\begin{aligned}
+\mathcal{L}\left[\prod_{ij}^{neq}\right] = \sum_{i} e_{i \alpha}e_{i \beta} \mathcal{L}\left[f_{i}^{neq}\right]
+\end{aligned}
+\end{equation}
+\noindent 第二步：取內積：(S(R(n(N非平衡態分佈函數)的(二階離散速度矩))的(濾波變換))的(范數平方)) ：
+\begin{equation}\begin{aligned}
+    Q \equiv \mathcal{L}\left[\prod_{ij}^{neq}\right] \mathcal{L}\left[\prod_{ij}^{neq}\right] 
+\end{aligned}\end{equation}
+\noindent 第三步：套公式：求(T(s(S實對稱剪應變率張量場)的(濾波變換))的(絕對值))
+\begin{equation}\begin{aligned}
+\sqrt{2\mathcal{L}\left[S_{ij}\right]\mathcal{L}\left[S_{ij}\right]} = \frac{\sqrt{\nu_{0}+18C_{s}\Delta^{2}Q^{1/2}} - \nu_{0}}{6C_{s}\Delta^{2}}
+\end{aligned}\end{equation}
+\noindent 第四步：求解(D(F亞格子應力張量場)的(各向異性部分))
+\begin{equation}\begin{aligned}
+ \tau_{ij} - \frac{1}{3}\tau_{kk}\delta _{ij} = -2 \nu_{t} \mathcal{L}\left[S_{ij}\right] = -2\nu_{t} \frac{1}{-\rho c_{s}^{2}\tau2}\mathcal{L}\left[\prod_{ij}^{(1)}\right]
+\end{aligned}\end{equation}
+\noindent 其中，$\mathcal{L}\left[S_{ij}\right]$為(s(S實對稱剪應變率張量場)的(濾波變換))，$\mathcal{L}\left[\prod_{ij}^{(1)}\right]$為(E($g_{1}$($G_{1}$一階尺度一般態分佈函數)的(濾波變換))的(二階離散速度矩))。
+\begin{equation}\begin{aligned}
+&\mathcal{L}\left[S_{ij}\right]  = \frac{1}{2}\left(\partial_{\alpha}\mathcal{L}[u_{\beta}] + \partial_{\beta}\mathcal{L}[u_{\alpha}]\right)\\[1.5ex]
+&\mathcal{L}\left[\prod_{ij}^{(1)}\right] = \sum_{i} e_{i\alpha}e_{i\beta}\mathcal{L}\left[f_{i}^{(1)}\right] = -\rho c_{s}^{2}\tau \left(\partial_{\beta}\mathcal{L}\left[u_{\alpha}\right] + \partial_{\alpha}\mathcal{L}\left[u_{\beta}\right]\right) = -2\rho c_{s}^{2} \tau \mathcal{L}[S_{ij}]
 \end{aligned}\end{equation}
 
 \end{document}
