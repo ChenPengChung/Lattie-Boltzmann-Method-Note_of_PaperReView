@@ -303,7 +303,7 @@
 \maketitle
 \tableofcontents
 \newpage
-
+\section{前言}
 \noindent (R(T速度空間離散化波茲曼方程)的(濾波形式))  = (U濾波型速度空間離散化波茲曼方程)
 \begin{equation}\begin{aligned}
    &\overline{\frac{\partial f_{\alpha}}{\partial t}} + \overline{e_{i\alpha} \cdot \frac{\partial f_{\alpha}}{\partial x_{i}}} = \overline{\Omega_{\alpha}(f_{\alpha})} \\[1.5ex]
@@ -316,5 +316,65 @@
 \end{aligned}\end{equation}  
 因為 “速度空間離散化波茲曼方程”與“晶格波茲曼方程” 皆為線性方程，所以先做濾波，跟先做離散化，順序可以對調，最後均得
 到 濾波型晶格波曼方程 。
+\section{亞格子模型與濾波}
+\noindent 何謂亞格子應力張量模型？在紊流裡面，最需要關心的雷諾應力張量場 (Raynolds Stress Tensor)，在LES模擬中，為亞格子應力張量場(subgrid stress tensor)，其表達式為：
+\begin{equation}\begin{aligned}
+  \tau_{ij} &= R_{ij} + C_{ij} + L_{ij} \\[1.5ex]
+  &= \left(\overline{u^{'}u^{'}} \right)+ \left( \overline{\overline{u}u^{'}}  + \overline{u^{'}\overline{u}} \right) + \left(\overline{\overline{u}\overline{u}} - \overline{u}\cdot\overline{u}\right) + \overline{u}\cdot\overline{u}
+ \end{aligned}\end{equation}
+\noindent 其中，$R_{ij}$為亞格子雷諾應力張量場，由此延伸，亞格子應力張量場的一種近似：(S(R(D亞格子應力張量場)的(各向異性部分))的(Smagorinsky模型))。如下給出該應力模型的定義：
+\begin{equation}\begin{aligned}
+  \tau_{ij} = -2\nu_{t}\overline{S_{ij}} = -2\left(C_s\Delta^{2}\sqrt{2\overline{S_{ij}}\overline{S_{ij}}}\right)\overline{S_{ij}}
+\end{aligned}\end{equation}
+\noindent 其中，$\overline{S_{ij}} = \frac{1}{2}\left(\frac{\partial \overline{u_{j}}}{\partial x_{i}} + \frac{\partial \overline{u_{i}}}{\partial x_{j}}\right)$，$\nu_{t}$稱為“渦黏度場”(Eddy viscosity)。
+在Subgrid turbulance model中，真正的意義為對於“亞格子應力張量場”取(R(D亞格子應力張量場)的(Smagorinsky模型)) ; 同時，對“運動黏度係數場”取為(U(R運動黏滯係數場)的(Smagorinsky模型)) : 
+\begin{equation}\begin{aligned}
+    \nu_{s} = \nu_{o} + C_{s}\Delta^{2}\sqrt{2\overline{S_{ij}}\cdot\overline{S_{ij}}}
+\end{aligned}\end{equation}
+如上所示，該模型為空間座標的函數，為原來運動粘滯係數場在LES當中的修正。
+在Large Eddy Simulation中，濾波型動量方程組為
+\begin{equation}\begin{aligned}
+  &\frac{\partial \overline{u_{i}}}{\partial x_{i}} = 0 \\[1.5ex]
+  &\frac{\partial \overline{u_{i}}}{\partial t} + \frac{\partial \overline{u_{i}}\cdot \overline{u_{j}}}{\partial x_{i}} = - \frac{1}{\overline{\rho}}\frac{\partial \overline{p}}{\partial x_{i}} - \frac{\partial \tau_{ij}}{\partial x_{i}} + \frac{\partial }{\partial x_{i}} \left(\nu \left(\frac{\partial \overline{u_{j}}}{\partial x_{i}}+\frac{\partial \overline{u_{i}}}{\partial x_{j}}\right)\right)
+\end{aligned}\end{equation}
+那我們在LBM當中，應該關心的問題是要如何修正Lattice Boltzmann Equation，才能恢復對應到濾波型Navier-Stokes方程組，如下給出一般碰撞算符下的LBE與單鬆弛時間下的LBE:
+\begin{equation}\begin{aligned}
+&f_{i}(\vec{r}+\vec{e}_{i}\delta t , t+\delta t) = f_{i}(\vec{r}, t)  + \Omega_{i}\\[1.5ex]
+&f_{i}(\vec{r}+\vec{e}_{i}\delta t , t+\delta t) = f_{i}(\vec{r}, t)  + \frac{1}{\tau}\left(f_{i}(\vec{r} , t) - f_{i}^{eq}(\rho , \vec{u})\right)\\[1.5ex]
+\end{aligned}\end{equation}
+同時對上式左右兩側取濾波卷積，則有(E濾波型晶格波茲曼方程)與(R濾波型單鬆弛時間晶格波茲曼方程)：
+\begin{equation}\begin{aligned}
+&\overline{f_{i}(\vec{r}+\vec{e}_{i}\delta t , t+\delta t)} = \overline{f_{i}(\vec{r}, t)}  + \overline{\Omega_{i}}\\[1.5ex]
+&\overline{f_{i}(\vec{r}+\vec{e}_{i}\delta t , t+\delta t)} = \overline{f_{i}(\vec{r}, t)}  + \frac{1}{\tau}\left(\overline{f_{i}(\vec{r} , t)} - \overline{f_{i}^{eq}(\rho , \vec{u}})\right)\\[1.5ex]
+\end{aligned}\end{equation}
+\noindent 在這邊．文獻所採取的方法為 
+\begin{enumerate}
+\item (G(T(E一般態分佈函數)且(F平衡態分佈函數)的(碰撞修正項))的(濾波卷積))改為(A(e(E一般態分佈函數)的(濾波卷積))且(f(F平衡態分佈函數)的(濾波卷積))的(碰撞修正項))：
+\begin{equation}\begin{aligned}
+\text{先娶碰撞再取濾波} &\Rightarrow \text{先取濾波再次取碰撞}\\[1.5ex]
+\overline{\Omega_{i}(f(\vec{r},t),f_{i}^{eq}(\rho , \vec{u}))} &\Rightarrow \Omega_{i}(\overline{f(\vec{r},t)},\overline{f_{i}^{eq}(\rho , \vec{u})})
+\end{aligned}\end{equation}
+\item (f(F平衡態分佈函數)的(濾波卷積)) 取為 
+\begin{equation}\begin{aligned}
+\overline{f_{i}^{eq}(\rho , \vec{u})} \Rightarrow f_{i}^{eq}(\overline{\rho} , \overline{\vec{u}}) 
+\end{aligned}\end{equation}
+\end{enumerate}
+\noindent 因此，以濾波速度場為自變數的平衡態分佈函數為 
+\begin{equation}\begin{aligned}
+  f_{i}(\overline{\rho}\, \overline{\vec{u}}) = w_{i}\overline{\rho} \left(1 + \frac{c_{i\alpha}\overline{u_{\alpha}}}{c_{s}^{2}} + \frac{(\overline{u_{\alpha}} \cdot \overline{u_{\beta}})(c_{i\alpha}c_{i\beta} - c_{s}^{2}\delta_{\alpha \beta})}{2c_s^{4}}\right)
+\end{aligned}\end{equation}
+\subsection{非封閉問題}
+\noindent 如果我沒有一點修正，則該濾波型晶格波茲曼方程的解的濾波形式不見得為原晶格波茲曼方程的解：
+\begin{equation}\begin{aligned}
+  \mathcal{F} \rightarrow \overline{}....  
+\end{aligned}\end{equation}
+就算你做了第一點修正，形成如下濾波型晶格波茲曼方程：
+\begin{equation}\begin{aligned}
+  \overline{f_{i}}(\vec{r}+\vec{e}_{i}\delta t , t + \delta t) = \overline{f_{i}} (\vec{r} , t) + \frac{1}{\tau} \left(\overline{f_{i}} - \overline{f_{i}^{eq}}\right)
+\end{aligned}\end{equation}
+\noindent 則有如下的宏觀參數的變換：
+\begin{equation}\begin{aligned}
+  \overline{\rho\vec{u}} = \sum_{i} 
+\end{aligned}\end{equation}
 \end{document}
 
