@@ -304,18 +304,23 @@
 \tableofcontents
 \newpage
 \section{前言}
-\noindent (R(T速度空間離散化波茲曼方程)的(濾波形式))  = (U濾波型速度空間離散化波茲曼方程)
-\begin{equation}\begin{aligned}
-   &\overline{\frac{\partial f_{\alpha}}{\partial t}} + \overline{e_{i\alpha} \cdot \frac{\partial f_{\alpha}}{\partial x_{i}}} = \overline{\Omega_{\alpha}(f_{\alpha})} \\[1.5ex]
-   \leftrightarrow &\frac{\partial \overline{f_{\alpha}}}{\partial t} + e_{i\alpha} \cdot \frac{\partial \overline{f_{\alpha}}}{\partial x_{i}} = \overline{\Omega_{\alpha}(f_{\alpha})} \\[1.5ex]
+\noindent 由速度空間離散化波茲曼方程：
+\begin{equation}\begin{aligned}\label{eq:1}
+\frac{\partial f_{i}}{\partial t} (\vec{r}  , t) + \vec{e}_{i}\cdot \frac{\partial f_{i}}{\partial \vec{r}}(\vec{r}  , t)  = \Omega(f_{i}  , f_{i}^{eq})
 \end{aligned}\end{equation}
-\noindent (U(E晶格波茲曼方程)的(濾波形式)) = (A濾波型晶格波茲曼方程)
+定義濾波變換：
 \begin{equation}\begin{aligned}
-& \overline{f_{\alpha}(\vec{r}+\vec{e}_{\alpha}\delta t , t + \delta t)} = \overline{f_{\alpha}(\vec{r},t)}+ \overline{\Omega_{\alpha}(f_{\alpha} )} \\[1.5ex]
-& \overline{f_{\alpha}(\vec{r}+\vec{e}_{\alpha}\delta t , t + \delta t)} = \overline{f_{\alpha}(\vec{r},t)}+ \overline{\Omega_{\alpha}(f_{\alpha} )} \\[1.5ex]
-\end{aligned}\end{equation}  
-因為 “速度空間離散化波茲曼方程”與“晶格波茲曼方程” 皆為線性方程，所以先做濾波，跟先做離散化，順序可以對調，最後均得
-到 濾波型晶格波曼方程 。
+\mathcal{L} (f) = \int_{\Omega} f(\vec{r}) G(\vec{r} - \vec{r}^{'}) dr^{3}
+\end{aligned}\end{equation}
+\noindent 對\eqref{eq:1}上式兩側左右同取濾波變換，則有：
+\begin{equation}\begin{aligned}\label{eq:2}
+\frac{\partial \mathcal{L} (f_{i})}{\partial t} (\vec{r}  , t) + \vec{e}_{i}\cdot \frac{\partial \mathcal{L} (f_{i})}{\partial \vec{r}}(\vec{r}  , t)  = \mathcal{L} \left(\Omega(f_{i}  , f_{i}^{eq})\right)
+\end{aligned}\end{equation}
+上式\eqref{eq:2}即稱為濾波型速度空間離散化波茲曼方程，對上式\eqref{eq:2}進行時空離散化，則有：
+\begin{equation}\begin{aligned}
+  \mathcal{L}(f_{i})(\vec{r} + \vec{e}_{i}\delta t , t+ \delta t) = \mathcal{L}(f_{i}) (\vec{r} ,t) + \mathcal{L} (\Omega(f_{i} - f_{i}^{eq})) \delta t
+\end{aligned}\end{equation}
+\noindent 上式即稱為濾波型晶格波茲曼方程。
 \section{亞格子模型與濾波}
 \noindent 何謂亞格子應力張量模型？在紊流裡面，最需要關心的雷諾應力張量場 (Raynolds Stress Tensor)，在LES模擬中，為亞格子應力張量場(subgrid stress tensor)，其表達式為：
 \begin{equation}\begin{aligned}
@@ -369,12 +374,10 @@
   \mathcal{F} \rightarrow \overline{}....  
 \end{aligned}\end{equation}
 就算你做了第一點修正，形成如下濾波型晶格波茲曼方程：
+\\令濾波變換為 ：
 \begin{equation}\begin{aligned}
-  \overline{f_{i}}(\vec{r}+\vec{e}_{i}\delta t , t + \delta t) = \overline{f_{i}} (\vec{r} , t) + \frac{1}{\tau} \left(\overline{f_{i}} - \overline{f_{i}^{eq}}\right)
+  \mathcal{L}(f) =  \int f(\vec{r}) G(\vec{r} , \vec{r}^{'}) dr^{3}
 \end{aligned}\end{equation}
-\noindent 則有如下的宏觀參數的變換：
-\begin{equation}\begin{aligned}
-  \overline{\rho\vec{u}} = \sum_{i} 
-\end{aligned}\end{equation}
+
 \end{document}
 
